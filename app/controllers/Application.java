@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.mvc.*;
 
 import service.H2Service;
@@ -19,11 +20,11 @@ public class Application extends Controller {
     private PostgresqlService postgresqlService;
 
 
-    public Result listUsers() {
-        return ok(users.render(h2Service.getAllUser()));
+    public Result listUsers(String lang) {
+        return ok(users.render(h2Service.getAllUser(),lang));
     }
 
-    public Result listBrands() {
-        return ok(brands.render(postgresqlService.getAllBrand()));
+    public Result listBrands(String lang) {
+        return ok(brands.render(postgresqlService.getAllBrand(),lang));
     }
 }

@@ -1,4 +1,5 @@
-@(users: List[domain.User])
+@(users: List[domain.User],lang:String)
+@import play.i18n._
 
 <!DOCTYPE html>
 
@@ -9,6 +10,8 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     </head>
     <body>
+        @lang
+        @Messages.get(new Lang(Lang.forCode(lang)),"test.lang")
         @if(!users.isEmpty()) {
             <ul>
                 @for(user <- users) {
