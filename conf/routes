@@ -3,11 +3,16 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.listUsers(lang = "cn")
-GET     /$lang<(cn|en|kr)>          controllers.Application.listUsers(lang)
+GET     /                                   controllers.Application.listUsers(lang = "cn")
+GET     /$lang<(cn|en|kr)>                  controllers.Application.listUsers(lang)
 
-GET     /brands                     controllers.Application.listBrands(lang = "cn")
-GET     /$lang<(cn|en|kr)>/brands   controllers.Application.listBrands(lang)
+GET     /brands                             controllers.Application.listBrands(lang = "cn")
+GET     /$lang<(cn|en|kr)>/brands           controllers.Application.listBrands(lang)
+
+GET     /validate                              controllers.Application.validate(lang = "cn")
+GET     /$lang<(cn|en|kr)>/validate            controllers.Application.validate(lang)
+
+POST    /validation                         controllers.Application.validation()
 
 #GET    /user/:id                   controllers.Application.showUser(id: Long)
 

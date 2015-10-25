@@ -1,9 +1,14 @@
 package domain;
 
+import play.data.validation.Constraints;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
+    @Constraints.Required
     private Long id;
+    @Constraints.Required
+    @Constraints.Min(0)
     private String name;
 
     public User(Long id, String name) {

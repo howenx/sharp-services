@@ -1,1 +1,4 @@
 test.lang = english
+validate.username = Username
+validate.password = Password
+validate.login = Login

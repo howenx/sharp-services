@@ -1,1 +1,4 @@
 test.lang = 中文
+validate.username = 用户名
+validate.password = 密码
+validate.login = 登录
