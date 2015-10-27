@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.ThemeMapper">
+
+    <!--enable mybatis default cache configure reference:
+        https://mybatis.github.io/mybatis-3/zh/sqlmap-xml.html#cache
+    -->
+    <!--<cache/>-->
+
+    <resultMap id="themeMap" type="domain.Theme">
+        <id property="id" column="id" javaType="Long"/>
+	    <result property="master_item_id" column="masterItemId" javaType="Long"/>
+        <result property="title"  column="title" javaType="String"/>
+	    <result property="theme_desc" column="themeDesc" javaType="String"/>
+        <result property="start_at" column="startAt" javaType="java.sql.Timestamp"/>
+	    <result property="end_at" column="endAt" javaType="java.sql.Timestamp"/>
+        <result property="theme_discount_up" column="themeDiscountUp" javaType="java.math.BigDecimal"/>
+        <result property="item_price_top" column="itemPriceTop" javaType="java.math.BigDecimal"/>
+        <result property="item_price_low" column="itemPriceLow" javaType="java.math.BigDecimal"/>
+	    <result property="theme_img" column="themeImg" javaType="String"/>
+        <result property="theme_url" column="themeUrl" javaType="String"/>
+	    <result property="theme_tags" column="themeTags" javaType="String"/>
+        <result property="item_count" column="itemCount" javaType="Integer"/>
+	    <result property="theme_tag_count" column="themeTagCount" javaType="Integer"/>
+        <result property="sort_nu" column="sortNu" javaType="Integer"/>
+	    <result property="is_destory" column="isDestory" javaType="Boolean"/>
+        <result property="destory_uid" column="destoryUid" javaType="Long"/>
+	    <result property="destory_at" column="destoryAt" javaType="java.sql.Timestamp"/>
+        <result property="update_at" column="updateAt" javaType="java.sql.Timestamp"/>
+	    <result property="update_uid" column="updateUid" javaType="Long"/>
+        <result property="create_at" column="createAt" javaType="java.sql.Timestamp"/>
+	    <result property="create_uid" column="createUid" javaType="Long"/>
+        <result property="theme_src_img" column="themeSrcImg" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="themeDtoMap" type="domain.ThemeDto">
+        <id property="id" column="id" javaType="Long"/>
+        <result column="master_item_id" property="masterItemId" javaType="Long"/>
+        <result column="theme_img" property="themeImg" javaType="String"/>
+        <result column="theme_url" property="themeUrl" javaType="String"/>
+        <result column="sort_nu" property="sortNu" javaType="Integer"/>
+    </resultMap>
+
+    <resultMap id="themeListDtoMap" type="domain.ThemeListDto">
+        <result column="theme_id" property="themeId" javaType="Long"/>
+        <result column="item_id" property="itemId" javaType="Long"/>
+        <result column="item_img" property="itemImg" javaType="String"/>
+        <result column="item_url" property="itemUrl" javaType="String"/>
+        <result column="item_title" property="itemTitle" javaType="String"/>
+        <result column="item_price" property="itemPrice" javaType="BigDecimal"/>
+        <result column="item_cost_price" property="itemCostPrice" javaType="BigDecimal"/>
+        <result column="item_discount" property="itemDiscount" javaType="BigDecimal"/>
+        <result column="item_sold_amount" property="itemSoldAmount" javaType="Integer"/>
+        <result column="is_master_item" property="isMasterItem" javaType="Boolean"/>
+        <result column="master_item_tag" property="masterItemTag" javaType="String"/>
+        <result column="collect_count" property="collectCount" javaType="Integer"/>
+        <result column="master_item_img" property="masterItemImg" javaType="String"/>
+    </resultMap>
+
+    <sql id="themeItemColumns">
+    ${alias}.id,
+    ${alias}.theme_id,
+    ${alias}.item_id,
+    ${alias}.item_img,
+    ${alias}.item_url,
+    ${alias}.item_title,
+    ${alias}.item_price,
+    ${alias}.item_cost_price,
+    ${alias}.item_discount,
+    ${alias}.item_sold_amount,
+    ${alias}.is_master_item,
+    ${alias}.master_item_tag,
+    ${alias}.like_count,
+    ${alias}.collect_count,
+    ${alias}.sort_nu,
+    ${alias}.is_destory,
+    ${alias}.destory_uid,
+    ${alias}.destory_at,
+    ${alias}.update_at,
+    ${alias}.update_uid,
+    ${alias}.create_at,
+    ${alias}.create_uid
+</sql>
+
+
+    <sql id="themesColumns">
+        ${alias}.id,
+        ${alias}.master_item_id,
+        ${alias}.title,
+        ${alias}.theme_desc,
+        ${alias}.start_at,
+        ${alias}.end_at,
+        ${alias}.theme_discount_up,
+        ${alias}.item_price_top,
+        ${alias}.item_price_low,
+        ${alias}.theme_img,
+        ${alias}.theme_url,
+        ${alias}.theme_tags,
+        ${alias}.item_count,
+        ${alias}.theme_tag_count,
+        ${alias}.sort_nu,
+        ${alias}.is_destory,
+        ${alias}.destory_uid,
+        ${alias}.destory_at,
+        ${alias}.update_at,
+        ${alias}.update_uid,
+        ${alias}.create_at,
+        ${alias}.create_uid,
+        ${alias}.theme_src_img
+    </sql>
+
+    <sql id="themesDtoColumns">
+        ${alias}.id,
+        ${alias}.master_item_id,
+        ${alias}.theme_img,
+        ${alias}.theme_url,
+        ${alias}.sort_nu
+    </sql>
+
+    <sql id="themesListDtoColumns">
+        ${alias}.theme_id,
+        ${alias}.item_id,
+        ${alias}.item_img,
+        ${alias}.item_url,
+        ${alias}.item_title,
+        ${alias}.item_price,
+        ${alias}.item_cost_price,
+        ${alias}.item_discount,
+        ${alias}.item_sold_amount,
+        ${alias}.is_master_item,
+        ${alias}.master_item_tag,
+        ${alias}.collect_count,
+        ${alias}.master_item_img
+    </sql>
+
+
+    <select id="getThemeItemByThemeId" resultType="java.util.List" parameterType="java.lang.Long">
+        select
+        <include refid="themeItemColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from theme_item t where theme_id=#{value}
+    </select>
+
+    <select id="getThemeListDtoByThemeId" resultMap="themeListDtoMap" parameterType="java.lang.Long">
+        select
+        <include refid="themesListDtoColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from theme_item t where theme_id=#{value}
+    </select>
+
+    <select id="getThemesById" resultType="domain.Theme" parameterType="java.lang.Long">
+        select
+        <include refid="themesColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from themes t where id=#{value}
+    </select>
+
+    <select id="getThemeAll" resultMap="themeMap" parameterType="map">
+        select
+        <include refid="themesColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from themes t
+        ORDER BY t.create_at DESC, t.sort_nu
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getThemeIosDto" resultMap="themeDtoMap" parameterType="map">
+        select
+        <include refid="themesDtoColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from themes t
+        ORDER BY t.create_at DESC, t.sort_nu
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getThemeItemAll" resultType="java.util.List">
+        select
+        <include refid="themeItemColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from theme_item t where 1=1
+    </select>
+</mapper>
