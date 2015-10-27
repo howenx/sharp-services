@@ -38,6 +38,10 @@ public class Application extends Controller {
     //图片服务器url
     public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
 
+
+    //发布服务器url
+    public static final String DEPLOY_URL = play.Play.application().configuration().getString("deploy.server.url");
+
     @Inject
     private ThemeService themeService;
 
@@ -73,7 +77,7 @@ public class Application extends Controller {
         for (int i=0;i<themeList.size();i++) {
             ThemeDto themeDto = themeList.get(i);
             themeDto.setThemeImg(IMAGE_URL+themeDto.getThemeImg());
-            themeDto.setThemeUrl(IMAGE_URL+"/getthemelist/"+themeDto.getId());
+            themeDto.setThemeUrl(DEPLOY_URL+"/getthemelist/"+themeDto.getId());
             themeList.set(i,themeDto);
         }
 
