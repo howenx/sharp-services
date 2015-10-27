@@ -86,8 +86,22 @@ public class Application extends Controller {
 
     public Result getThemeList(Long themeId){
 
-        List<ThemeListDto> themeListDtoList = themeService.getThemeList(themeId);
+        List<ThemeListDto> themeListDtoList = themeService.getThemeList(Long.valueOf(100033));
 
+        for (int i=0;i<themeListDtoList.size();i++) {
+            ThemeListDto themeListDto = themeListDtoList.get(i);
+            themeListDto.setItemImg(IMAGE_URL + themeListDto.getItemImg());
+            themeListDto.setItemUrl(DEPLOY_URL + "/getitem/" + themeListDto.getItemId());
+
+//            if(themeListDto.getMasterItemTag()!=null && !themeListDto.getMasterItemTag().equals("") && !themeListDto.getMasterItemTag().equals("null")){
+//                themeListDto.setMasterItemTag(themeListDto.getMasterItemTag());
+//                Logger.error(Json.parse(themeListDto.getMasterItemTag()).toString());
+//            }
+            if(themeListDto.getMasterItemImg()!=null && !themeListDto.getMasterItemImg().equals("") && !themeListDto.getMasterItemImg().equals("null")){
+                themeListDto.setMasterItemImg(IMAGE_URL + themeListDto.getMasterItemImg());
+            }
+            themeListDtoList.set(i,themeListDto);
+        }
         return ok(Json.toJson(themeListDtoList));
     }
 }

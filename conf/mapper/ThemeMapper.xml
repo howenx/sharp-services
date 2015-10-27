@@ -64,7 +64,7 @@
         <include refid="themesListDtoColumns">
             <property name="alias" value="t"/>
         </include>
-        from theme_item t where theme_id=#{value}
+        from theme_item t where theme_id=#{value} order by t.is_master_item DESC,t.sort_nu
     </select>
 
 
