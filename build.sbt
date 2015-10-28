@@ -62,6 +62,3 @@ resolvers ++= Seq(
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
-mappings in Universal ++=
-  (baseDirectory.value / "data.mv.db" get) map
-    (x => x -> (x.getName))
