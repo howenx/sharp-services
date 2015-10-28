@@ -1,9 +1,6 @@
 package mapper;
 
-import domain.Theme;
-import domain.ThemeDto;
-import domain.ThemeItem;
-import domain.ThemeListDto;
+import domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -14,17 +11,9 @@ import java.util.Map;
  */
 public interface ThemeMapper {
 
-
-    List<ThemeItem> getThemeItemByThemeId(Long itemId);
-
-    Theme getThemesById(Long id);
-
-    List<Theme> getThemeAll(Map<String,Integer> params);
-
-    List<ThemeItem> getThemeItemAll();
-
     List<ThemeDto> getThemeIosDto(Map<String,Integer> params);
 
     List<ThemeListDto> getThemeListDtoByThemeId(Long themeId);
 
+    List<Slider> getSlider();
 }

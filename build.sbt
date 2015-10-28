@@ -48,7 +48,6 @@ libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
 resolvers ++= Seq(
   "Apache" at "http://repo1.maven.org/maven2/",
   "jBCrypt Repository" at "http://repo1.maven.org/maven2/org/",
-  "Sonatype OSS Snasphots" at "http://oss.sonatype.org/content/repositories/snapshots",
   "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 )
 

@@ -62,7 +62,6 @@ public class PlayMybatisModule extends PrivateModule{
             this.db = db;
         }
 
-
         @Override
         public DataSource get() {
             return db.getDatabase("dev").getDataSource();

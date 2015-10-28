@@ -1,5 +1,6 @@
 package service;
 
+import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
 import mapper.ThemeMapper;
@@ -33,5 +34,10 @@ public class ThemeServiceImpl implements ThemeService{
     public List<ThemeListDto> getThemeList(Long themeId) {
 
         return themeMapper.getThemeListDtoByThemeId(themeId);
+    }
+
+    @Override
+    public List<Slider> getSlider() {
+        return themeMapper.getSlider();
     }
 }

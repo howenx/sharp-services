@@ -1,16 +1,22 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
 import play.libs.Json;
 import play.mvc.*;
 
+import scala.util.parsing.json.JSONObject;
 import service.ThemeService;
 import views.html.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Application extends Controller {
@@ -43,7 +49,19 @@ public class Application extends Controller {
             themeList.set(i,themeDto);
         }
 
-        return ok(Json.toJson(themeList));
+        List<Slider> sliderList = themeService.getSlider();
+        List<String> sliderImgList = new ArrayList<String>();
+
+        for (int i=0;i<sliderList.size();i++) {
+            Slider slider = sliderList.get(i);
+            sliderImgList.add(IMAGE_URL + slider.getImg());
+        }
+
+        ObjectNode result = Json.newObject();
+        result.putPOJO("slider", Json.toJson(sliderImgList));
+        result.putPOJO("theme",Json.toJson(themeList));
+
+        return ok(result);
     }
 
     public Result getThemeList(Long themeId){
@@ -58,6 +76,7 @@ public class Application extends Controller {
             if(null!=themeListDto.getMasterItemImg() && !("").equals(themeListDto.getMasterItemImg()) && !"null".equals(themeListDto.getMasterItemImg())){
                 themeListDto.setMasterItemImg(IMAGE_URL + themeListDto.getMasterItemImg());
             }
+
             themeListDtoList.set(i,themeListDto);
         }
         return ok(Json.toJson(themeListDtoList));

@@ -34,6 +34,13 @@
         <result column="master_item_img" property="masterItemImg" javaType="String"/>
     </resultMap>
 
+    <resultMap id="sliderMap" type="domain.Slider">
+        <id property="id" column="id" javaType="Long"/>
+        <result column="img" property="img" javaType="String"/>
+        <result column="sort_nu" property="sortNu" javaType="Integer"/>
+        <result column="create_at" property="createAt" javaType="java.sql.Timestamp"/>
+    </resultMap>
+
     <sql id="themesDtoColumns">
         ${alias}.id,
         ${alias}.master_item_id,
@@ -58,6 +65,12 @@
         ${alias}.master_item_img
     </sql>
 
+    <sql id="slider">
+        ${alias}.id,
+        ${alias}.img,
+        ${alias}.sort_nu,
+        ${alias}.create_at
+    </sql>
 
     <select id="getThemeListDtoByThemeId" resultMap="themeListDtoMap" parameterType="java.lang.Long">
         select
@@ -76,6 +89,15 @@
         from themes t
         ORDER BY t.create_at DESC, t.sort_nu
         LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getSlider" resultMap="sliderMap" >
+        select
+        <include refid="slider">
+            <property name="alias" value="t"/>
+        </include>
+        from slider t
+        ORDER BY t.create_at DESC, t.sort_nu
     </select>
 
 </mapper>

@@ -1,5 +1,6 @@
 package service;
 
+import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
 
@@ -15,4 +16,5 @@ public interface ThemeService {
 
     List<ThemeListDto> getThemeList(Long itemId);
 
+    List<Slider> getSlider();
 }
