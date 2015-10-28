@@ -49,6 +49,7 @@ public class Application extends Controller {
             themeList.set(i,themeDto);
         }
 
+        //slider取出链接
         List<Slider> sliderList = themeService.getSlider();
         List<String> sliderImgList = new ArrayList<String>();
 
@@ -57,6 +58,7 @@ public class Application extends Controller {
             sliderImgList.add(IMAGE_URL + slider.getImg());
         }
 
+        //组合结果集
         ObjectNode result = Json.newObject();
         result.putPOJO("slider", Json.toJson(sliderImgList));
         result.putPOJO("theme",Json.toJson(themeList));
@@ -68,6 +70,7 @@ public class Application extends Controller {
 
         List<ThemeListDto> themeListDtoList = themeService.getThemeList(Long.valueOf(100033));
 
+        //对图片url和请求链接进行相应更改
         for (int i=0;i<themeListDtoList.size();i++) {
             ThemeListDto themeListDto = themeListDtoList.get(i);
             themeListDto.setItemImg(IMAGE_URL + themeListDto.getItemImg());
