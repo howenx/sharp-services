@@ -1,5 +1,6 @@
+**/.DS_Store
+**/.log
 test/
-data.trace.db
 logs
 target
 /app-2.11
