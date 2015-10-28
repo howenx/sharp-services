@@ -27,13 +27,11 @@ public class Application extends Controller {
     //图片服务器url
     public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
 
-
     //发布服务器url
     public static final String DEPLOY_URL = play.Play.application().configuration().getString("deploy.server.url");
 
     @Inject
     private ThemeService themeService;
-
 
     public Result getThemes(int pageNum){
 
@@ -43,6 +41,7 @@ public class Application extends Controller {
         List<ThemeDto> themeList = themeService.getThemes(PAGE_SIZE,offset);
 
         for (int i=0;i<themeList.size();i++) {
+
             ThemeDto themeDto = themeList.get(i);
             themeDto.setThemeImg(IMAGE_URL+themeDto.getThemeImg());
             themeDto.setThemeUrl(DEPLOY_URL+"/getthemelist/"+themeDto.getId());
@@ -72,6 +71,7 @@ public class Application extends Controller {
 
         //对图片url和请求链接进行相应更改
         for (int i=0;i<themeListDtoList.size();i++) {
+
             ThemeListDto themeListDto = themeListDtoList.get(i);
             themeListDto.setItemImg(IMAGE_URL + themeListDto.getItemImg());
             themeListDto.setItemUrl(DEPLOY_URL + "/getitem/" + themeListDto.getItemId());
