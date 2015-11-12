@@ -41,6 +41,40 @@
         ${alias}.create_at
     </sql>
 
+    <sql id = "itemByIdColumns">
+        ${alias}.id,
+        ${alias}.item_title,
+        ${alias}.on_shelves_at,
+        ${alias}.off_shelves_at,
+        ${alias}.item_detail_imgs,
+        ${alias}.item_features,
+        ${alias}.theme_id,
+        ${alias}.state,
+        ${alias}.or_free_ship,
+        ${alias}.delivery_area,
+        ${alias}.delivery_time,
+        ${alias}.or_restrict_buy,
+        ${alias}.restrict_amount,
+        ${alias}.or_shopping_poll,
+        ${alias}.share_img,
+        ${alias}.share_url,
+        ${alias}.collect_count,
+        ${alias}.item_notice
+    </sql>
+
+    <sql id = "invListColumns">
+        ${alias}.id,
+        ${alias}.item_color,
+        ${alias}.item_size,
+        ${alias}.item_price,
+        ${alias}.item_cost_price,
+        ${alias}.item_discout,
+        ${alias}.rest_amount,
+        ${alias}.or_sold_out,
+        ${alias}.item_preview_imgs,
+        ${alias}.or_master_inv
+    </sql>
+
     <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
         select
         <include refid="themesListDtoColumns">
@@ -67,6 +101,34 @@
         </include>
         from slider t
         ORDER BY t.create_at DESC, t.sort_nu
+    </select>
+
+    <select id="getItemById" resultType="domain.Item" parameterType="domain.Item">
+        select
+        <include refid="itemByIdColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from items t
+        where 1=1
+        <if test="id!=null and id !=''">
+            and t.id = ${id}
+        </if>
+        ORDER BY t.create_at DESC
+    </select>
+
+    <select id="getInvList" resultType="domain.Inventory" parameterType="domain.Item">
+        select
+        <include refid="invListColumns">
+            <property name="alias" value="t"/>
+        </include>,
+        (select d.item_title from items d where d.id=t.item_id) as invTitle,
+        (select d.collect_count from items d where d.id=t.item_id) as invCollection
+        from inventories t
+        where 1=1
+        <if test="id != null and id!=''">
+            and t.item_id = ${id}
+        </if>
+        ORDER BY t.item_color
     </select>
 
 </mapper>

@@ -6,8 +6,9 @@
 
 
 # Theme service
-GET     /getthemes/$pageNum<[0-9]+>         controllers.Application.getThemes(pageNum:Int)
-GET     /getthemelist/:themeId              controllers.Application.getThemeList(themeId:Long)
+GET     /index/$pageNum<[0-9]+>                     controllers.Application.getIndex(pageNum:Int)
+GET     /topic/list/$themeId<[0-9]+>                controllers.Application.getThemeList(themeId:Long)
+GET     /comm/detail/$id<[0-9]+>                    controllers.Application.getItemDetail(id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                               controllers.Assets.versioned(path="/public", file: Asset)

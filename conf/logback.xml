@@ -29,7 +29,6 @@
     <logger name="play" level="INFO" />
 
     <logger name="application" level="INFO" />
-    <logger name="service" level="INFO" />
     <logger name="dao" level="DEBUG" />
     <logger name="mapper" level="DEBUG" />
 

@@ -27,7 +27,7 @@ public class Application extends Controller {
     @Inject
     private ThemeService themeService;
 
-    public Result getThemes(int pageNum){
+    public Result getIndex(int pageNum){
 
         //计算从第几条开始取数据
         int offset = (pageNum-1)*PAGE_SIZE;
@@ -38,7 +38,7 @@ public class Application extends Controller {
 
             ThemeDto themeDto = themeList.get(i);
             themeDto.setThemeImg(IMAGE_URL+themeDto.getThemeImg());
-            themeDto.setThemeUrl(DEPLOY_URL+"/getthemelist/"+themeDto.getId());
+            themeDto.setThemeUrl(DEPLOY_URL+"/topic/list/"+themeDto.getId());
             themeList.set(i,themeDto);
         }
 
@@ -68,7 +68,7 @@ public class Application extends Controller {
 
             ThemeListDto themeListDto = themeListDtoList.get(i);
             themeListDto.setItemImg(IMAGE_URL + themeListDto.getItemImg());
-            themeListDto.setItemUrl(DEPLOY_URL + "/getitem/" + themeListDto.getItemId());
+            themeListDto.setItemUrl(DEPLOY_URL + "/comm/detail/" + themeListDto.getItemId());
 
             if(null!=themeListDto.getMasterItemImg() && !("").equals(themeListDto.getMasterItemImg()) && !"null".equals(themeListDto.getMasterItemImg())){
                 themeListDto.setMasterItemImg(IMAGE_URL + themeListDto.getMasterItemImg());
@@ -77,5 +77,9 @@ public class Application extends Controller {
             themeListDtoList.set(i,themeListDto);
         }
         return ok(Json.toJson(themeListDtoList));
+    }
+
+    public Result getItemDetail(Long id){
+        return ok(Json.toJson(themeService.getItemDetail(id)));
     }
 }

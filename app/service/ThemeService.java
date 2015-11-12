@@ -5,6 +5,7 @@ import domain.ThemeDto;
 import domain.ThemeListDto;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * For homepage theme list display function.
@@ -17,4 +18,6 @@ public interface ThemeService {
     List<ThemeListDto> getThemeList(Long itemId);
 
     List<Slider> getSlider();
+
+    Map<String,Object> getItemDetail(Long id);
 }

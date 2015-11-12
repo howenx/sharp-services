@@ -16,4 +16,8 @@ public interface ThemeMapper {
     List<ThemeListDto> getThemeListDtoByThemeId(Long themeId);
 
     List<Slider> getSlider();
+
+    Item getItemById(Item item);
+
+    List<Inventory> getInvList(Item item);
 }
