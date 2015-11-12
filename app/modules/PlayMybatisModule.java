@@ -29,9 +29,9 @@ public class PlayMybatisModule extends PrivateModule{
             @Override
             protected void initialize() {
                 environmentId("dev");
-                bindConstant().annotatedWith(
-                        Names.named("mapUnderscoreToCamelCase")).
-                        to(true);
+                //开启驼峰自动映射
+                mapUnderscoreToCamelCase(true);
+
                 bindDataSourceProviderType(DevDataSourceProvider.class);
                 bindTransactionFactoryType(JdbcTransactionFactory.class);
                 addMapperClass(ThemeMapper.class);

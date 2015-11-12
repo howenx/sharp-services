@@ -24,14 +24,17 @@ public class ThemeItem implements Serializable {
     private Integer     likeCount;   	//商品点赞数
     private Integer     collectCount;   //商品收藏数
     private Integer     sortNu;   		//商品排序
-    private Boolean     isDestory;      //是否删除,
+    private Boolean     orDestory;      //是否删除,
     private Long        destoryUid;   	//删除操作用户id,
     private Timestamp   updateAt;    	//更新时间,
     private Long        updateUid;    	//更新操作用户id,
     private Timestamp   createAt;     	//创建时间
     private Long        createUid;    	//创建操作用户id
 
-    public ThemeItem(Long id, Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, Double itemPrice, Double itemCostPrice, Double itemDiscount, Integer itemSoldAmount, Boolean isMasterItem, String masterItemTag, Integer likeCount, Integer collectCount, Integer sortNu, Boolean isDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
+    public ThemeItem() {
+    }
+
+    public ThemeItem(Long id, Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, Double itemPrice, Double itemCostPrice, Double itemDiscount, Integer itemSoldAmount, Boolean isMasterItem, String masterItemTag, Integer likeCount, Integer collectCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
         this.id = id;
         this.themeId = themeId;
         this.itemId = itemId;
@@ -47,39 +50,12 @@ public class ThemeItem implements Serializable {
         this.likeCount = likeCount;
         this.collectCount = collectCount;
         this.sortNu = sortNu;
-        this.isDestory = isDestory;
+        this.orDestory = orDestory;
         this.destoryUid = destoryUid;
         this.updateAt = updateAt;
         this.updateUid = updateUid;
         this.createAt = createAt;
         this.createUid = createUid;
-    }
-
-    @Override
-    public String toString() {
-        return "ThemeItem{" +
-                "id=" + id +
-                ", themeId=" + themeId +
-                ", itemId=" + itemId +
-                ", itemImg='" + itemImg + '\'' +
-                ", itemUrl='" + itemUrl + '\'' +
-                ", itemTitle='" + itemTitle + '\'' +
-                ", itemPrice=" + itemPrice +
-                ", itemCostPrice=" + itemCostPrice +
-                ", itemDiscount=" + itemDiscount +
-                ", itemSoldAmount=" + itemSoldAmount +
-                ", isMasterItem=" + isMasterItem +
-                ", masterItemTag='" + masterItemTag + '\'' +
-                ", likeCount=" + likeCount +
-                ", collectCount=" + collectCount +
-                ", sortNu=" + sortNu +
-                ", isDestory=" + isDestory +
-                ", destoryUid=" + destoryUid +
-                ", updateAt=" + updateAt +
-                ", updateUid=" + updateUid +
-                ", createAt=" + createAt +
-                ", createUid=" + createUid +
-                '}';
     }
 
     public Long getId() {
@@ -162,12 +138,12 @@ public class ThemeItem implements Serializable {
         this.itemSoldAmount = itemSoldAmount;
     }
 
-    public Boolean getIsMasterItem() {
+    public Boolean getMasterItem() {
         return isMasterItem;
     }
 
-    public void setIsMasterItem(Boolean isMasterItem) {
-        this.isMasterItem = isMasterItem;
+    public void setMasterItem(Boolean masterItem) {
+        isMasterItem = masterItem;
     }
 
     public String getMasterItemTag() {
@@ -202,12 +178,12 @@ public class ThemeItem implements Serializable {
         this.sortNu = sortNu;
     }
 
-    public Boolean getIsDestory() {
-        return isDestory;
+    public Boolean getOrDestory() {
+        return orDestory;
     }
 
-    public void setIsDestory(Boolean isDestory) {
-        this.isDestory = isDestory;
+    public void setOrDestory(Boolean orDestory) {
+        this.orDestory = orDestory;
     }
 
     public Long getDestoryUid() {
@@ -248,5 +224,32 @@ public class ThemeItem implements Serializable {
 
     public void setCreateUid(Long createUid) {
         this.createUid = createUid;
+    }
+
+    @Override
+    public String toString() {
+        return "ThemeItem{" +
+                "id=" + id +
+                ", themeId=" + themeId +
+                ", itemId=" + itemId +
+                ", itemImg='" + itemImg + '\'' +
+                ", itemUrl='" + itemUrl + '\'' +
+                ", itemTitle='" + itemTitle + '\'' +
+                ", itemPrice=" + itemPrice +
+                ", itemCostPrice=" + itemCostPrice +
+                ", itemDiscount=" + itemDiscount +
+                ", itemSoldAmount=" + itemSoldAmount +
+                ", isMasterItem=" + isMasterItem +
+                ", masterItemTag='" + masterItemTag + '\'' +
+                ", likeCount=" + likeCount +
+                ", collectCount=" + collectCount +
+                ", sortNu=" + sortNu +
+                ", orDestory=" + orDestory +
+                ", destoryUid=" + destoryUid +
+                ", updateAt=" + updateAt +
+                ", updateUid=" + updateUid +
+                ", createAt=" + createAt +
+                ", createUid=" + createUid +
+                '}';
     }
 }

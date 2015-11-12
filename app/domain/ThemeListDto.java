@@ -18,12 +18,15 @@ public class ThemeListDto implements Serializable {
     private BigDecimal  itemCostPrice;  //商品原价
     private BigDecimal  itemDiscount;   //商品折扣
     private Integer     itemSoldAmount; //商品销量
-    private Boolean     isMasterItem;   //是否是主题主打宣传商品
+    private Boolean     orMasterItem;   //是否是主题主打宣传商品
     private String      masterItemTag;	//如果是主打宣传商品，会需要tag json串
     private Integer     collectCount;   //商品收藏数
     private String      masterItemImg;  //主题属宣传商品图片url
 
-    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean isMasterItem, String masterItemTag, Integer collectCount, String masterItemImg) {
+    public ThemeListDto() {
+    }
+
+    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemTag, Integer collectCount, String masterItemImg) {
         this.themeId = themeId;
         this.itemId = itemId;
         this.itemImg = itemImg;
@@ -33,29 +36,10 @@ public class ThemeListDto implements Serializable {
         this.itemCostPrice = itemCostPrice;
         this.itemDiscount = itemDiscount;
         this.itemSoldAmount = itemSoldAmount;
-        this.isMasterItem = isMasterItem;
+        this.orMasterItem = orMasterItem;
         this.masterItemTag = masterItemTag;
         this.collectCount = collectCount;
         this.masterItemImg = masterItemImg;
-    }
-
-    @Override
-    public String toString() {
-        return "ThemeListDto{" +
-                "themeId=" + themeId +
-                ", itemId=" + itemId +
-                ", itemImg='" + itemImg + '\'' +
-                ", itemUrl='" + itemUrl + '\'' +
-                ", itemTitle='" + itemTitle + '\'' +
-                ", itemPrice=" + itemPrice +
-                ", itemCostPrice=" + itemCostPrice +
-                ", itemDiscount=" + itemDiscount +
-                ", itemSoldAmount=" + itemSoldAmount +
-                ", isMasterItem=" + isMasterItem +
-                ", masterItemTag='" + masterItemTag + '\'' +
-                ", collectCount=" + collectCount +
-                ", masterItemImg='" + masterItemImg + '\'' +
-                '}';
     }
 
     public Long getThemeId() {
@@ -130,12 +114,12 @@ public class ThemeListDto implements Serializable {
         this.itemSoldAmount = itemSoldAmount;
     }
 
-    public Boolean getIsMasterItem() {
-        return isMasterItem;
+    public Boolean getOrMasterItem() {
+        return orMasterItem;
     }
 
-    public void setIsMasterItem(Boolean isMasterItem) {
-        this.isMasterItem = isMasterItem;
+    public void setOrMasterItem(Boolean orMasterItem) {
+        this.orMasterItem = orMasterItem;
     }
 
     public String getMasterItemTag() {
@@ -160,5 +144,24 @@ public class ThemeListDto implements Serializable {
 
     public void setMasterItemImg(String masterItemImg) {
         this.masterItemImg = masterItemImg;
+    }
+
+    @Override
+    public String toString() {
+        return "ThemeListDto{" +
+                "themeId=" + themeId +
+                ", itemId=" + itemId +
+                ", itemImg='" + itemImg + '\'' +
+                ", itemUrl='" + itemUrl + '\'' +
+                ", itemTitle='" + itemTitle + '\'' +
+                ", itemPrice=" + itemPrice +
+                ", itemCostPrice=" + itemCostPrice +
+                ", itemDiscount=" + itemDiscount +
+                ", itemSoldAmount=" + itemSoldAmount +
+                ", orMasterItem=" + orMasterItem +
+                ", masterItemTag='" + masterItemTag + '\'' +
+                ", collectCount=" + collectCount +
+                ", masterItemImg='" + masterItemImg + '\'' +
+                '}';
     }
 }

@@ -10,37 +10,6 @@
     -->
     <!--<cache/>-->
 
-    <resultMap id="themeDtoMap" type="domain.ThemeDto">
-        <id property="id" column="id" javaType="Long"/>
-        <result column="master_item_id" property="masterItemId" javaType="Long"/>
-        <result column="theme_img" property="themeImg" javaType="String"/>
-        <result column="theme_url" property="themeUrl" javaType="String"/>
-        <result column="sort_nu" property="sortNu" javaType="Integer"/>
-    </resultMap>
-
-    <resultMap id="themeListDtoMap" type="domain.ThemeListDto">
-        <result column="theme_id" property="themeId" javaType="Long"/>
-        <result column="item_id" property="itemId" javaType="Long"/>
-        <result column="item_img" property="itemImg" javaType="String"/>
-        <result column="item_url" property="itemUrl" javaType="String"/>
-        <result column="item_title" property="itemTitle" javaType="String"/>
-        <result column="item_price" property="itemPrice" javaType="BigDecimal"/>
-        <result column="item_cost_price" property="itemCostPrice" javaType="BigDecimal"/>
-        <result column="item_discount" property="itemDiscount" javaType="BigDecimal"/>
-        <result column="item_sold_amount" property="itemSoldAmount" javaType="Integer"/>
-        <result column="is_master_item" property="isMasterItem" javaType="Boolean"/>
-        <result column="master_item_tag" property="masterItemTag" javaType="String"/>
-        <result column="collect_count" property="collectCount" javaType="Integer"/>
-        <result column="master_item_img" property="masterItemImg" javaType="String"/>
-    </resultMap>
-
-    <resultMap id="sliderMap" type="domain.Slider">
-        <id property="id" column="id" javaType="Long"/>
-        <result column="img" property="img" javaType="String"/>
-        <result column="sort_nu" property="sortNu" javaType="Integer"/>
-        <result column="create_at" property="createAt" javaType="java.sql.Timestamp"/>
-    </resultMap>
-
     <sql id="themesDtoColumns">
         ${alias}.id,
         ${alias}.master_item_id,
@@ -59,7 +28,7 @@
         ${alias}.item_cost_price,
         ${alias}.item_discount,
         ${alias}.item_sold_amount,
-        ${alias}.is_master_item,
+        ${alias}.or_master_item,
         ${alias}.master_item_tag,
         ${alias}.collect_count,
         ${alias}.master_item_img
@@ -72,26 +41,26 @@
         ${alias}.create_at
     </sql>
 
-    <select id="getThemeListDtoByThemeId" resultMap="themeListDtoMap" parameterType="java.lang.Long">
+    <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
         select
         <include refid="themesListDtoColumns">
             <property name="alias" value="t"/>
         </include>
-        from theme_item t where theme_id=#{value} order by t.is_master_item DESC,t.sort_nu
+        from theme_item t where theme_id=${value} order by t.or_master_item DESC,t.sort_nu
     </select>
 
 
-    <select id="getThemeIosDto" resultMap="themeDtoMap" parameterType="map">
+    <select id="getThemeIosDto" resultType="domain.ThemeDto" parameterType="map">
         select
         <include refid="themesDtoColumns">
             <property name="alias" value="t"/>
         </include>
         from themes t
         ORDER BY t.create_at DESC, t.sort_nu
-        LIMIT #{pageSize} OFFSET #{offset}
+        LIMIT ${pageSize} OFFSET ${offset}
     </select>
 
-    <select id="getSlider" resultMap="sliderMap" >
+    <select id="getSlider" resultType="domain.Slider" >
         select
         <include refid="slider">
             <property name="alias" value="t"/>

@@ -1,6 +1,6 @@
 name := """style-services"""
 
-version := "0.0.1"
+version := "0.1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -50,7 +50,8 @@ resolvers ++= Seq(
   "jBCrypt Repository" at "http://repo1.maven.org/maven2/org/",
   "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 )
-
+// 检查代码中使用的过时类细节
+javacOptions += "-Xlint:deprecation"
 //// "Add mapper xml files to classpath" -- blank line necessary for SBT
 //unmanagedResourceDirectories in Compile <+= baseDirectory(_ / "app")
 //

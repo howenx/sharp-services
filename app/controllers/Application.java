@@ -1,21 +1,15 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
 import play.libs.Json;
-import play.mvc.*;
-
-import scala.util.parsing.json.JSONObject;
+import play.mvc.Controller;
+import play.mvc.Result;
 import service.ThemeService;
-import views.html.*;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.List;
 

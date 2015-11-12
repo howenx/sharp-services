@@ -25,7 +25,7 @@ public class Theme implements Serializable {
     private Integer     itemCount;   							//主题包含商品数量
     private Integer     themeTagCount;   						//主题图片标签数
     private Integer     sortNu;									//排序编号
-    private Boolean     isDestory;    							//是否删除,
+    private Boolean     orDestory;    							//是否删除,
     private Long        destoryUid;   							//删除操作用户id,
     private Timestamp   destoryAt;    							//更新时间,
     private Timestamp   updateAt;    							//更新时间,
@@ -34,59 +34,7 @@ public class Theme implements Serializable {
     private Long        createUid;    							//创建操作用户id
     private String      themeSrcImg;                            //主题底图
 
-    public Theme(Long id, Long masterItemId, String title, String themeDesc, Timestamp startAt, Timestamp endAt, BigDecimal themeDiscountUp, BigDecimal itemPriceTop, BigDecimal itemPriceLow, String themeImg, String themeUrl, String themeTags, Integer itemCount, Integer themeTagCount, Integer sortNu, Boolean isDestory, Long destoryUid, Timestamp destoryAt, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid, String themeSrcImg) {
-        this.id = id;
-        this.masterItemId = masterItemId;
-        this.title = title;
-        this.themeDesc = themeDesc;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.themeDiscountUp = themeDiscountUp;
-        this.itemPriceTop = itemPriceTop;
-        this.itemPriceLow = itemPriceLow;
-        this.themeImg = themeImg;
-        this.themeUrl = themeUrl;
-        this.themeTags = themeTags;
-        this.itemCount = itemCount;
-        this.themeTagCount = themeTagCount;
-        this.sortNu = sortNu;
-        this.isDestory = isDestory;
-        this.destoryUid = destoryUid;
-        this.destoryAt = destoryAt;
-        this.updateAt = updateAt;
-        this.updateUid = updateUid;
-        this.createAt = createAt;
-        this.createUid = createUid;
-        this.themeSrcImg = themeSrcImg;
-    }
-
-    @Override
-    public String toString() {
-        return "Theme{" +
-                "id=" + id +
-                ", masterItemId=" + masterItemId +
-                ", title='" + title + '\'' +
-                ", themeDesc='" + themeDesc + '\'' +
-                ", startAt=" + startAt +
-                ", endAt=" + endAt +
-                ", themeDiscountUp=" + themeDiscountUp +
-                ", itemPriceTop=" + itemPriceTop +
-                ", itemPriceLow=" + itemPriceLow +
-                ", themeImg='" + themeImg + '\'' +
-                ", themeUrl='" + themeUrl + '\'' +
-                ", themeTags='" + themeTags + '\'' +
-                ", itemCount=" + itemCount +
-                ", themeTagCount=" + themeTagCount +
-                ", sortNu=" + sortNu +
-                ", isDestory=" + isDestory +
-                ", destoryUid=" + destoryUid +
-                ", destoryAt=" + destoryAt +
-                ", updateAt=" + updateAt +
-                ", updateUid=" + updateUid +
-                ", createAt=" + createAt +
-                ", createUid=" + createUid +
-                ", themeSrcImg='" + themeSrcImg + '\'' +
-                '}';
+    public Theme() {
     }
 
     public Long getId() {
@@ -209,12 +157,12 @@ public class Theme implements Serializable {
         this.sortNu = sortNu;
     }
 
-    public Boolean getIsDestory() {
-        return isDestory;
+    public Boolean getOrDestory() {
+        return orDestory;
     }
 
-    public void setIsDestory(Boolean isDestory) {
-        this.isDestory = isDestory;
+    public void setOrDestory(Boolean orDestory) {
+        this.orDestory = orDestory;
     }
 
     public Long getDestoryUid() {
@@ -271,5 +219,60 @@ public class Theme implements Serializable {
 
     public void setThemeSrcImg(String themeSrcImg) {
         this.themeSrcImg = themeSrcImg;
+    }
+
+    public Theme(Long id, Long masterItemId, String title, String themeDesc, Timestamp startAt, Timestamp endAt, BigDecimal themeDiscountUp, BigDecimal itemPriceTop, BigDecimal itemPriceLow, String themeImg, String themeUrl, String themeTags, Integer itemCount, Integer themeTagCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp destoryAt, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid, String themeSrcImg) {
+        this.id = id;
+        this.masterItemId = masterItemId;
+        this.title = title;
+        this.themeDesc = themeDesc;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.themeDiscountUp = themeDiscountUp;
+        this.itemPriceTop = itemPriceTop;
+        this.itemPriceLow = itemPriceLow;
+        this.themeImg = themeImg;
+        this.themeUrl = themeUrl;
+        this.themeTags = themeTags;
+        this.itemCount = itemCount;
+        this.themeTagCount = themeTagCount;
+        this.sortNu = sortNu;
+        this.orDestory = orDestory;
+        this.destoryUid = destoryUid;
+        this.destoryAt = destoryAt;
+        this.updateAt = updateAt;
+        this.updateUid = updateUid;
+        this.createAt = createAt;
+        this.createUid = createUid;
+        this.themeSrcImg = themeSrcImg;
+    }
+
+    @Override
+    public String toString() {
+        return "Theme{" +
+                "id=" + id +
+                ", masterItemId=" + masterItemId +
+                ", title='" + title + '\'' +
+                ", themeDesc='" + themeDesc + '\'' +
+                ", startAt=" + startAt +
+                ", endAt=" + endAt +
+                ", themeDiscountUp=" + themeDiscountUp +
+                ", itemPriceTop=" + itemPriceTop +
+                ", itemPriceLow=" + itemPriceLow +
+                ", themeImg='" + themeImg + '\'' +
+                ", themeUrl='" + themeUrl + '\'' +
+                ", themeTags='" + themeTags + '\'' +
+                ", itemCount=" + itemCount +
+                ", themeTagCount=" + themeTagCount +
+                ", sortNu=" + sortNu +
+                ", orDestory=" + orDestory +
+                ", destoryUid=" + destoryUid +
+                ", destoryAt=" + destoryAt +
+                ", updateAt=" + updateAt +
+                ", updateUid=" + updateUid +
+                ", createAt=" + createAt +
+                ", createUid=" + createUid +
+                ", themeSrcImg='" + themeSrcImg + '\'' +
+                '}';
     }
 }
