@@ -1,16 +1,9 @@
 package service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
 import mapper.ThemeMapper;
-import play.Logger;
-import play.libs.Json;
-import scala.util.parsing.json.JSONObject$;
 
 import javax.inject.Inject;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +45,7 @@ public class ThemeServiceImpl implements ThemeService{
      * @return  map
      */
     @Override
-    public Map<String,Object> getItemDetail(Long id) {
+    public Map<String,Object> getItemDetail(Long id,Long skuId) {
         Item item = new Item();
         item.setId(id);
 //        Logger.error(themeMapper.getItemById(item).toString());
@@ -69,6 +62,21 @@ public class ThemeServiceImpl implements ThemeService{
         //逻辑:检查除过第一个元素外,其余的每个颜色与上一个进行比较,如果不一样,则拷贝当前list到一个新list,然后放到map中
 
         for(int i=0;i<list.size();i++){
+
+            //拼接sku链接
+            if(null!=list.get(i).getInvUrl() && !"".equals(list.get(i).getInvUrl())){
+                list.get(i).setInvUrl(controllers.Application.DEPLOY_URL+ list.get(i).getInvUrl());
+            }
+            else {
+                list.get(i).setInvUrl(controllers.Application.DEPLOY_URL+ "/comm/detail/"+id+"/"+list.get(i).getId());
+            }
+
+            //判断是否是当前需要显示的sku
+            if(!skuId.equals(Long.valueOf(-1)) && !list.get(i).getId().equals(skuId)){
+                list.get(i).setOrMasterInv(false);
+            }else if (list.get(i).getId().equals( skuId)){
+                list.get(i).setOrMasterInv(true);
+            }
 
             colorList.add(list.get(i));
 

@@ -44,7 +44,7 @@ public class Application extends Controller {
 
         //slider取出链接
         List<Slider> sliderList = themeService.getSlider();
-        List<String> sliderImgList = new ArrayList<String>();
+        List<String> sliderImgList = new ArrayList<>();
 
         for (int i=0;i<sliderList.size();i++) {
             Slider slider = sliderList.get(i);
@@ -79,7 +79,7 @@ public class Application extends Controller {
         return ok(Json.toJson(themeListDtoList));
     }
 
-    public Result getItemDetail(Long id){
-        return ok(Json.toJson(themeService.getItemDetail(id)));
+    public Result getItemDetail(Long id,Long skuId){
+        return ok(Json.toJson(themeService.getItemDetail(id,skuId)));
     }
 }

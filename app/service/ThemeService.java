@@ -19,5 +19,5 @@ public interface ThemeService {
 
     List<Slider> getSlider();
 
-    Map<String,Object> getItemDetail(Long id);
+    Map<String,Object> getItemDetail(Long id,Long skuId);
 }

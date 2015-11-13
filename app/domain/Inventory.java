@@ -21,12 +21,13 @@ public class Inventory implements Serializable{
     private     String itemPreviewImgs;//预览图
     private     String invTitle;//商品标题,数据库不使用
     private     String invCollection;//商品收藏数,数据库不使用
-    private     Boolean orMasterInv;//是否是主sku
+    private     Boolean orMasterInv;//是否是主sku,现在将其用作标志进到详情页时候需要显示的哪一个sku
+    private     String invUrl;//单个sku链接
 
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscout, Integer restAmount, Boolean orSoldOut, String itemPreviewImgs, String invTitle, String invCollection, Boolean orMasterInv) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscout, Integer restAmount, Boolean orSoldOut, String itemPreviewImgs, String invTitle, String invCollection, Boolean orMasterInv, String invUrl) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -39,6 +40,7 @@ public class Inventory implements Serializable{
         this.invTitle = invTitle;
         this.invCollection = invCollection;
         this.orMasterInv = orMasterInv;
+        this.invUrl = invUrl;
     }
 
     public Long getId() {
@@ -137,6 +139,14 @@ public class Inventory implements Serializable{
         this.orMasterInv = orMasterInv;
     }
 
+    public String getInvUrl() {
+        return invUrl;
+    }
+
+    public void setInvUrl(String invUrl) {
+        this.invUrl = invUrl;
+    }
+
     @Override
     public String toString() {
         return "Inventory{" +
@@ -152,6 +162,7 @@ public class Inventory implements Serializable{
                 ", invTitle='" + invTitle + '\'' +
                 ", invCollection='" + invCollection + '\'' +
                 ", orMasterInv=" + orMasterInv +
+                ", invUrl='" + invUrl + '\'' +
                 '}';
     }
 }

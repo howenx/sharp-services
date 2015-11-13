@@ -72,7 +72,8 @@
         ${alias}.rest_amount,
         ${alias}.or_sold_out,
         ${alias}.item_preview_imgs,
-        ${alias}.or_master_inv
+        ${alias}.or_master_inv,
+        ${alias}.inv_url
     </sql>
 
     <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
