@@ -11,8 +11,8 @@ public class Item implements Serializable {
 
     private Long id;//商品ID
     private String itemTitle;//商品标题
-    private Timestamp onShelvesAt;//商品销售起始时间
-    private Timestamp offShelvesAt;//商品销售终止时间
+    private String onShelvesAt;//商品销售起始时间
+    private String offShelvesAt;//商品销售终止时间
     private String itemDetailImgs;//商品详细图
     private String itemFeatures;//商品属性
     private Long themeId;//主题ID
@@ -31,27 +31,6 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Long id, String itemTitle, Timestamp onShelvesAt, Timestamp offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, Boolean orFreeShip, String deliveryArea, String deliveryTime, Boolean orRestrictBuy, Integer restrictAmount, Boolean orShoppingPoll, String shareImg, String shareUrl, Integer collectCount, String itemNotice) {
-        this.id = id;
-        this.itemTitle = itemTitle;
-        this.onShelvesAt = onShelvesAt;
-        this.offShelvesAt = offShelvesAt;
-        this.itemDetailImgs = itemDetailImgs;
-        this.itemFeatures = itemFeatures;
-        this.themeId = themeId;
-        this.state = state;
-        this.orFreeShip = orFreeShip;
-        this.deliveryArea = deliveryArea;
-        this.deliveryTime = deliveryTime;
-        this.orRestrictBuy = orRestrictBuy;
-        this.restrictAmount = restrictAmount;
-        this.orShoppingPoll = orShoppingPoll;
-        this.shareImg = shareImg;
-        this.shareUrl = shareUrl;
-        this.collectCount = collectCount;
-        this.itemNotice = itemNotice;
-    }
-
     public Long getId() {
         return id;
     }
@@ -68,19 +47,19 @@ public class Item implements Serializable {
         this.itemTitle = itemTitle;
     }
 
-    public Timestamp getOnShelvesAt() {
+    public String getOnShelvesAt() {
         return onShelvesAt;
     }
 
-    public void setOnShelvesAt(Timestamp onShelvesAt) {
+    public void setOnShelvesAt(String onShelvesAt) {
         this.onShelvesAt = onShelvesAt;
     }
 
-    public Timestamp getOffShelvesAt() {
+    public String getOffShelvesAt() {
         return offShelvesAt;
     }
 
-    public void setOffShelvesAt(Timestamp offShelvesAt) {
+    public void setOffShelvesAt(String offShelvesAt) {
         this.offShelvesAt = offShelvesAt;
     }
 
@@ -196,13 +175,34 @@ public class Item implements Serializable {
         this.itemNotice = itemNotice;
     }
 
+    public Item(Long id, String itemTitle, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, Boolean orFreeShip, String deliveryArea, String deliveryTime, Boolean orRestrictBuy, Integer restrictAmount, Boolean orShoppingPoll, String shareImg, String shareUrl, Integer collectCount, String itemNotice) {
+        this.id = id;
+        this.itemTitle = itemTitle;
+        this.onShelvesAt = onShelvesAt;
+        this.offShelvesAt = offShelvesAt;
+        this.itemDetailImgs = itemDetailImgs;
+        this.itemFeatures = itemFeatures;
+        this.themeId = themeId;
+        this.state = state;
+        this.orFreeShip = orFreeShip;
+        this.deliveryArea = deliveryArea;
+        this.deliveryTime = deliveryTime;
+        this.orRestrictBuy = orRestrictBuy;
+        this.restrictAmount = restrictAmount;
+        this.orShoppingPoll = orShoppingPoll;
+        this.shareImg = shareImg;
+        this.shareUrl = shareUrl;
+        this.collectCount = collectCount;
+        this.itemNotice = itemNotice;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
                 "id=" + id +
                 ", itemTitle='" + itemTitle + '\'' +
-                ", onShelvesAt=" + onShelvesAt +
-                ", offShelvesAt=" + offShelvesAt +
+                ", onShelvesAt='" + onShelvesAt + '\'' +
+                ", offShelvesAt='" + offShelvesAt + '\'' +
                 ", itemDetailImgs='" + itemDetailImgs + '\'' +
                 ", itemFeatures='" + itemFeatures + '\'' +
                 ", themeId=" + themeId +
