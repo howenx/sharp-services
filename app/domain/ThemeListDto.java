@@ -22,11 +22,14 @@ public class ThemeListDto implements Serializable {
     private String      masterItemTag;	//如果是主打宣传商品，会需要tag json串
     private Integer     collectCount;   //商品收藏数
     private String      masterItemImg;  //主题属宣传商品图片url
+    private String      onShelvesAt;    //商品销售起始时间
+    private String      offShelvesAt;   //商品销售终止时间
+
 
     public ThemeListDto() {
     }
 
-    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemTag, Integer collectCount, String masterItemImg) {
+    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemTag, Integer collectCount, String masterItemImg, String onShelvesAt, String offShelvesAt) {
         this.themeId = themeId;
         this.itemId = itemId;
         this.itemImg = itemImg;
@@ -40,6 +43,8 @@ public class ThemeListDto implements Serializable {
         this.masterItemTag = masterItemTag;
         this.collectCount = collectCount;
         this.masterItemImg = masterItemImg;
+        this.onShelvesAt = onShelvesAt;
+        this.offShelvesAt = offShelvesAt;
     }
 
     public Long getThemeId() {
@@ -146,6 +151,22 @@ public class ThemeListDto implements Serializable {
         this.masterItemImg = masterItemImg;
     }
 
+    public String getOnShelvesAt() {
+        return onShelvesAt;
+    }
+
+    public void setOnShelvesAt(String onShelvesAt) {
+        this.onShelvesAt = onShelvesAt;
+    }
+
+    public String getOffShelvesAt() {
+        return offShelvesAt;
+    }
+
+    public void setOffShelvesAt(String offShelvesAt) {
+        this.offShelvesAt = offShelvesAt;
+    }
+
     @Override
     public String toString() {
         return "ThemeListDto{" +
@@ -162,6 +183,8 @@ public class ThemeListDto implements Serializable {
                 ", masterItemTag='" + masterItemTag + '\'' +
                 ", collectCount=" + collectCount +
                 ", masterItemImg='" + masterItemImg + '\'' +
+                ", onShelvesAt='" + onShelvesAt + '\'' +
+                ", offShelvesAt='" + offShelvesAt + '\'' +
                 '}';
     }
 }

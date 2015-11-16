@@ -27,6 +27,7 @@ public class Item implements Serializable {
     private String shareUrl;//分享的地址
     private Integer collectCount;//收藏数
     private String itemNotice;//商品重要布告
+    private String publicity;//宣传标识
 
     public Item() {
     }
@@ -175,7 +176,15 @@ public class Item implements Serializable {
         this.itemNotice = itemNotice;
     }
 
-    public Item(Long id, String itemTitle, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, Boolean orFreeShip, String deliveryArea, String deliveryTime, Boolean orRestrictBuy, Integer restrictAmount, Boolean orShoppingPoll, String shareImg, String shareUrl, Integer collectCount, String itemNotice) {
+    public String getPublicity() {
+        return publicity;
+    }
+
+    public void setPublicity(String publicity) {
+        this.publicity = publicity;
+    }
+
+    public Item(Long id, String itemTitle, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, Boolean orFreeShip, String deliveryArea, String deliveryTime, Boolean orRestrictBuy, Integer restrictAmount, Boolean orShoppingPoll, String shareImg, String shareUrl, Integer collectCount, String itemNotice, String publicity) {
         this.id = id;
         this.itemTitle = itemTitle;
         this.onShelvesAt = onShelvesAt;
@@ -194,6 +203,7 @@ public class Item implements Serializable {
         this.shareUrl = shareUrl;
         this.collectCount = collectCount;
         this.itemNotice = itemNotice;
+        this.publicity = publicity;
     }
 
     @Override
@@ -217,6 +227,7 @@ public class Item implements Serializable {
                 ", shareUrl='" + shareUrl + '\'' +
                 ", collectCount=" + collectCount +
                 ", itemNotice='" + itemNotice + '\'' +
+                ", publicity='" + publicity + '\'' +
                 '}';
     }
 }

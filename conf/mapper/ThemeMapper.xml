@@ -44,8 +44,12 @@
     <sql id = "itemByIdColumns">
         ${alias}.id,
         ${alias}.item_title,
-        to_char(${alias}.on_shelves_at, 'YYYY-MM-DD HH24:MI:SS') on_shelves_at,
-        to_char(${alias}.off_shelves_at, 'YYYY-MM-DD HH24:MI:SS') off_shelves_at,
+        CASE ${alias}.on_shelves_at &gt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
+        ELSE 'N'
+        END  on_shelves_at,
+        CASE ${alias}.off_shelves_at &lt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
+        ELSE 'N'
+        END  off_shelves_at,
         ${alias}.item_detail_imgs,
         ${alias}.item_features,
         ${alias}.theme_id,
@@ -59,7 +63,8 @@
         ${alias}.share_img,
         ${alias}.share_url,
         ${alias}.collect_count,
-        ${alias}.item_notice
+        ${alias}.item_notice,
+        ${alias}.publicity
     </sql>
 
     <sql id = "invListColumns">
@@ -80,7 +85,15 @@
         select
         <include refid="themesListDtoColumns">
             <property name="alias" value="t"/>
-        </include>
+        </include>,
+        (select
+        CASE d.on_shelves_at &gt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
+        ELSE 'N'
+        END  on_shelves_at from items d where d.id = t.item_id) as onShelvesAt,
+        (select
+        CASE d.off_shelves_at &lt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
+        ELSE 'N'
+        END  off_shelves_at from items d where d.id = t.item_id) as offShelvesAt
         from theme_item t where theme_id=${value} order by t.or_master_item DESC,t.sort_nu
     </select>
 
