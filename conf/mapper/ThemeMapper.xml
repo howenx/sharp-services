@@ -78,7 +78,8 @@
         ${alias}.or_sold_out,
         ${alias}.item_preview_imgs,
         ${alias}.or_master_inv,
-        ${alias}.inv_url
+        ${alias}.inv_url,
+        ${alias}.state
     </sql>
 
     <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
@@ -93,7 +94,8 @@
         (select
         CASE d.off_shelves_at &lt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
         ELSE 'N'
-        END  off_shelves_at from items d where d.id = t.item_id) as offShelvesAt
+        END  off_shelves_at from items d where d.id = t.item_id) as offShelvesAt,
+        (select d.state from items d where d.id = t.item_id) as state,
         from theme_item t where theme_id=${value} order by t.or_master_item DESC,t.sort_nu
     </select>
 

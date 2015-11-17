@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
  */
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4" withSources() withJavadoc()
 
-libraryDependencies += "org.postgresql" % "postgresql" % "9.3-1103-jdbc41" withSources() withJavadoc()
+libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1205-jdbc42" withSources() withJavadoc()
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.188" withSources() withJavadoc()
 

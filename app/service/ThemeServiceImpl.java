@@ -95,59 +95,6 @@ public class ThemeServiceImpl implements ThemeService{
 
         List<Inventory> colorList = new ArrayList<>();
 
-        //test
-        SecureRandom random = null;
-        random = new SecureRandom();
-        byte[] sharedSecret = new byte[32];
-        random.nextBytes(sharedSecret);
-
-        String data = new String(sharedSecret, StandardCharsets.UTF_8);
-        System.out.println("原始的:"+data);
-
-        System.out.println("UUID:"+UUID.randomUUID().toString().replaceAll("-", ""));
-
-        Random ranGen = new SecureRandom();
-        byte[] aesKey = new byte[32];
-        ranGen.nextBytes(aesKey);
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < aesKey.length; i++) {
-            String hex = Integer.toHexString(0xff & aesKey[i]);
-            if (hex.length() == 1)
-                hexString.append('0');
-            hexString.append(hex);
-        }
-
-
-
-
-        System.out.println("hex:"+hexString);
-
-        System.out.println("16进制的:"+byteArrayToString(sharedSecret));
-
-        data = new String(Base64.encodeBase64(sharedSecret));
-        System.out.println("Base64:"+data);
-
-
-        while (pass.length () != 32){
-            int rPick = r.nextInt(4);
-            if (rPick == 0){
-                int spot = r.nextInt(25);
-                pass += dCase.charAt(spot);
-            } else if (rPick == 1) {
-                int spot = r.nextInt (25);
-                pass += uCase.charAt(spot);
-            } else if (rPick == 2) {
-                int spot = r.nextInt (7);
-                pass += sChar.charAt(spot);
-            } else if (rPick == 3){
-                int spot = r.nextInt (9);
-                pass += intChar.charAt (spot);
-            }
-        }
-        System.out.println ("Generated Pass: " + pass);
-
-        System.out.println("common:"+ RandomStringUtils.randomAscii(32));
-
         //逻辑:检查除过第一个元素外,其余的每个颜色与上一个进行比较,如果不一样,则拷贝当前list到一个新list,然后放到map中
 
         for(int i=0;i<list.size();i++){
@@ -169,23 +116,23 @@ public class ThemeServiceImpl implements ThemeService{
 
             colorList.add(list.get(i));
 
-            if(i!=0 && !list.get(i).getItemColor().equals(list.get(i-1).getItemColor())){
-
-                colorList.remove(list.get(i));
-
-                List<Inventory> tempList = new ArrayList<>();
-                tempList.addAll(colorList);
-
-                colorMap.put(list.get(i-1).getItemColor(),tempList);
-
-                colorList.clear();
-                colorList.add(list.get(i));
-            }
-            if (i==(list.size()-1)){
-                colorMap.put(list.get(i).getItemColor(),colorList);
-            }
+//            if(i!=0 && !list.get(i).getItemColor().equals(list.get(i-1).getItemColor())){
+//
+//                colorList.remove(list.get(i));
+//
+//                List<Inventory> tempList = new ArrayList<>();
+//                tempList.addAll(colorList);
+//
+//                colorMap.put(list.get(i-1).getItemColor(),tempList);
+//
+//                colorList.clear();
+//                colorList.add(list.get(i));
+//            }
+//            if (i==(list.size()-1)){
+//                colorMap.put(list.get(i).getItemColor(),colorList);
+//            }
         }
-        map.put("stock",colorMap);
+        map.put("stock",colorList);
         return map;
     }
 

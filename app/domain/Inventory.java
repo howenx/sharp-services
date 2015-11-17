@@ -23,12 +23,14 @@ public class Inventory implements Serializable{
     private     String invCollection;//商品收藏数,数据库不使用
     private     Boolean orMasterInv;//是否是主sku,现在将其用作标志进到详情页时候需要显示的哪一个sku
     private     String invUrl;//单个sku链接
+    private     String state;//状态
 
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscout, Integer restAmount, Boolean orSoldOut, String itemPreviewImgs, String invTitle, String invCollection, Boolean orMasterInv, String invUrl) {
+    public Inventory(Long id, String state, String itemColor, String itemSize, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscout, Integer restAmount, Boolean orSoldOut, String itemPreviewImgs, String invTitle, String invCollection, Boolean orMasterInv, String invUrl) {
         this.id = id;
+        this.state = state;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
         this.itemPrice = itemPrice;
@@ -147,6 +149,14 @@ public class Inventory implements Serializable{
         this.invUrl = invUrl;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Inventory{" +
@@ -163,6 +173,7 @@ public class Inventory implements Serializable{
                 ", invCollection='" + invCollection + '\'' +
                 ", orMasterInv=" + orMasterInv +
                 ", invUrl='" + invUrl + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

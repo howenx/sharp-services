@@ -24,12 +24,13 @@ public class ThemeListDto implements Serializable {
     private String      masterItemImg;  //主题属宣传商品图片url
     private String      onShelvesAt;    //商品销售起始时间
     private String      offShelvesAt;   //商品销售终止时间
+    private String      state;//商品状态
 
 
     public ThemeListDto() {
     }
 
-    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemTag, Integer collectCount, String masterItemImg, String onShelvesAt, String offShelvesAt) {
+    public ThemeListDto(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemTag, Integer collectCount, String masterItemImg, String onShelvesAt, String offShelvesAt, String state) {
         this.themeId = themeId;
         this.itemId = itemId;
         this.itemImg = itemImg;
@@ -45,6 +46,7 @@ public class ThemeListDto implements Serializable {
         this.masterItemImg = masterItemImg;
         this.onShelvesAt = onShelvesAt;
         this.offShelvesAt = offShelvesAt;
+        this.state = state;
     }
 
     public Long getThemeId() {
@@ -167,6 +169,14 @@ public class ThemeListDto implements Serializable {
         this.offShelvesAt = offShelvesAt;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "ThemeListDto{" +
@@ -185,6 +195,7 @@ public class ThemeListDto implements Serializable {
                 ", masterItemImg='" + masterItemImg + '\'' +
                 ", onShelvesAt='" + onShelvesAt + '\'' +
                 ", offShelvesAt='" + offShelvesAt + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 }
