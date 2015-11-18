@@ -1,17 +1,19 @@
 package service;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Application;
 import domain.*;
 import mapper.ThemeMapper;
-import play.Logger;
 import play.libs.Json;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -51,20 +53,20 @@ public class ThemeServiceImpl implements ThemeService {
      * @return map
      */
     @Override
-    public Map<String, Object> getItemDetail(Long id, Long skuId) {
+    public JsonNode getItemDetail(Long id, Long skuId) {
         Item item = new Item();
         item.setId(id);
 
-        Map<String, Object> map = new HashMap<>();
+        ObjectNode map = Json.newObject();
         item = themeMapper.getItemById(item);
 
         //将Json字符串转成list
         List<String> itemDetailImgsList =new ArrayList<String>(json2List(item.getItemDetailImgs(),ArrayList.class,List.class,String.class));
 
         //使用Java8 Stream写法,增加图片地址前缀
-        item.setItemDetailImgs(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList()).toString());
+        item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())).toString());
 
-        map.put("main", item);
+        map.putPOJO("main", item);
 
         //遍历库存list 对其进行相应的处理
         List<Inventory> list = themeMapper.getInvList(item).stream().map(l -> {
@@ -75,27 +77,25 @@ public class ThemeServiceImpl implements ThemeService {
             } else {
                 l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
             }
-            //列表页跳转到详细页面
-            Integer flag = -1;
 
             //判断是否是当前需要显示的sku
-            if (!skuId.equals(flag.longValue()) && !l.getId().equals(skuId)) {
+            if (!skuId.equals(((Integer)(-1)).longValue()) && !l.getId().equals(skuId)) {
                 l.setOrMasterInv(false);
             } else if (l.getId().equals(skuId)) {
                 l.setOrMasterInv(true);
             }
 
             //将Json字符串转成list
-            List<String> previewList =new ArrayList<String>(json2List(l.getItemPreviewImgs(),ArrayList.class,List.class,String.class));
+            List<String> previewList =new ArrayList<>(json2List(l.getItemPreviewImgs(),ArrayList.class,List.class,String.class));
 
             //使用Java8 Stream写法,增加图片地址前缀
-            l.setItemPreviewImgs(previewList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList()).toString());
+            l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())).toString());
 
             return l;
 
         }).collect(Collectors.toList());
 
-        map.put("stock", list);
+        map.putPOJO("stock", list);
         return map;
     }
 

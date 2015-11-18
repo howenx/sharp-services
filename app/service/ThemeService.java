@@ -1,11 +1,11 @@
 package service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * For homepage theme list display function.
@@ -19,5 +19,5 @@ public interface ThemeService {
 
     List<Slider> getSlider();
 
-    Map<String,Object> getItemDetail(Long id,Long skuId);
+    JsonNode getItemDetail(Long id, Long skuId);
 }
