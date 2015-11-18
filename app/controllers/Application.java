@@ -40,15 +40,11 @@ public class Application extends Controller {
         }).collect(Collectors.toList());
 
         //slider取出链接
-        List<Slider> sliderList = themeService.getSlider().stream().map(l -> {
-            l.setImg(IMAGE_URL + l.getImg());
-            return l;
-        }).collect(Collectors.toList());
-
+        List<String> sliderImgList = new ArrayList<>(themeService.getSlider().stream().map(l->(IMAGE_URL + l.getImg())).collect(Collectors.toList()));
 
         //组合结果集
         ObjectNode result = Json.newObject();
-        result.putPOJO("slider", Json.toJson(sliderList));
+        result.putPOJO("slider", Json.toJson(sliderImgList));
         result.putPOJO("theme",Json.toJson(themeList));
 
         return ok(result);
