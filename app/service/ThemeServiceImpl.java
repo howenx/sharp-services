@@ -1,23 +1,24 @@
 package service;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers.Application;
 import domain.*;
 import mapper.ThemeMapper;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.RandomStringUtils;
 import play.Logger;
+import play.libs.Json;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * implements Service and transaction processing.
  * Created by howen on 15/10/26.
  */
-public class ThemeServiceImpl implements ThemeService{
+public class ThemeServiceImpl implements ThemeService {
 
     @Inject
     private ThemeMapper themeMapper;
@@ -25,7 +26,7 @@ public class ThemeServiceImpl implements ThemeService{
     @Override
     public List<ThemeDto> getThemes(int pageSize, int offset) {
 
-        Map<String,Integer> params = new HashMap<String,Integer>();
+        Map<String, Integer> params = new HashMap<String, Integer>();
         params.put("pageSize", pageSize);
         params.put("offset", offset);
 
@@ -45,95 +46,71 @@ public class ThemeServiceImpl implements ThemeService{
 
     /**
      * 组装返回详细页面数据
-     * @param id 商品主键
-     * @return  map
-     */
-
-
-    private static final char[] HEX_CHAR = { '0', '1', '2', '3', '4', '5', '6',
-            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-    /**
-     * 字节数据转十六进制字符串
      *
-     * @param data
-     *            输入数据
-     * @return 十六进制内容
+     * @param id 商品主键
+     * @return map
      */
-    public static String byteArrayToString(byte[] data) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length; i++) {
-            // 取出字节的高四位 作为索引得到相应的十六进制标识符 注意无符号右移
-            stringBuilder.append(HEX_CHAR[(data[i] & 0xf0) >>> 4]);
-            // 取出字节的低四位 作为索引得到相应的十六进制标识符
-            stringBuilder.append(HEX_CHAR[(data[i] & 0x0f)]);
-            if (i < data.length - 1) {
-                stringBuilder.append(' ');
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    private static final String dCase = "abcdefghijklmnopqrstuvwxyz";
-    private static final String uCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String sChar = "_/-+&^=";
-    private static final String intChar = "0123456789";
-    private static Random r = new Random();
-    private static String pass = "";
-
     @Override
-    public Map<String,Object> getItemDetail(Long id,Long skuId) {
+    public Map<String, Object> getItemDetail(Long id, Long skuId) {
         Item item = new Item();
         item.setId(id);
-//        Logger.error(themeMapper.getItemById(item).toString());
 
-        Map<String,Object> map= new HashMap<>();
-        map.put("main",themeMapper.getItemById(item));
+        Map<String, Object> map = new HashMap<>();
+        item = themeMapper.getItemById(item);
 
-        List<Inventory> list = themeMapper.getInvList(item);
+        //将Json字符串转成list
+        List<String> itemDetailImgsList =new ArrayList<String>(json2List(item.getItemDetailImgs(),ArrayList.class,List.class,String.class));
 
-        Map<String,Object> colorMap = new HashMap<>();
+        //使用Java8 Stream写法,增加图片地址前缀
+        item.setItemDetailImgs(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList()).toString());
 
-        List<Inventory> colorList = new ArrayList<>();
+        map.put("main", item);
 
-        //逻辑:检查除过第一个元素外,其余的每个颜色与上一个进行比较,如果不一样,则拷贝当前list到一个新list,然后放到map中
-
-        for(int i=0;i<list.size();i++){
+        //遍历库存list 对其进行相应的处理
+        List<Inventory> list = themeMapper.getInvList(item).stream().map(l -> {
 
             //拼接sku链接
-            if(null!=list.get(i).getInvUrl() && !"".equals(list.get(i).getInvUrl())){
-                list.get(i).setInvUrl(controllers.Application.DEPLOY_URL+ list.get(i).getInvUrl());
+            if (null != l.getInvUrl() && !"".equals(l.getInvUrl())) {
+                l.setInvUrl(controllers.Application.DEPLOY_URL + l.getInvUrl());
+            } else {
+                l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
             }
-            else {
-                list.get(i).setInvUrl(controllers.Application.DEPLOY_URL+ "/comm/detail/"+id+"/"+list.get(i).getId());
-            }
+            //列表页跳转到详细页面
+            Integer flag = -1;
 
             //判断是否是当前需要显示的sku
-            if(!skuId.equals(Long.valueOf(-1)) && !list.get(i).getId().equals(skuId)){
-                list.get(i).setOrMasterInv(false);
-            }else if (list.get(i).getId().equals( skuId)){
-                list.get(i).setOrMasterInv(true);
+            if (!skuId.equals(flag.longValue()) && !l.getId().equals(skuId)) {
+                l.setOrMasterInv(false);
+            } else if (l.getId().equals(skuId)) {
+                l.setOrMasterInv(true);
             }
 
-            colorList.add(list.get(i));
+            //将Json字符串转成list
+            List<String> previewList =new ArrayList<String>(json2List(l.getItemPreviewImgs(),ArrayList.class,List.class,String.class));
 
-//            if(i!=0 && !list.get(i).getItemColor().equals(list.get(i-1).getItemColor())){
-//
-//                colorList.remove(list.get(i));
-//
-//                List<Inventory> tempList = new ArrayList<>();
-//                tempList.addAll(colorList);
-//
-//                colorMap.put(list.get(i-1).getItemColor(),tempList);
-//
-//                colorList.clear();
-//                colorList.add(list.get(i));
-//            }
-//            if (i==(list.size()-1)){
-//                colorMap.put(list.get(i).getItemColor(),colorList);
-//            }
-        }
-        map.put("stock",colorList);
+            //使用Java8 Stream写法,增加图片地址前缀
+            l.setItemPreviewImgs(previewList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList()).toString());
+
+            return l;
+
+        }).collect(Collectors.toList());
+
+        map.put("stock", list);
         return map;
+    }
+
+    //将Json串转换成List
+    final static ObjectMapper mapper = new ObjectMapper();
+
+    public static <T> List<T> json2List(String json,Class<?> parametrized, Class<?> parametersFor,
+                                           Class<?>... parameterClasses){
+        List<T> lst = new ArrayList<>();
+        try {
+                lst = mapper.readValue(json, mapper.getTypeFactory().constructParametrizedType(parametrized,parametersFor, parameterClasses));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lst;
     }
 
 }

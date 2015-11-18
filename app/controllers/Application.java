@@ -80,6 +80,7 @@ public class Application extends Controller {
     }
 
     public Result getItemDetail(Long id,Long skuId){
+
         return ok(Json.toJson(themeService.getItemDetail(id,skuId)));
     }
 }
