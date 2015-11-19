@@ -20,4 +20,6 @@ public interface ThemeMapper {
     Item getItemById(Item item);
 
     List<Inventory> getInvList(Item item);
+
+    List<Address> getAddresssList(Address address);
 }

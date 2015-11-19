@@ -82,6 +82,15 @@
         ${alias}.state
     </sql>
 
+    <sql id="addressColumns">
+        ${alias}.add_id,
+        ${alias}.or_default,
+        ${alias}.tel,
+        ${alias}.name,
+        ${alias}.delivery_city,
+        ${alias}.delivery_detail
+    </sql>
+
     <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
         select
         <include refid="themesListDtoColumns">
@@ -145,6 +154,19 @@
             and t.item_id = ${id}
         </if>
         ORDER BY t.item_color
+    </select>
+
+    <select id="getAddresssList" resultType="domain.Address" parameterType="domain.Address">
+        select
+        <include refid="addressColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from address t
+        where 1=1 and t.or_destory=false
+        <if test="userId != null and userId!=''">
+            and t.user_id = ${userId}
+        </if>
+        ORDER BY t.or_default DESC
     </select>
 
 </mapper>

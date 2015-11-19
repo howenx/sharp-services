@@ -1,6 +1,7 @@
 package service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import domain.Address;
 import domain.Slider;
 import domain.ThemeDto;
 import domain.ThemeListDto;
@@ -20,4 +21,6 @@ public interface ThemeService {
     List<Slider> getSlider();
 
     JsonNode getItemDetail(Long id, Long skuId);
+
+    List<Address> getAddress(Long userId);
 }

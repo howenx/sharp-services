@@ -99,6 +99,18 @@ public class ThemeServiceImpl implements ThemeService {
         return map;
     }
 
+    /**
+     * 获取用户收货地址
+     * @param userId 用户token
+     * @return  Json
+     */
+    @Override
+    public List<Address> getAddress(Long userId) {
+        Address address = new Address();
+        address.setUserId(userId);
+        return themeMapper.getAddresssList(address);
+    }
+
     //将Json串转换成List
     final static ObjectMapper mapper = new ObjectMapper();
 

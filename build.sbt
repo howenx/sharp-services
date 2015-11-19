@@ -8,6 +8,8 @@ scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
   javaJdbc,
+  cache,
+  javaWs,
   filters
 )
 
@@ -29,6 +31,8 @@ libraryDependencies += "org.mybatis" % "mybatis-guice" % "3.6" withSources() wit
 libraryDependencies += "com.google.inject.extensions" % "guice-multibindings" % "4.0" withSources() withJavadoc()
 
 libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
+
+libraryDependencies += "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0" withSources() withJavadoc()
 
 //Code Review
 //libraryDependencies += "com.puppycrawl.tools" % "checkstyle" % "6.7" withSources() withJavadoc()
