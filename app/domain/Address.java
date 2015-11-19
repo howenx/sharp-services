@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +11,9 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     private Long addId;//用户地址主键
+    @JsonIgnore
     private Long userId;//用户ID
+    @JsonIgnore
     private String userToken;//客户端返回的token
     private Boolean orDefault;//是否默认收获地址
     private String tel;//电话

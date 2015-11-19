@@ -11,11 +11,14 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.util.parsing.json.JSONObject;
 import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Application extends Controller {
@@ -116,15 +119,10 @@ public class Application extends Controller {
     public Result allAddress() {
         ObjectNode result = Json.newObject();
         try{
-            Logger.debug("测试用户信息:" + cache.get("1d3f3fcf313b7b0332d64db15986bd66").toString());
-            Logger.error(Json.parse(cache.get("1d3f3fcf313b7b0332d64db15986bd66").toString()).findValue("id").asText());
-
-
+            Logger.error("测试用户信息:" + cache.get("1d3f3fcf313b7b0332d64db15986bd66").toString());
             List<Address> addressList = themeService.getAddress(Long.valueOf(Json.parse(cache.get("1d3f3fcf313b7b0332d64db15986bd66").toString()).findValue("id").asText()));
-            
-
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
-            result.putPOJO("address", Json.toJson(themeService.getAddress(Long.valueOf(Json.parse(cache.get("1d3f3fcf313b7b0332d64db15986bd66").toString()).findValue("id").asText()))));
+            result.putPOJO("address", Json.toJson(addressList));
             return ok(result);
         }catch (NullPointerException ex_null){
             Logger.error("404 cache not found token:"+ex_null.toString());
