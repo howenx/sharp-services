@@ -1,8 +1,6 @@
 package domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 /**
  * ios client homepage model

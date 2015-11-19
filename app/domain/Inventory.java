@@ -2,7 +2,6 @@ package domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.security.Timestamp;
 
 /**
  * 商品库存信息

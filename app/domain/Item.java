@@ -1,7 +1,6 @@
 package domain;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * 商品vo
