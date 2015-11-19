@@ -3,8 +3,8 @@ package service;
 import com.fasterxml.jackson.databind.JsonNode;
 import domain.Address;
 import domain.Slider;
-import domain.ThemeDto;
-import domain.ThemeListDto;
+import domain.Theme;
+import domain.ThemeItem;
 
 import java.util.List;
 
@@ -14,13 +14,16 @@ import java.util.List;
  */
 public interface ThemeService {
 
-    List<ThemeDto> getThemes(int pageSize,int offset);
+    List<Theme> getThemes(int pageSize, int offset);
 
-    List<ThemeListDto> getThemeList(Long itemId);
+    List<ThemeItem> getThemeList(Long itemId);
 
     List<Slider> getSlider();
 
     JsonNode getItemDetail(Long id, Long skuId);
 
     List<Address> getAddress(Long userId);
+
+    Boolean handleAddress(Address address,Integer handle);
+
 }

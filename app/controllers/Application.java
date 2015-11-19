@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.Address;
 import domain.Message;
-import domain.ThemeDto;
-import domain.ThemeListDto;
+import domain.Theme;
+import domain.ThemeItem;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
@@ -15,6 +15,7 @@ import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class Application extends Controller {
         //计算从第几条开始取数据
         int offset = (pageNum - 1) * PAGE_SIZE;
 
-        List<ThemeDto> themeList = themeService.getThemes(PAGE_SIZE, offset).stream().map(l -> {
+        List<Theme> themeList = themeService.getThemes(PAGE_SIZE, offset).stream().map(l -> {
             l.setThemeImg(IMAGE_URL + l.getThemeImg());
             l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
             return l;
@@ -72,7 +73,7 @@ public class Application extends Controller {
     public Result getThemeList(Long themeId) {
 
         //对图片url和请求链接进行相应更改
-        List<ThemeListDto> themeListDtoList = themeService.getThemeList(((Integer) 100033).longValue()).stream().map(l -> {
+        List<ThemeItem> themeListDtoList = themeService.getThemeList(((Integer) 100033).longValue()).stream().map(l -> {
             l.setItemImg(IMAGE_URL + l.getItemImg());
             l.setItemUrl(DEPLOY_URL + "/comm/detail/" + l.getItemId());
 
@@ -125,6 +126,39 @@ public class Application extends Controller {
             Logger.error("404 cache not found token:"+ex_null.toString());
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.BAD_USER_TOKEN.getIndex()),Message.ErrorCode.BAD_USER_TOKEN.getIndex())));
             return ok(result);
+        }catch (Exception ex){
+            Logger.error("server exception:"+ex.toString());
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(result);
+        }
+    }
+
+    /**
+     * 更新用户收货地址列表
+     *
+     * @return 返回Json
+     */
+    public Result handleAddress(Integer handle) {
+        long start = System.currentTimeMillis();
+        JsonNode json = request().body().asJson();
+        ObjectNode result = Json.newObject();
+        Logger.error("客户端返回:" + json);
+        try{
+            Logger.error("测试用户信息:" + cache.get(request().getHeader("id-token")).toString());
+            Address address = Json.fromJson(json,Address.class);
+            address.setUserId(Long.valueOf(Json.parse(cache.get(request().getHeader("id-token")).toString()).findValue("id").asText()));
+            long start1 = System.currentTimeMillis();
+            if (themeService.handleAddress(address,handle)){
+                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+                Logger.error("运行时间1：" +(System.currentTimeMillis()-start)+ "毫秒");
+                Logger.error("运行时间2：" +(System.currentTimeMillis()-start1)+ "毫秒");
+                return ok(result);
+            }
+            else {
+                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.DATABASE_EXCEPTION.getIndex()),Message.ErrorCode.DATABASE_EXCEPTION.getIndex())));
+                Logger.error("运行时间：" +(System.currentTimeMillis()-start)+ "毫秒");
+                return ok(result);
+            }
         }catch (Exception ex){
             Logger.error("server exception:"+ex.toString());
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));

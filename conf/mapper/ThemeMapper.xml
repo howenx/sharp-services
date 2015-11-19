@@ -41,15 +41,15 @@
         ${alias}.create_at
     </sql>
 
-    <sql id = "itemByIdColumns">
+    <sql id="itemByIdColumns">
         ${alias}.id,
         ${alias}.item_title,
         CASE ${alias}.on_shelves_at &gt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
         ELSE 'N'
-        END  on_shelves_at,
+        END on_shelves_at,
         CASE ${alias}.off_shelves_at &lt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
         ELSE 'N'
-        END  off_shelves_at,
+        END off_shelves_at,
         ${alias}.item_detail_imgs,
         ${alias}.item_features,
         ${alias}.theme_id,
@@ -67,7 +67,7 @@
         ${alias}.publicity
     </sql>
 
-    <sql id = "invListColumns">
+    <sql id="invListColumns">
         ${alias}.id,
         ${alias}.item_color,
         ${alias}.item_size,
@@ -91,35 +91,36 @@
         ${alias}.delivery_detail
     </sql>
 
-    <select id="getThemeListDtoByThemeId" resultType="domain.ThemeListDto" parameterType="java.lang.Long">
+    <select id="getThemeListDtoByThemeId" resultType="domain.ThemeItem" parameterType="java.lang.Long">
         select
         <include refid="themesListDtoColumns">
             <property name="alias" value="t"/>
-        </include>,
+        </include>
+        ,
         (select
         CASE d.on_shelves_at &gt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
         ELSE 'N'
-        END  on_shelves_at from items d where d.id = t.item_id) as onShelvesAt,
+        END on_shelves_at from items d where d.id = t.item_id) as onShelvesAt,
         (select
         CASE d.off_shelves_at &lt;=CURRENT_TIMESTAMP(0) WHEN true THEN 'Y'
         ELSE 'N'
-        END  off_shelves_at from items d where d.id = t.item_id) as offShelvesAt,
+        END off_shelves_at from items d where d.id = t.item_id) as offShelvesAt,
         (select d.state from items d where d.id = t.item_id) as state
-        from theme_item t where theme_id=${value} order by t.or_master_item DESC,t.sort_nu
+        from theme_item t where theme_id=#{value} order by t.or_master_item DESC,t.sort_nu
     </select>
 
 
-    <select id="getThemeIosDto" resultType="domain.ThemeDto" parameterType="map">
+    <select id="getThemeIosDto" resultType="domain.Theme" parameterType="map">
         select
         <include refid="themesDtoColumns">
             <property name="alias" value="t"/>
         </include>
         from themes t
         ORDER BY t.create_at DESC, t.sort_nu
-        LIMIT ${pageSize} OFFSET ${offset}
+        LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
-    <select id="getSlider" resultType="domain.Slider" >
+    <select id="getSlider" resultType="domain.Slider">
         select
         <include refid="slider">
             <property name="alias" value="t"/>
@@ -136,7 +137,7 @@
         from items t
         where 1=1
         <if test="id!=null and id !=''">
-            and t.id = ${id}
+            and t.id = #{id}
         </if>
         ORDER BY t.create_at DESC
     </select>
@@ -145,13 +146,14 @@
         select
         <include refid="invListColumns">
             <property name="alias" value="t"/>
-        </include>,
+        </include>
+        ,
         (select d.item_title from items d where d.id=t.item_id) as invTitle,
         (select d.collect_count from items d where d.id=t.item_id) as invCollection
         from inventories t
         where 1=1
         <if test="id != null and id!=''">
-            and t.item_id = ${id}
+            and t.item_id = #{id}
         </if>
         ORDER BY t.item_color
     </select>
@@ -164,9 +166,41 @@
         from address t
         where 1=1 and t.or_destory=false
         <if test="userId != null and userId!=''">
-            and t.user_id = ${userId}
+            and t.user_id = #{userId}
         </if>
         ORDER BY t.or_default DESC
     </select>
 
+    <update id="updateAddress" parameterType="domain.Address">
+        update address set update_at = CURRENT_TIMESTAMP(0)
+        <if test="name != null and name!=''">
+            ,name=#{name}
+        </if>
+        <if test="tel != null and tel!=''">
+            ,tel=#{tel}
+        </if>
+        <if test="deliveryCity != null and deliveryCity!=''">
+            ,delivery_city=#{deliveryCity}
+        </if>
+        <if test="deliveryDetail != null and deliveryDetail!=''">
+            ,delivery_detail=#{deliveryDetail}
+        </if>
+        <if test="orDefault != null and orDefault!=''">
+            ,or_default = #{orDefault}
+        </if>
+        <if test="userId != null and userId!=''">
+            ,update_mid = #{userId}
+        </if>
+        where add_id = #{addId}
+    </update>
+
+    <insert id="insertAddress" parameterType="domain.Address" useGeneratedKeys="true" keyProperty="addId">
+        insert into address (user_id,name,tel,delivery_city,delivery_detail,create_at,create_mid)
+        values (#{userId},#{name},#{tel},#{deliveryCity},#{deliveryDetail},CURRENT_TIMESTAMP(0),#{userId})
+    </insert>
+
+    <delete id="deleteAddress" parameterType="domain.Address">
+        delete from address
+        where add_id = #{addId}
+    </delete>
 </mapper>

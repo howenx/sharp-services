@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -9,7 +11,6 @@ import java.sql.Timestamp;
  */
 public class ThemeItem implements Serializable {
 
-    private Long        id;				//主键
     private Long        themeId;   	    //主题ID
     private Long        itemId;   	    //商品ID
     private String      itemImg;   	    //商品图片
@@ -19,22 +20,36 @@ public class ThemeItem implements Serializable {
     private Double      itemCostPrice;  //商品原价
     private Double      itemDiscount;   //商品折扣
     private Integer     itemSoldAmount; //商品销量
-    private Boolean     isMasterItem;   //是否是主题主打宣传商品
+    private String      onShelvesAt;    //商品销售起始时间
+    private String      offShelvesAt;   //商品销售终止时间
+    private Boolean     orMasterItem;   //是否是主题主打宣传商品
+    private String      masterItemImg;  //如果是主宣传商品图片url
     private String      masterItemTag;	//如果是主打宣传商品，会需要tag json串
-    private Integer     likeCount;   	//商品点赞数
     private Integer     collectCount;   //商品收藏数
+    private String      state;          //商品状态
+    @JsonIgnore
+    private Long        id;				//主键
+    @JsonIgnore
+    private Integer     likeCount;   	//商品点赞数
+    @JsonIgnore
     private Integer     sortNu;   		//商品排序
+    @JsonIgnore
     private Boolean     orDestory;      //是否删除,
+    @JsonIgnore
     private Long        destoryUid;   	//删除操作用户id,
+    @JsonIgnore
     private Timestamp   updateAt;    	//更新时间,
+    @JsonIgnore
     private Long        updateUid;    	//更新操作用户id,
+    @JsonIgnore
     private Timestamp   createAt;     	//创建时间
+    @JsonIgnore
     private Long        createUid;    	//创建操作用户id
 
     public ThemeItem() {
     }
 
-    public ThemeItem(Long id, Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, Double itemPrice, Double itemCostPrice, Double itemDiscount, Integer itemSoldAmount, Boolean isMasterItem, String masterItemTag, Integer likeCount, Integer collectCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
+    public ThemeItem(Long id, Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, Double itemPrice, Double itemCostPrice, Double itemDiscount, Integer itemSoldAmount, String onShelvesAt, String offShelvesAt, Boolean orMasterItem, String masterItemImg, String masterItemTag, Integer collectCount, String state, Integer likeCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
         this.id = id;
         this.themeId = themeId;
         this.itemId = itemId;
@@ -45,10 +60,14 @@ public class ThemeItem implements Serializable {
         this.itemCostPrice = itemCostPrice;
         this.itemDiscount = itemDiscount;
         this.itemSoldAmount = itemSoldAmount;
-        this.isMasterItem = isMasterItem;
+        this.onShelvesAt = onShelvesAt;
+        this.offShelvesAt = offShelvesAt;
+        this.orMasterItem = orMasterItem;
+        this.masterItemImg = masterItemImg;
         this.masterItemTag = masterItemTag;
-        this.likeCount = likeCount;
         this.collectCount = collectCount;
+        this.state = state;
+        this.likeCount = likeCount;
         this.sortNu = sortNu;
         this.orDestory = orDestory;
         this.destoryUid = destoryUid;
@@ -138,12 +157,36 @@ public class ThemeItem implements Serializable {
         this.itemSoldAmount = itemSoldAmount;
     }
 
-    public Boolean getMasterItem() {
-        return isMasterItem;
+    public String getOnShelvesAt() {
+        return onShelvesAt;
     }
 
-    public void setMasterItem(Boolean masterItem) {
-        isMasterItem = masterItem;
+    public void setOnShelvesAt(String onShelvesAt) {
+        this.onShelvesAt = onShelvesAt;
+    }
+
+    public String getOffShelvesAt() {
+        return offShelvesAt;
+    }
+
+    public void setOffShelvesAt(String offShelvesAt) {
+        this.offShelvesAt = offShelvesAt;
+    }
+
+    public Boolean getOrMasterItem() {
+        return orMasterItem;
+    }
+
+    public void setOrMasterItem(Boolean orMasterItem) {
+        this.orMasterItem = orMasterItem;
+    }
+
+    public String getMasterItemImg() {
+        return masterItemImg;
+    }
+
+    public void setMasterItemImg(String masterItemImg) {
+        this.masterItemImg = masterItemImg;
     }
 
     public String getMasterItemTag() {
@@ -154,20 +197,28 @@ public class ThemeItem implements Serializable {
         this.masterItemTag = masterItemTag;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
-
     public Integer getCollectCount() {
         return collectCount;
     }
 
     public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 
     public Integer getSortNu() {
@@ -239,10 +290,14 @@ public class ThemeItem implements Serializable {
                 ", itemCostPrice=" + itemCostPrice +
                 ", itemDiscount=" + itemDiscount +
                 ", itemSoldAmount=" + itemSoldAmount +
-                ", isMasterItem=" + isMasterItem +
+                ", onShelvesAt='" + onShelvesAt + '\'' +
+                ", offShelvesAt='" + offShelvesAt + '\'' +
+                ", orMasterItem=" + orMasterItem +
+                ", masterItemImg='" + masterItemImg + '\'' +
                 ", masterItemTag='" + masterItemTag + '\'' +
-                ", likeCount=" + likeCount +
                 ", collectCount=" + collectCount +
+                ", state='" + state + '\'' +
+                ", likeCount=" + likeCount +
                 ", sortNu=" + sortNu +
                 ", orDestory=" + orDestory +
                 ", destoryUid=" + destoryUid +

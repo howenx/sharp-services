@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Application;
 import domain.*;
 import mapper.ThemeMapper;
+import play.Logger;
 import play.libs.Json;
 
 import javax.inject.Inject;
@@ -26,7 +27,7 @@ public class ThemeServiceImpl implements ThemeService {
     private ThemeMapper themeMapper;
 
     @Override
-    public List<ThemeDto> getThemes(int pageSize, int offset) {
+    public List<Theme> getThemes(int pageSize, int offset) {
 
         Map<String, Integer> params = new HashMap<String, Integer>();
         params.put("pageSize", pageSize);
@@ -36,7 +37,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public List<ThemeListDto> getThemeList(Long themeId) {
+    public List<ThemeItem> getThemeList(Long themeId) {
 
         return themeMapper.getThemeListDtoByThemeId(themeId);
     }
@@ -110,6 +111,29 @@ public class ThemeServiceImpl implements ThemeService {
         address.setUserId(userId);
         return themeMapper.getAddresssList(address);
     }
+
+    /**
+     * 地址更删改
+     * @param address 地址vo
+     * @return 是否成功
+     */
+    @Override
+    public Boolean handleAddress(Address address,Integer handle) {
+        try{
+            if(handle==0){
+                themeMapper.updateAddress(address);
+            }else if(handle ==1){
+                themeMapper.insertAddress(address);
+            }else if(handle ==2){
+                themeMapper.deleteAddress(address);
+            }
+            return true;
+        }catch (Exception ex){
+            Logger.error("1005 地址更删改发生异常"+ex.toString());
+            return false;
+        }
+    }
+
 
     //将Json串转换成List
     final static ObjectMapper mapper = new ObjectMapper();

@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,26 +14,46 @@ public class Theme implements Serializable {
 
     private Long        id;                                     //主键
     private Long        masterItemId;                           //主题主宣传商品ID
-    private String      title;                                  //标题
-    private String      themeDesc;   							//主题描述
-    private Timestamp   startAt;    							//主题开始时间
-    private Timestamp   endAt;   								//主题结束时间
-    private BigDecimal  themeDiscountUp;						//几折扣起
-    private BigDecimal  itemPriceTop;   						//主题包含商品最高价格
-    private BigDecimal  itemPriceLow;   						//主题包含商品最低价格
     private String      themeImg;   							//主题图片
     private String      themeUrl;   							//主题列表url
+
+    @JsonIgnore
+    private String      title;                                  //标题
+    @JsonIgnore
+    private String      themeDesc;   							//主题描述
+    @JsonIgnore
+    private Timestamp   startAt;    							//主题开始时间
+    @JsonIgnore
+    private Timestamp   endAt;   								//主题结束时间
+    @JsonIgnore
+    private BigDecimal  themeDiscountUp;						//几折扣起
+    @JsonIgnore
+    private BigDecimal  itemPriceTop;   						//主题包含商品最高价格
+    @JsonIgnore
+    private BigDecimal  itemPriceLow;   						//主题包含商品最低价格
+    @JsonIgnore
     private String      themeTags;								//主题主图标签json串 name,angle,top,left
+    @JsonIgnore
     private Integer     itemCount;   							//主题包含商品数量
+    @JsonIgnore
     private Integer     themeTagCount;   						//主题图片标签数
+    @JsonIgnore
     private Integer     sortNu;									//排序编号
+    @JsonIgnore
     private Boolean     orDestory;    							//是否删除,
+    @JsonIgnore
     private Long        destoryUid;   							//删除操作用户id,
+    @JsonIgnore
     private Timestamp   destoryAt;    							//更新时间,
+    @JsonIgnore
     private Timestamp   updateAt;    							//更新时间,
+    @JsonIgnore
     private Long        updateUid;    							//更新操作用户id,
+    @JsonIgnore
     private Timestamp   createAt;     							//创建时间
+    @JsonIgnore
     private Long        createUid;    							//创建操作用户id
+    @JsonIgnore
     private String      themeSrcImg;                            //主题底图
 
     public Theme() {

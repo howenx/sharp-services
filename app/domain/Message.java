@@ -50,7 +50,8 @@ public class Message implements Serializable{
         ERROR("内部发生错误", 1001),
         SERVER_EXCEPTION("服务器异常", 1002),
         BAD_PARAMETER("参数不合法", 1003),
-        BAD_USER_TOKEN("用户不存在", 1004);
+        BAD_USER_TOKEN("用户不存在", 1004),
+        DATABASE_EXCEPTION("数据库操作异常", 1005);
 
         // 成员变量
         private String name;

@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public interface ThemeMapper {
 
-    List<ThemeDto> getThemeIosDto(Map<String,Integer> params);
+    List<Theme> getThemeIosDto(Map<String,Integer> params);
 
-    List<ThemeListDto> getThemeListDtoByThemeId(Long themeId);
+    List<ThemeItem> getThemeListDtoByThemeId(Long themeId);
 
     List<Slider> getSlider();
 
@@ -22,4 +22,10 @@ public interface ThemeMapper {
     List<Inventory> getInvList(Item item);
 
     List<Address> getAddresssList(Address address);
+
+    Integer updateAddress(Address address);
+
+    Integer insertAddress(Address address);
+
+    Integer deleteAddress(Address address);
 }

@@ -15,6 +15,7 @@ public class Address implements Serializable {
     private Long userId;//用户ID
     @JsonIgnore
     private String userToken;//客户端返回的token
+    @JsonIgnore
     private Boolean orDefault;//是否默认收获地址
     private String tel;//电话
     private String name;//姓名
