@@ -20,13 +20,15 @@ public class ThemeItem implements Serializable {
     private Double      itemCostPrice;  //商品原价
     private Double      itemDiscount;   //商品折扣
     private Integer     itemSoldAmount; //商品销量
-    private String      onShelvesAt;    //商品销售起始时间
-    private String      offShelvesAt;   //商品销售终止时间
     private Boolean     orMasterItem;   //是否是主题主打宣传商品
     private String      masterItemImg;  //如果是主宣传商品图片url
     private String      masterItemTag;	//如果是主打宣传商品，会需要tag json串
     private Integer     collectCount;   //商品收藏数
     private String      state;          //商品状态
+    @JsonIgnore
+    private String      onShelvesAt;    //商品销售起始时间
+    @JsonIgnore
+    private String      offShelvesAt;   //商品销售终止时间
     @JsonIgnore
     private Long        id;				//主键
     @JsonIgnore
