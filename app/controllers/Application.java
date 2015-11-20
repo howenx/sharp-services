@@ -150,8 +150,10 @@ public class Application extends Controller {
             long start1 = System.currentTimeMillis();
             if (themeService.handleAddress(address,handle)){
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
-                Logger.error("运行时间1：" +(System.currentTimeMillis()-start)+ "毫秒");
-                Logger.error("运行时间2：" +(System.currentTimeMillis()-start1)+ "毫秒");
+//                Logger.error("运行时间1：" +(System.currentTimeMillis()-start)+ "毫秒");
+//                Logger.error("运行时间2：" +(System.currentTimeMillis()-start1)+ "毫秒");
+                result.putPOJO("address",Json.toJson(address));
+                Logger.error("返回ID:"+result.toString());
                 return ok(result);
             }
             else {
