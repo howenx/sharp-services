@@ -11,17 +11,17 @@ import java.util.Map;
  */
 public interface ThemeMapper {
 
-    List<Theme> getThemeIosDto(Map<String,Integer> params);
+    List<Theme> getThemes(Map<String,Integer> params);
 
-    List<ThemeItem> getThemeListDtoByThemeId(Long themeId);
+    Theme getThemeBy(Theme theme);
 
     List<Slider> getSlider();
 
-    Item getItemById(Item item);
+    Item getItemBy(Item item);
 
-    List<Inventory> getInvList(Item item);
+    List<Inventory> getInvBy(Item item);
 
-    List<Address> getAddresssList(Address address);
+    List<Address> getAddressList(Address address);
 
     Integer updateAddress(Address address);
 

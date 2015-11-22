@@ -1,6 +1,10 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * 商品vo
@@ -8,27 +12,67 @@ import java.io.Serializable;
  */
 public class Item implements Serializable {
 
-    private Long id;//商品ID
-    private String itemTitle;//商品标题
-    private String onShelvesAt;//商品销售起始时间
-    private String offShelvesAt;//商品销售终止时间
-    private String itemDetailImgs;//商品详细图
-    private String itemFeatures;//商品属性
-    private Long themeId;//主题ID
-    private String state;//商品状态
-    private Boolean orFreeShip;//是否包邮
-    private String deliveryArea;//发货区域
-    private String deliveryTime;//配送时间
-    private Boolean orRestrictBuy;//是否限购
-    private Integer restrictAmount;//限购数量
-    private Boolean orShoppingPoll;//是否拼购
-    private String shareImg;//分享的图片
-    private String shareUrl;//分享的地址
-    private Integer collectCount;//收藏数
-    private String itemNotice;//商品重要布告
-    private String publicity;//宣传标识
+    private Long        id;//商品ID
+    private String      itemTitle ;//商品标题
+    private String      itemMasterImg;//商品主图,用于列表页显示的图片
+    private String      onShelvesAt;//上架时间
+    private String      offShelvesAt;//下架时间
+    private JsonNode    itemDetailImgs;//商品详细图片
+    private JsonNode    itemFeatures;//商品参数
+    private Long        themeId;//商品属于主题的ID
+    private String      state;//商品状态 'Y'--正常,'D'--下架,'N'--删除,'K'--售空
+    private String      shareUrl;//分享链接
+    private Long        collectCount;//收藏数
+    private String      itemNotice;//商品重要布告
+    private JsonNode    publicity;//优惠区域显示信息（包括发货区域，多久后发货）
+    private Long        masterInvId;//主SKU的ID
+
+    @JsonIgnore
+    private Long        cateId ;
+    @JsonIgnore
+    private Long        brandId;
+    @JsonIgnore
+    private String      supplyMerch ;
+    @JsonIgnore
+    private Long        shareCount;
+    @JsonIgnore
+    private Long        browseCount;
+    @JsonIgnore
+    private Boolean     orDestroy;
+    @JsonIgnore
+    private Timestamp   destroyAt;
+    @JsonIgnore
+    private Timestamp   updateAt;
+    @JsonIgnore
+    private Timestamp   createAt;
 
     public Item() {
+    }
+
+    public Item(Long id, String itemTitle, String itemMasterImg, String onShelvesAt, String offShelvesAt, JsonNode itemDetailImgs, JsonNode itemFeatures, Long themeId, String state, String shareUrl, Long collectCount, String itemNotice, JsonNode publicity, Long masterInvId, Long cateId, Long brandId, String supplyMerch, Long shareCount, Long browseCount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+        this.id = id;
+        this.itemTitle = itemTitle;
+        this.itemMasterImg = itemMasterImg;
+        this.onShelvesAt = onShelvesAt;
+        this.offShelvesAt = offShelvesAt;
+        this.itemDetailImgs = itemDetailImgs;
+        this.itemFeatures = itemFeatures;
+        this.themeId = themeId;
+        this.state = state;
+        this.shareUrl = shareUrl;
+        this.collectCount = collectCount;
+        this.itemNotice = itemNotice;
+        this.publicity = publicity;
+        this.masterInvId = masterInvId;
+        this.cateId = cateId;
+        this.brandId = brandId;
+        this.supplyMerch = supplyMerch;
+        this.shareCount = shareCount;
+        this.browseCount = browseCount;
+        this.orDestroy = orDestroy;
+        this.destroyAt = destroyAt;
+        this.updateAt = updateAt;
+        this.createAt = createAt;
     }
 
     public Long getId() {
@@ -47,6 +91,14 @@ public class Item implements Serializable {
         this.itemTitle = itemTitle;
     }
 
+    public String getItemMasterImg() {
+        return itemMasterImg;
+    }
+
+    public void setItemMasterImg(String itemMasterImg) {
+        this.itemMasterImg = itemMasterImg;
+    }
+
     public String getOnShelvesAt() {
         return onShelvesAt;
     }
@@ -63,19 +115,19 @@ public class Item implements Serializable {
         this.offShelvesAt = offShelvesAt;
     }
 
-    public String getItemDetailImgs() {
+    public JsonNode getItemDetailImgs() {
         return itemDetailImgs;
     }
 
-    public void setItemDetailImgs(String itemDetailImgs) {
+    public void setItemDetailImgs(JsonNode itemDetailImgs) {
         this.itemDetailImgs = itemDetailImgs;
     }
 
-    public String getItemFeatures() {
+    public JsonNode getItemFeatures() {
         return itemFeatures;
     }
 
-    public void setItemFeatures(String itemFeatures) {
+    public void setItemFeatures(JsonNode itemFeatures) {
         this.itemFeatures = itemFeatures;
     }
 
@@ -95,62 +147,6 @@ public class Item implements Serializable {
         this.state = state;
     }
 
-    public Boolean getOrFreeShip() {
-        return orFreeShip;
-    }
-
-    public void setOrFreeShip(Boolean orFreeShip) {
-        this.orFreeShip = orFreeShip;
-    }
-
-    public String getDeliveryArea() {
-        return deliveryArea;
-    }
-
-    public void setDeliveryArea(String deliveryArea) {
-        this.deliveryArea = deliveryArea;
-    }
-
-    public String getDeliveryTime() {
-        return deliveryTime;
-    }
-
-    public void setDeliveryTime(String deliveryTime) {
-        this.deliveryTime = deliveryTime;
-    }
-
-    public Boolean getOrRestrictBuy() {
-        return orRestrictBuy;
-    }
-
-    public void setOrRestrictBuy(Boolean orRestrictBuy) {
-        this.orRestrictBuy = orRestrictBuy;
-    }
-
-    public Integer getRestrictAmount() {
-        return restrictAmount;
-    }
-
-    public void setRestrictAmount(Integer restrictAmount) {
-        this.restrictAmount = restrictAmount;
-    }
-
-    public Boolean getOrShoppingPoll() {
-        return orShoppingPoll;
-    }
-
-    public void setOrShoppingPoll(Boolean orShoppingPoll) {
-        this.orShoppingPoll = orShoppingPoll;
-    }
-
-    public String getShareImg() {
-        return shareImg;
-    }
-
-    public void setShareImg(String shareImg) {
-        this.shareImg = shareImg;
-    }
-
     public String getShareUrl() {
         return shareUrl;
     }
@@ -159,11 +155,11 @@ public class Item implements Serializable {
         this.shareUrl = shareUrl;
     }
 
-    public Integer getCollectCount() {
+    public Long getCollectCount() {
         return collectCount;
     }
 
-    public void setCollectCount(Integer collectCount) {
+    public void setCollectCount(Long collectCount) {
         this.collectCount = collectCount;
     }
 
@@ -175,34 +171,92 @@ public class Item implements Serializable {
         this.itemNotice = itemNotice;
     }
 
-    public String getPublicity() {
+    public JsonNode getPublicity() {
         return publicity;
     }
 
-    public void setPublicity(String publicity) {
+    public void setPublicity(JsonNode publicity) {
         this.publicity = publicity;
     }
 
-    public Item(Long id, String itemTitle, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, Boolean orFreeShip, String deliveryArea, String deliveryTime, Boolean orRestrictBuy, Integer restrictAmount, Boolean orShoppingPoll, String shareImg, String shareUrl, Integer collectCount, String itemNotice, String publicity) {
-        this.id = id;
-        this.itemTitle = itemTitle;
-        this.onShelvesAt = onShelvesAt;
-        this.offShelvesAt = offShelvesAt;
-        this.itemDetailImgs = itemDetailImgs;
-        this.itemFeatures = itemFeatures;
-        this.themeId = themeId;
-        this.state = state;
-        this.orFreeShip = orFreeShip;
-        this.deliveryArea = deliveryArea;
-        this.deliveryTime = deliveryTime;
-        this.orRestrictBuy = orRestrictBuy;
-        this.restrictAmount = restrictAmount;
-        this.orShoppingPoll = orShoppingPoll;
-        this.shareImg = shareImg;
-        this.shareUrl = shareUrl;
-        this.collectCount = collectCount;
-        this.itemNotice = itemNotice;
-        this.publicity = publicity;
+    public Long getMasterInvId() {
+        return masterInvId;
+    }
+
+    public void setMasterInvId(Long masterInvId) {
+        this.masterInvId = masterInvId;
+    }
+
+    public Long getCateId() {
+        return cateId;
+    }
+
+    public void setCateId(Long cateId) {
+        this.cateId = cateId;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getSupplyMerch() {
+        return supplyMerch;
+    }
+
+    public void setSupplyMerch(String supplyMerch) {
+        this.supplyMerch = supplyMerch;
+    }
+
+    public Long getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(Long shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public Long getBrowseCount() {
+        return browseCount;
+    }
+
+    public void setBrowseCount(Long browseCount) {
+        this.browseCount = browseCount;
+    }
+
+    public Boolean getOrDestroy() {
+        return orDestroy;
+    }
+
+    public void setOrDestroy(Boolean orDestroy) {
+        this.orDestroy = orDestroy;
+    }
+
+    public Timestamp getDestroyAt() {
+        return destroyAt;
+    }
+
+    public void setDestroyAt(Timestamp destroyAt) {
+        this.destroyAt = destroyAt;
+    }
+
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
     }
 
     @Override
@@ -210,23 +264,27 @@ public class Item implements Serializable {
         return "Item{" +
                 "id=" + id +
                 ", itemTitle='" + itemTitle + '\'' +
+                ", itemMasterImg='" + itemMasterImg + '\'' +
                 ", onShelvesAt='" + onShelvesAt + '\'' +
                 ", offShelvesAt='" + offShelvesAt + '\'' +
-                ", itemDetailImgs='" + itemDetailImgs + '\'' +
-                ", itemFeatures='" + itemFeatures + '\'' +
+                ", itemDetailImgs=" + itemDetailImgs +
+                ", itemFeatures=" + itemFeatures +
                 ", themeId=" + themeId +
                 ", state='" + state + '\'' +
-                ", orFreeShip=" + orFreeShip +
-                ", deliveryArea='" + deliveryArea + '\'' +
-                ", deliveryTime='" + deliveryTime + '\'' +
-                ", orRestrictBuy=" + orRestrictBuy +
-                ", restrictAmount=" + restrictAmount +
-                ", orShoppingPoll=" + orShoppingPoll +
-                ", shareImg='" + shareImg + '\'' +
                 ", shareUrl='" + shareUrl + '\'' +
                 ", collectCount=" + collectCount +
                 ", itemNotice='" + itemNotice + '\'' +
-                ", publicity='" + publicity + '\'' +
+                ", publicity=" + publicity +
+                ", masterInvId=" + masterInvId +
+                ", cateId=" + cateId +
+                ", brandId=" + brandId +
+                ", supplyMerch='" + supplyMerch + '\'' +
+                ", shareCount=" + shareCount +
+                ", browseCount=" + browseCount +
+                ", orDestroy=" + orDestroy +
+                ", destroyAt=" + destroyAt +
+                ", updateAt=" + updateAt +
+                ", createAt=" + createAt +
                 '}';
     }
 }

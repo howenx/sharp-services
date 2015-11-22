@@ -11,16 +11,17 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     private Long addId;//用户地址主键
+    private String tel;//电话
+    private String name;//姓名
+    private String deliveryCity;//配送城市
+    private String deliveryDetail;//配送详细地址
+
     @JsonIgnore
     private Long userId;//用户ID
     @JsonIgnore
     private String userToken;//客户端返回的token
     @JsonIgnore
     private Boolean orDefault;//是否默认收获地址
-    private String tel;//电话
-    private String name;//姓名
-    private String deliveryCity;//配送城市
-    private String deliveryDetail;//配送详细地址
 
     public Address() {
     }

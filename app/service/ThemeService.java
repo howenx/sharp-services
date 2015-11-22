@@ -16,7 +16,7 @@ public interface ThemeService {
 
     List<Theme> getThemes(int pageSize, int offset);
 
-    List<ThemeItem> getThemeList(Long itemId);
+    JsonNode getThemeList(Long itemId);
 
     List<Slider> getSlider();
 

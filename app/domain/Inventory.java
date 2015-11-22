@@ -1,7 +1,11 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * 商品库存信息
@@ -9,39 +13,67 @@ import java.math.BigDecimal;
  */
 public class Inventory implements Serializable{
 
-    private     Long id;//库存ID
-    private     String itemColor;//颜色
-    private     String itemSize;//尺寸
-    private     BigDecimal itemPrice;//原价
-    private     BigDecimal itemCostPrice;//售价
-    private     BigDecimal itemDiscout;//折扣
-    private     Integer restAmount;//剩余数量
-    private     Boolean orSoldOut;//是否卖光
-    private     String itemPreviewImgs;//预览图
-    private     String invTitle;//商品标题,数据库不使用
-    private     String invCollection;//商品收藏数,数据库不使用
-    private     Boolean orMasterInv;//是否是主sku,现在将其用作标志进到详情页时候需要显示的哪一个sku
-    private     String invUrl;//单个sku链接
-    private     String state;//状态
+    private     Long        id;//库存ID
+    private     String      itemColor;//颜色
+    private     String      itemSize;//尺码
+    private     BigDecimal  itemSrcPrice;//商品原价
+    private     BigDecimal  itemPrice;//商品价格
+    private     BigDecimal  itemDiscount;//商品折扣
+    private     Boolean     orMasterInv;//是否主商品
+    private     String      state;//状态
+    private     BigDecimal  shipFee;//邮费
+    private     String      invArea;//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
+    private     Integer     restrictAmount;//限购数量
+    private     Integer     restAmount;//商品余量
+    private     String      invImg;//sku主图
+    private     JsonNode    itemPreviewImgs;//sku预览图
+    private     String      invUrl;//用于方便前段获取库存跳转链接
+
+    @JsonIgnore
+    private     Long        itemId;
+    @JsonIgnore
+    private     Integer     amount;//库存总量
+    @JsonIgnore
+    private     BigDecimal  itemCostPrice; //商品成本价
+    @JsonIgnore
+    private     Integer     soldAmount;
+    @JsonIgnore
+    private     Boolean     orDestroy;
+    @JsonIgnore
+    private     Timestamp   destroyAt;
+    @JsonIgnore
+    private     Timestamp   updateAt;
+    @JsonIgnore
+    private     Timestamp   createAt;
+
 
     public Inventory() {
     }
 
-    public Inventory(Long id, String state, String itemColor, String itemSize, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscout, Integer restAmount, Boolean orSoldOut, String itemPreviewImgs, String invTitle, String invCollection, Boolean orMasterInv, String invUrl) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, JsonNode itemPreviewImgs, String invUrl, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
-        this.state = state;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
+        this.itemSrcPrice = itemSrcPrice;
         this.itemPrice = itemPrice;
-        this.itemCostPrice = itemCostPrice;
-        this.itemDiscout = itemDiscout;
-        this.restAmount = restAmount;
-        this.orSoldOut = orSoldOut;
-        this.itemPreviewImgs = itemPreviewImgs;
-        this.invTitle = invTitle;
-        this.invCollection = invCollection;
+        this.itemDiscount = itemDiscount;
         this.orMasterInv = orMasterInv;
+        this.state = state;
+        this.shipFee = shipFee;
+        this.invArea = invArea;
+        this.restrictAmount = restrictAmount;
+        this.restAmount = restAmount;
+        this.invImg = invImg;
+        this.itemPreviewImgs = itemPreviewImgs;
         this.invUrl = invUrl;
+        this.itemId = itemId;
+        this.amount = amount;
+        this.itemCostPrice = itemCostPrice;
+        this.soldAmount = soldAmount;
+        this.orDestroy = orDestroy;
+        this.destroyAt = destroyAt;
+        this.updateAt = updateAt;
+        this.createAt = createAt;
     }
 
     public Long getId() {
@@ -68,6 +100,14 @@ public class Inventory implements Serializable{
         this.itemSize = itemSize;
     }
 
+    public BigDecimal getItemSrcPrice() {
+        return itemSrcPrice;
+    }
+
+    public void setItemSrcPrice(BigDecimal itemSrcPrice) {
+        this.itemSrcPrice = itemSrcPrice;
+    }
+
     public BigDecimal getItemPrice() {
         return itemPrice;
     }
@@ -76,60 +116,12 @@ public class Inventory implements Serializable{
         this.itemPrice = itemPrice;
     }
 
-    public BigDecimal getItemCostPrice() {
-        return itemCostPrice;
+    public BigDecimal getItemDiscount() {
+        return itemDiscount;
     }
 
-    public void setItemCostPrice(BigDecimal itemCostPrice) {
-        this.itemCostPrice = itemCostPrice;
-    }
-
-    public BigDecimal getItemDiscout() {
-        return itemDiscout;
-    }
-
-    public void setItemDiscout(BigDecimal itemDiscout) {
-        this.itemDiscout = itemDiscout;
-    }
-
-    public Integer getRestAmount() {
-        return restAmount;
-    }
-
-    public void setRestAmount(Integer restAmount) {
-        this.restAmount = restAmount;
-    }
-
-    public Boolean getOrSoldOut() {
-        return orSoldOut;
-    }
-
-    public void setOrSoldOut(Boolean orSoldOut) {
-        this.orSoldOut = orSoldOut;
-    }
-
-    public String getItemPreviewImgs() {
-        return itemPreviewImgs;
-    }
-
-    public void setItemPreviewImgs(String itemPreviewImgs) {
-        this.itemPreviewImgs = itemPreviewImgs;
-    }
-
-    public String getInvTitle() {
-        return invTitle;
-    }
-
-    public void setInvTitle(String invTitle) {
-        this.invTitle = invTitle;
-    }
-
-    public String getInvCollection() {
-        return invCollection;
-    }
-
-    public void setInvCollection(String invCollection) {
-        this.invCollection = invCollection;
+    public void setItemDiscount(BigDecimal itemDiscount) {
+        this.itemDiscount = itemDiscount;
     }
 
     public Boolean getOrMasterInv() {
@@ -140,14 +132,6 @@ public class Inventory implements Serializable{
         this.orMasterInv = orMasterInv;
     }
 
-    public String getInvUrl() {
-        return invUrl;
-    }
-
-    public void setInvUrl(String invUrl) {
-        this.invUrl = invUrl;
-    }
-
     public String getState() {
         return state;
     }
@@ -156,23 +140,152 @@ public class Inventory implements Serializable{
         this.state = state;
     }
 
+    public BigDecimal getShipFee() {
+        return shipFee;
+    }
+
+    public void setShipFee(BigDecimal shipFee) {
+        this.shipFee = shipFee;
+    }
+
+    public String getInvArea() {
+        return invArea;
+    }
+
+    public void setInvArea(String invArea) {
+        this.invArea = invArea;
+    }
+
+    public Integer getRestrictAmount() {
+        return restrictAmount;
+    }
+
+    public void setRestrictAmount(Integer restrictAmount) {
+        this.restrictAmount = restrictAmount;
+    }
+
+    public Integer getRestAmount() {
+        return restAmount;
+    }
+
+    public void setRestAmount(Integer restAmount) {
+        this.restAmount = restAmount;
+    }
+
+    public String getInvImg() {
+        return invImg;
+    }
+
+    public void setInvImg(String invImg) {
+        this.invImg = invImg;
+    }
+
+    public JsonNode getItemPreviewImgs() {
+        return itemPreviewImgs;
+    }
+
+    public void setItemPreviewImgs(JsonNode itemPreviewImgs) {
+        this.itemPreviewImgs = itemPreviewImgs;
+    }
+
+    public String getInvUrl() {
+        return invUrl;
+    }
+
+    public void setInvUrl(String invUrl) {
+        this.invUrl = invUrl;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getItemCostPrice() {
+        return itemCostPrice;
+    }
+
+    public void setItemCostPrice(BigDecimal itemCostPrice) {
+        this.itemCostPrice = itemCostPrice;
+    }
+
+    public Integer getSoldAmount() {
+        return soldAmount;
+    }
+
+    public void setSoldAmount(Integer soldAmount) {
+        this.soldAmount = soldAmount;
+    }
+
+    public Boolean getOrDestroy() {
+        return orDestroy;
+    }
+
+    public void setOrDestroy(Boolean orDestroy) {
+        this.orDestroy = orDestroy;
+    }
+
+    public Timestamp getDestroyAt() {
+        return destroyAt;
+    }
+
+    public void setDestroyAt(Timestamp destroyAt) {
+        this.destroyAt = destroyAt;
+    }
+
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
     @Override
     public String toString() {
         return "Inventory{" +
                 "id=" + id +
                 ", itemColor='" + itemColor + '\'' +
                 ", itemSize='" + itemSize + '\'' +
+                ", itemSrcPrice=" + itemSrcPrice +
                 ", itemPrice=" + itemPrice +
-                ", itemCostPrice=" + itemCostPrice +
-                ", itemDiscout=" + itemDiscout +
-                ", restAmount=" + restAmount +
-                ", orSoldOut=" + orSoldOut +
-                ", itemPreviewImgs='" + itemPreviewImgs + '\'' +
-                ", invTitle='" + invTitle + '\'' +
-                ", invCollection='" + invCollection + '\'' +
+                ", itemDiscount=" + itemDiscount +
                 ", orMasterInv=" + orMasterInv +
-                ", invUrl='" + invUrl + '\'' +
                 ", state='" + state + '\'' +
+                ", shipFee=" + shipFee +
+                ", invArea='" + invArea + '\'' +
+                ", restrictAmount=" + restrictAmount +
+                ", restAmount=" + restAmount +
+                ", invImg='" + invImg + '\'' +
+                ", itemPreviewImgs=" + itemPreviewImgs +
+                ", invUrl='" + invUrl + '\'' +
+                ", itemId=" + itemId +
+                ", amount=" + amount +
+                ", itemCostPrice=" + itemCostPrice +
+                ", soldAmount=" + soldAmount +
+                ", orDestroy=" + orDestroy +
+                ", destroyAt=" + destroyAt +
+                ", updateAt=" + updateAt +
+                ", createAt=" + createAt +
                 '}';
     }
 }

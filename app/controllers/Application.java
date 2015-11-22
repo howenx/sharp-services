@@ -15,7 +15,6 @@ import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,18 +71,7 @@ public class Application extends Controller {
      */
     public Result getThemeList(Long themeId) {
 
-        //对图片url和请求链接进行相应更改
-        List<ThemeItem> themeListDtoList = themeService.getThemeList(((Integer) 100033).longValue()).stream().map(l -> {
-            l.setItemImg(IMAGE_URL + l.getItemImg());
-            l.setItemUrl(DEPLOY_URL + "/comm/detail/" + l.getItemId());
-
-            if (null != l.getMasterItemImg() && !("").equals(l.getMasterItemImg()) && !"null".equals(l.getMasterItemImg())) {
-                l.setMasterItemImg(IMAGE_URL + l.getMasterItemImg());
-            }
-            return l;
-        }).collect(Collectors.toList());
-
-        return ok(Json.toJson(themeListDtoList));
+        return ok(themeService.getThemeList(themeId));
     }
 
     /**
