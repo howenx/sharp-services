@@ -15,7 +15,9 @@ import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Application extends Controller {
@@ -53,14 +55,25 @@ public class Application extends Controller {
         }).collect(Collectors.toList());
 
         //slider取出链接
-        List<String> sliderImgList = new ArrayList<>(themeService.getSlider().stream().map(l -> (IMAGE_URL + l.getImg())).collect(Collectors.toList()));
+        List<Map> sliderImgList = new ArrayList<>(themeService.getSlider().stream().map(l -> {
+            Map<String,Object> map  = new HashMap<>();
+            map.put("url",IMAGE_URL + l.getImg());
+            map.put("itemTarget","");
+            return map;
+        }).collect(Collectors.toList()));
 
         //组合结果集
         ObjectNode result = Json.newObject();
-        result.putPOJO("slider", Json.toJson(sliderImgList));
-        result.putPOJO("theme", Json.toJson(themeList));
-
-        return ok(result);
+        try{
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+            result.putPOJO("slider", Json.toJson(sliderImgList));
+            result.putPOJO("theme", Json.toJson(themeList));
+            return ok(result);
+        }catch (Exception ex){
+            Logger.error("server exception:"+ex.toString());
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(result);
+        }
     }
 
     /**
@@ -70,8 +83,17 @@ public class Application extends Controller {
      * @return 返回主题列表JSON
      */
     public Result getThemeList(Long themeId) {
-
-        return ok(themeService.getThemeList(themeId));
+        //组合结果集
+        ObjectNode result = Json.newObject();
+        try{
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+            result.putPOJO("themeList", Json.toJson(themeService.getThemeList(themeId)));
+            return ok(result);
+        }catch (Exception ex){
+            Logger.error("server exception:"+ex.toString());
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(result);
+        }
     }
 
     /**
@@ -82,19 +104,17 @@ public class Application extends Controller {
      * @return 返回JSON
      */
     public Result getItemDetail(Long id, Long skuId) {
-
-        return ok(Json.toJson(themeService.getItemDetail(id, skuId)));
-    }
-
-    public Result putAddress() {
-        JsonNode json = request().body().asJson();
-        Logger.error("客户端返回:" + json.toString());
-        Message message = new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex());
-
         //组合结果集
         ObjectNode result = Json.newObject();
-        result.putPOJO("message", Json.toJson(message));
-        return ok(result);
+        try{
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+            result.putPOJO("itemDetail", Json.toJson(themeService.getItemDetail(id, skuId)));
+            return ok(result);
+        }catch (Exception ex){
+            Logger.error("server exception:"+ex.toString());
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(result);
+        }
     }
 
     /**

@@ -19,7 +19,7 @@ public interface ThemeMapper {
 
     Item getItemBy(Item item);
 
-    List<Inventory> getInvBy(Item item);
+    List<Inventory> getInvBy(Inventory inventory);
 
     List<Address> getAddressList(Address address);
 

@@ -23,9 +23,9 @@
         ${alias}.update_at           ,
         ${alias}.create_at           ,
         ${alias}.theme_src_img       ,
-        ${alias}.theme_config_info   ,
-        ${alias}.theme_item          ,
-        ${alias}.master_item_tag
+        ${alias}.theme_config_info::text   ,
+        ${alias}.theme_item::text          ,
+        ${alias}.master_item_tag::text
     </sql>
 
 
@@ -45,8 +45,8 @@
         ${alias}.on_shelves_at      ,
         ${alias}.off_shelves_at     ,
         ${alias}.item_master_img    ,
-        ${alias}.item_detail_imgs   ,
-        ${alias}.item_features      ,
+        ${alias}.item_detail_imgs::text   ,
+        ${alias}.item_features::text      ,
         ${alias}.theme_id           ,
         ${alias}.state              ,
         ${alias}.share_url          ,
@@ -59,7 +59,7 @@
         ${alias}.update_at          ,
         ${alias}.create_at          ,
         ${alias}.master_inv_id      ,
-        ${alias}.publicity
+        ${alias}.publicity::text
     </sql>
 
     <sql id="invColumns">
@@ -75,7 +75,7 @@
         ${alias}.sold_amount         ,
         ${alias}.rest_amount         ,
         ${alias}.inv_img             ,
-        ${alias}.item_preview_imgs   ,
+        ${alias}.item_preview_imgs::text   ,
         ${alias}.or_destroy          ,
         ${alias}.destroy_at          ,
         ${alias}.update_at           ,

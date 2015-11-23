@@ -43,7 +43,7 @@ public class ThemeServiceImpl implements ThemeService {
         theme.setId(themeId);
         theme = themeMapper.getThemeBy(theme);
         List<Map> list = new ArrayList<>();
-        JsonNode jsonNode = theme.getThemeItem();
+        JsonNode jsonNode = Json.parse(theme.getThemeItem());
         for (final JsonNode objNode : jsonNode) {
             //获取每一个Item
             Item item = new Item();
@@ -52,6 +52,7 @@ public class ThemeServiceImpl implements ThemeService {
             //找到每一个主库存信息
             Inventory inventory = new Inventory();
             inventory.setId(item.getMasterInvId());
+            inventory  = themeMapper.getInvBy(inventory).get(0);
             Map<String,Object> map = new HashMap<>();
             map.put("themeId",theme.getId());
             map.put("itemId",item.getId());
@@ -97,15 +98,18 @@ public class ThemeServiceImpl implements ThemeService {
         item = themeMapper.getItemBy(item);
 
         //将Json字符串转成list
-        List<String> itemDetailImgsList =new ArrayList<>(json2List(item.getItemDetailImgs().toString(),ArrayList.class,List.class,String.class));
+        List<String> itemDetailImgsList =new ArrayList<>(json2List(item.getItemDetailImgs(),ArrayList.class,List.class,String.class));
 
         //使用Java8 Stream写法,增加图片地址前缀
-        item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())));
+        item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())).toString());
 
         map.putPOJO("main", item);
 
+        Inventory inventory = new Inventory();
+        inventory.setItemId(item.getId());
+
         //遍历库存list 对其进行相应的处理
-        List<Inventory> list = themeMapper.getInvBy(item).stream().map(l -> {
+        List<Inventory> list = themeMapper.getInvBy(inventory).stream().map(l -> {
 
             //拼接sku链接
             if (null != l.getInvUrl() && !"".equals(l.getInvUrl())) {
@@ -122,10 +126,10 @@ public class ThemeServiceImpl implements ThemeService {
             }
 
             //将Json字符串转成list
-            List<String> previewList =new ArrayList<>(json2List(l.getItemPreviewImgs().toString(),ArrayList.class,List.class,String.class));
+            List<String> previewList =new ArrayList<>(json2List(l.getItemPreviewImgs(),ArrayList.class,List.class,String.class));
 
             //使用Java8 Stream写法,增加图片地址前缀
-            l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())));
+            l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())).toString());
 
             return l;
 

@@ -1,7 +1,6 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -17,14 +16,14 @@ public class Item implements Serializable {
     private String      itemMasterImg;//商品主图,用于列表页显示的图片
     private String      onShelvesAt;//上架时间
     private String      offShelvesAt;//下架时间
-    private JsonNode    itemDetailImgs;//商品详细图片
-    private JsonNode    itemFeatures;//商品参数
+    private String    itemDetailImgs;//商品详细图片
+    private String    itemFeatures;//商品参数
     private Long        themeId;//商品属于主题的ID
     private String      state;//商品状态 'Y'--正常,'D'--下架,'N'--删除,'K'--售空
     private String      shareUrl;//分享链接
     private Long        collectCount;//收藏数
     private String      itemNotice;//商品重要布告
-    private JsonNode    publicity;//优惠区域显示信息（包括发货区域，多久后发货）
+    private String    publicity;//优惠区域显示信息（包括发货区域，多久后发货）
     private Long        masterInvId;//主SKU的ID
 
     @JsonIgnore
@@ -49,7 +48,7 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Long id, String itemTitle, String itemMasterImg, String onShelvesAt, String offShelvesAt, JsonNode itemDetailImgs, JsonNode itemFeatures, Long themeId, String state, String shareUrl, Long collectCount, String itemNotice, JsonNode publicity, Long masterInvId, Long cateId, Long brandId, String supplyMerch, Long shareCount, Long browseCount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Item(Long id, String itemTitle, String itemMasterImg, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, String shareUrl, Long collectCount, String itemNotice, String publicity, Long masterInvId, Long cateId, Long brandId, String supplyMerch, Long shareCount, Long browseCount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
         this.itemTitle = itemTitle;
         this.itemMasterImg = itemMasterImg;
@@ -115,19 +114,19 @@ public class Item implements Serializable {
         this.offShelvesAt = offShelvesAt;
     }
 
-    public JsonNode getItemDetailImgs() {
+    public String getItemDetailImgs() {
         return itemDetailImgs;
     }
 
-    public void setItemDetailImgs(JsonNode itemDetailImgs) {
+    public void setItemDetailImgs(String itemDetailImgs) {
         this.itemDetailImgs = itemDetailImgs;
     }
 
-    public JsonNode getItemFeatures() {
+    public String getItemFeatures() {
         return itemFeatures;
     }
 
-    public void setItemFeatures(JsonNode itemFeatures) {
+    public void setItemFeatures(String itemFeatures) {
         this.itemFeatures = itemFeatures;
     }
 
@@ -171,11 +170,11 @@ public class Item implements Serializable {
         this.itemNotice = itemNotice;
     }
 
-    public JsonNode getPublicity() {
+    public String getPublicity() {
         return publicity;
     }
 
-    public void setPublicity(JsonNode publicity) {
+    public void setPublicity(String publicity) {
         this.publicity = publicity;
     }
 

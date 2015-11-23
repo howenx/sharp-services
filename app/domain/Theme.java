@@ -1,10 +1,8 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -17,7 +15,6 @@ public class Theme implements Serializable {
     private     String      themeImg;//主题图片
     private     String      themeUrl;//跳转到主题列表页的链接
 
-
     @JsonIgnore
     private     String      title;
     @JsonIgnore
@@ -27,9 +24,9 @@ public class Theme implements Serializable {
     @JsonIgnore
     private     Integer     sortNu;
     @JsonIgnore
-    private     Boolean     orDestory;
+    private     Boolean     orDestroy;
     @JsonIgnore
-    private     Timestamp   destoryAt;
+    private     Timestamp   destroyAt;
     @JsonIgnore
     private     Timestamp   updateAt;
     @JsonIgnore
@@ -37,18 +34,18 @@ public class Theme implements Serializable {
     @JsonIgnore
     private     String      themeSrcImg;
     @JsonIgnore
-    private     JsonNode    themeConfigInfo;
+    private     String    themeConfigInfo;
     @JsonIgnore
-    private     JsonNode    themeItem;
+    private     String    themeItem;
     @JsonIgnore
-    private     JsonNode    masterItemTag;
+    private     String    masterItemTag;
     @JsonIgnore
     private     Long        masterItemId;
 
     public Theme() {
     }
 
-    public Theme(Long id, String themeImg, String themeUrl, String title, Timestamp startAt, Timestamp endAt, Integer sortNu, Boolean orDestory, Timestamp destoryAt, Timestamp updateAt, Timestamp createAt, String themeSrcImg, JsonNode themeConfigInfo, JsonNode themeItem, JsonNode masterItemTag, Long masterItemId) {
+    public Theme(Long id, String themeImg, String themeUrl, String title, Timestamp startAt, Timestamp endAt, Integer sortNu, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String themeSrcImg, String themeConfigInfo, String themeItem, String masterItemTag, Long masterItemId) {
         this.id = id;
         this.themeImg = themeImg;
         this.themeUrl = themeUrl;
@@ -56,8 +53,8 @@ public class Theme implements Serializable {
         this.startAt = startAt;
         this.endAt = endAt;
         this.sortNu = sortNu;
-        this.orDestory = orDestory;
-        this.destoryAt = destoryAt;
+        this.orDestroy = orDestroy;
+        this.destroyAt = destroyAt;
         this.updateAt = updateAt;
         this.createAt = createAt;
         this.themeSrcImg = themeSrcImg;
@@ -123,20 +120,20 @@ public class Theme implements Serializable {
         this.sortNu = sortNu;
     }
 
-    public Boolean getOrDestory() {
-        return orDestory;
+    public Boolean getOrDestroy() {
+        return orDestroy;
     }
 
-    public void setOrDestory(Boolean orDestory) {
-        this.orDestory = orDestory;
+    public void setOrDestroy(Boolean orDestroy) {
+        this.orDestroy = orDestroy;
     }
 
-    public Timestamp getDestoryAt() {
-        return destoryAt;
+    public Timestamp getDestroyAt() {
+        return destroyAt;
     }
 
-    public void setDestoryAt(Timestamp destoryAt) {
-        this.destoryAt = destoryAt;
+    public void setDestroyAt(Timestamp destroyAt) {
+        this.destroyAt = destroyAt;
     }
 
     public Timestamp getUpdateAt() {
@@ -163,27 +160,27 @@ public class Theme implements Serializable {
         this.themeSrcImg = themeSrcImg;
     }
 
-    public JsonNode getThemeConfigInfo() {
+    public String getThemeConfigInfo() {
         return themeConfigInfo;
     }
 
-    public void setThemeConfigInfo(JsonNode themeConfigInfo) {
+    public void setThemeConfigInfo(String themeConfigInfo) {
         this.themeConfigInfo = themeConfigInfo;
     }
 
-    public JsonNode getThemeItem() {
+    public String getThemeItem() {
         return themeItem;
     }
 
-    public void setThemeItem(JsonNode themeItem) {
+    public void setThemeItem(String themeItem) {
         this.themeItem = themeItem;
     }
 
-    public JsonNode getMasterItemTag() {
+    public String getMasterItemTag() {
         return masterItemTag;
     }
 
-    public void setMasterItemTag(JsonNode masterItemTag) {
+    public void setMasterItemTag(String masterItemTag) {
         this.masterItemTag = masterItemTag;
     }
 
@@ -205,14 +202,14 @@ public class Theme implements Serializable {
                 ", startAt=" + startAt +
                 ", endAt=" + endAt +
                 ", sortNu=" + sortNu +
-                ", orDestory=" + orDestory +
-                ", destoryAt=" + destoryAt +
+                ", orDestroy=" + orDestroy +
+                ", destroyAt=" + destroyAt +
                 ", updateAt=" + updateAt +
                 ", createAt=" + createAt +
                 ", themeSrcImg='" + themeSrcImg + '\'' +
-                ", themeConfigInfo=" + themeConfigInfo +
-                ", themeItem=" + themeItem +
-                ", masterItemTag=" + masterItemTag +
+                ", themeConfigInfo='" + themeConfigInfo + '\'' +
+                ", themeItem='" + themeItem + '\'' +
+                ", masterItemTag='" + masterItemTag + '\'' +
                 ", masterItemId=" + masterItemId +
                 '}';
     }

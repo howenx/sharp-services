@@ -1,7 +1,6 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ public class Inventory implements Serializable{
     private     Integer     restrictAmount;//限购数量
     private     Integer     restAmount;//商品余量
     private     String      invImg;//sku主图
-    private     JsonNode    itemPreviewImgs;//sku预览图
+    private     String    itemPreviewImgs;//sku预览图
     private     String      invUrl;//用于方便前段获取库存跳转链接
 
     @JsonIgnore
@@ -50,7 +49,7 @@ public class Inventory implements Serializable{
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, JsonNode itemPreviewImgs, String invUrl, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -180,11 +179,11 @@ public class Inventory implements Serializable{
         this.invImg = invImg;
     }
 
-    public JsonNode getItemPreviewImgs() {
+    public String getItemPreviewImgs() {
         return itemPreviewImgs;
     }
 
-    public void setItemPreviewImgs(JsonNode itemPreviewImgs) {
+    public void setItemPreviewImgs(String itemPreviewImgs) {
         this.itemPreviewImgs = itemPreviewImgs;
     }
 
