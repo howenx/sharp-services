@@ -90,11 +90,11 @@ public class ThemeServiceImpl implements ThemeService {
      * @return map
      */
     @Override
-    public JsonNode getItemDetail(Long id, Long skuId) {
+    public Map<String,Object> getItemDetail(Long id, Long skuId) {
         Item item = new Item();
         item.setId(id);
 
-        ObjectNode map = Json.newObject();
+        Map<String,Object> map = new HashMap<>();
         item = themeMapper.getItemBy(item);
 
         //将Json字符串转成list
@@ -105,7 +105,7 @@ public class ThemeServiceImpl implements ThemeService {
 
         item.setItemMasterImg(Application.IMAGE_URL+item.getItemMasterImg());
 
-        map.putPOJO("main", item);
+        map.put("main", item);
 
         Inventory inventory = new Inventory();
         inventory.setItemId(item.getId());
@@ -140,7 +140,7 @@ public class ThemeServiceImpl implements ThemeService {
 
         }).collect(Collectors.toList());
 
-        map.putPOJO("stock", list);
+        map.put("stock", list);
         return map;
     }
 

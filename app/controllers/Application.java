@@ -104,15 +104,15 @@ public class Application extends Controller {
      */
     public Result getItemDetail(Long id, Long skuId) {
         //组合结果集
-        ObjectNode result = Json.newObject();
+        Map<String,Object> map = new HashMap<>();
         try{
-            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
-            result.putPOJO("itemDetail", Json.toJson(themeService.getItemDetail(id, skuId)));
-            return ok(result);
+            map = themeService.getItemDetail(id, skuId);
+            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+            return ok(Json.toJson(map));
         }catch (Exception ex){
             Logger.error("server exception:"+ex.toString());
-            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-            return ok(result);
+            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(Json.toJson(map));
         }
     }
 
@@ -177,13 +177,14 @@ public class Application extends Controller {
 
     //测试File
     public Result testFile(){
+        Logger.error("测试request:" + request().body());
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         Logger.error("客户端返回:" + json);
         try{
             Logger.error("测试用户信息:" + cache.get(request().getHeader("id-token")).toString());
-            Address address = Json.fromJson(json,Address.class);
-            address.setUserId(Long.valueOf(Json.parse(cache.get(request().getHeader("id-token")).toString()).findValue("id").asText()));
+//            Address address = Json.fromJson(json,Address.class);
+//            address.setUserId(Long.valueOf(Json.parse(cache.get(request().getHeader("id-token")).toString()).findValue("id").asText()));
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
             return ok(result);
         }catch (Exception ex){

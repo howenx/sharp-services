@@ -6,7 +6,9 @@ import domain.Slider;
 import domain.Theme;
 import domain.ThemeItem;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * For homepage theme list display function.
@@ -20,7 +22,7 @@ public interface ThemeService {
 
     List<Slider> getSlider();
 
-    JsonNode getItemDetail(Long id, Long skuId);
+    Map<String,Object> getItemDetail(Long id, Long skuId);
 
     List<Address> getAddress(Long userId);
 
