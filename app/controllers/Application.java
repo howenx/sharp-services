@@ -14,6 +14,8 @@ import play.mvc.Result;
 import service.ThemeService;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -177,16 +179,26 @@ public class Application extends Controller {
     }
 
     //测试File
-    @BodyParser.Of(value = BodyParser.Text.class, maxLength = 10*1024 * 1024)
+    @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10*1024 * 1024)
     public Result testFile(){
-        Logger.error("测试request:" + request().body());
+//        Logger.error("测试request:" + request().body());
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         Logger.error("客户端返回:" + json);
         try{
+            Logger.error("真实姓名"+json.findValue("realName").toString());
+            Logger.error("身份证编号"+json.findValue("cardNum").toString());
+            byte[] bufferA= org.apache.commons.codec.binary.Base64.decodeBase64(json.findValue("cardImgA").toString());
+            FileOutputStream outA = new FileOutputStream(new File("/Users/howen/git/style-services/1."+json.findValue("aType").asText()));
+            outA.write(bufferA);
+            outA.flush();
+            outA.close();
+            byte[] bufferB= org.apache.commons.codec.binary.Base64.decodeBase64(json.findValue("cardImgB").toString());
+            FileOutputStream outB = new FileOutputStream(new File("/Users/howen/git/style-services/2."+json.findValue("bType").asText()));
+            outB.write(bufferB);
+            outB.flush();
+            outB.close();
             Logger.error("测试用户信息:" + cache.get(request().getHeader("id-token")).toString());
-//            Address address = Json.fromJson(json,Address.class);
-//            address.setUserId(Long.valueOf(Json.parse(cache.get(request().getHeader("id-token")).toString()).findValue("id").asText()));
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
             return ok(result);
         }catch (Exception ex){
