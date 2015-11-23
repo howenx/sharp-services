@@ -103,6 +103,8 @@ public class ThemeServiceImpl implements ThemeService {
         //使用Java8 Stream写法,增加图片地址前缀
         item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL+s).collect(Collectors.toList())).toString());
 
+        item.setItemMasterImg(Application.IMAGE_URL+item.getItemMasterImg());
+
         map.putPOJO("main", item);
 
         Inventory inventory = new Inventory();
@@ -117,6 +119,8 @@ public class ThemeServiceImpl implements ThemeService {
             } else {
                 l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
             }
+
+            l.setInvImg(Application.IMAGE_URL+l.getInvImg());
 
             //判断是否是当前需要显示的sku
             if (!skuId.equals(((Integer)(-1)).longValue()) && !l.getId().equals(skuId)) {
