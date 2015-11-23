@@ -14,6 +14,6 @@ GET     /id/address                                                 controllers.
 POST    /id/address/update                                          controllers.Application.handleAddress(handle:Integer ?= 0)
 POST    /id/address/add                                             controllers.Application.handleAddress(handle:Integer ?= 1)
 POST    /id/address/del                                             controllers.Application.handleAddress(handle:Integer ?= 2)
-
+POST    /test/file                                                  controllers.Application.testFile()
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                                               controllers.Assets.versioned(path="/public", file: Asset)

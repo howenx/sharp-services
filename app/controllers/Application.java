@@ -147,7 +147,7 @@ public class Application extends Controller {
      * @return 返回Json
      */
     public Result handleAddress(Integer handle) {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         Logger.error("客户端返回:" + json);
@@ -166,9 +166,27 @@ public class Application extends Controller {
             }
             else {
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.DATABASE_EXCEPTION.getIndex()),Message.ErrorCode.DATABASE_EXCEPTION.getIndex())));
-                Logger.error("运行时间：" +(System.currentTimeMillis()-start)+ "毫秒");
+//                Logger.error("运行时间：" +(System.currentTimeMillis()-start)+ "毫秒");
                 return ok(result);
             }
+        }catch (Exception ex){
+            Logger.error("server exception:"+ex.toString());
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(result);
+        }
+    }
+
+    //测试File
+    public Result testFile(){
+        JsonNode json = request().body().asJson();
+        ObjectNode result = Json.newObject();
+        Logger.error("客户端返回:" + json);
+        try{
+            Logger.error("测试用户信息:" + cache.get(request().getHeader("id-token")).toString());
+            Address address = Json.fromJson(json,Address.class);
+            address.setUserId(Long.valueOf(Json.parse(cache.get(request().getHeader("id-token")).toString()).findValue("id").asText()));
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()),Message.ErrorCode.SUCCESS.getIndex())));
+            return ok(result);
         }catch (Exception ex){
             Logger.error("server exception:"+ex.toString());
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()),Message.ErrorCode.SERVER_EXCEPTION.getIndex())));

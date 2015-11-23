@@ -69,7 +69,7 @@ public class ThemeServiceImpl implements ThemeService {
                 map.put("masterItemTag",theme.getMasterItemTag());//如果是主宣传商品,增加tag
                 map.put("orMasterItem",true);
             }else {
-                map.put("masterItemTag",null);
+                map.put("masterItemTag","");
                 map.put("orMasterItem",false);
             }
             map.put("state",item.getState());//商品状态
