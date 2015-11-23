@@ -166,7 +166,7 @@
         <include refid="addressColumns">
             <property name="alias" value="t"/>
         </include>
-        from address t
+        from id_address t
         where 1=1 and t.or_destory=false
         <if test="userId != null and userId!=''">
             and t.user_id = #{userId}
@@ -175,7 +175,7 @@
     </select>
 
     <update id="updateAddress" parameterType="domain.Address">
-        update address set update_at = CURRENT_TIMESTAMP(0)
+        update id_address set update_at = CURRENT_TIMESTAMP(0)
         <if test="name != null and name!=''">
             ,name=#{name}
         </if>
@@ -198,12 +198,12 @@
     </update>
 
     <insert id="insertAddress" parameterType="domain.Address" useGeneratedKeys="true" keyProperty="addId">
-        insert into address (user_id,name,tel,delivery_city,delivery_detail,create_at,create_mid)
-        values (#{userId},#{name},#{tel},#{deliveryCity},#{deliveryDetail},CURRENT_TIMESTAMP(0),#{userId})
+        insert into id_address (user_id,name,tel,delivery_city,delivery_detail,create_at)
+        values (#{userId},#{name},#{tel},#{deliveryCity},#{deliveryDetail},CURRENT_TIMESTAMP(0))
     </insert>
 
     <delete id="deleteAddress" parameterType="domain.Address">
-        delete from address
+        delete from id_address
         where add_id = #{addId}
     </delete>
 </mapper>

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.Address;
 import domain.Message;
 import domain.Theme;
-import domain.ThemeItem;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
