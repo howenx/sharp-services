@@ -120,6 +120,7 @@ public class ThemeServiceImpl implements ThemeService {
                 l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
             }
 
+            //SKU图片
             l.setInvImg(Application.IMAGE_URL+l.getInvImg());
 
             //判断是否是当前需要显示的sku

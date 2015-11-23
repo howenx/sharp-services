@@ -33,7 +33,8 @@
         ${alias}.id,
         ${alias}.img,
         ${alias}.sort_nu,
-        ${alias}.create_at
+        ${alias}.create_at,
+        ${alias}.item_target
     </sql>
 
     <sql id="itemColumns">

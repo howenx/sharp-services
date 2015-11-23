@@ -13,12 +13,9 @@ public class Slider implements Serializable{
     private String img;
     private Integer sortNu;
     private Timestamp createAt;
+    private String  itemTarget;
 
-    public Slider(Long id, String img, Integer sortNu, Timestamp createAt) {
-        this.id = id;
-        this.img = img;
-        this.sortNu = sortNu;
-        this.createAt = createAt;
+    public Slider() {
     }
 
     public Long getId() {
@@ -51,5 +48,32 @@ public class Slider implements Serializable{
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    public String getItemTarget() {
+        return itemTarget;
+    }
+
+    public void setItemTarget(String itemTarget) {
+        this.itemTarget = itemTarget;
+    }
+
+    public Slider(Long id, String img, Integer sortNu, Timestamp createAt, String itemTarget) {
+        this.id = id;
+        this.img = img;
+        this.sortNu = sortNu;
+        this.createAt = createAt;
+        this.itemTarget = itemTarget;
+    }
+
+    @Override
+    public String toString() {
+        return "Slider{" +
+                "id=" + id +
+                ", img='" + img + '\'' +
+                ", sortNu=" + sortNu +
+                ", createAt=" + createAt +
+                ", itemTarget='" + itemTarget + '\'' +
+                '}';
     }
 }
