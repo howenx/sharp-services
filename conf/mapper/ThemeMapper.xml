@@ -85,7 +85,8 @@
         ${alias}.state               ,
         ${alias}.ship_fee            ,
         ${alias}.inv_area            ,
-        ${alias}.restrict_amount
+        ${alias}.restrict_amount     ,
+        ${alias}.inv_title
     </sql>
 
     <sql id="addressColumns">

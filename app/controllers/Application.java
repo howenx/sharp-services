@@ -8,6 +8,7 @@ import domain.Theme;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import service.ThemeService;
@@ -176,6 +177,7 @@ public class Application extends Controller {
     }
 
     //测试File
+    @BodyParser.Of(value = BodyParser.Text.class, maxLength = 10*1024 * 1024)
     public Result testFile(){
         Logger.error("测试request:" + request().body());
         JsonNode json = request().body().asJson();

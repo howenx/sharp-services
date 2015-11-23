@@ -25,9 +25,9 @@ public class Inventory implements Serializable{
     private     Integer     restrictAmount;//限购数量
     private     Integer     restAmount;//商品余量
     private     String      invImg;//sku主图
-    private     String    itemPreviewImgs;//sku预览图
+    private     String      itemPreviewImgs;//sku预览图
     private     String      invUrl;//用于方便前段获取库存跳转链接
-
+    private     String      invTitle;//sku标题
     @JsonIgnore
     private     Long        itemId;
     @JsonIgnore
@@ -49,7 +49,7 @@ public class Inventory implements Serializable{
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -65,6 +65,7 @@ public class Inventory implements Serializable{
         this.invImg = invImg;
         this.itemPreviewImgs = itemPreviewImgs;
         this.invUrl = invUrl;
+        this.invTitle = invTitle;
         this.itemId = itemId;
         this.amount = amount;
         this.itemCostPrice = itemCostPrice;
@@ -195,6 +196,14 @@ public class Inventory implements Serializable{
         this.invUrl = invUrl;
     }
 
+    public String getInvTitle() {
+        return invTitle;
+    }
+
+    public void setInvTitle(String invTitle) {
+        this.invTitle = invTitle;
+    }
+
     public Long getItemId() {
         return itemId;
     }
@@ -275,8 +284,9 @@ public class Inventory implements Serializable{
                 ", restrictAmount=" + restrictAmount +
                 ", restAmount=" + restAmount +
                 ", invImg='" + invImg + '\'' +
-                ", itemPreviewImgs=" + itemPreviewImgs +
+                ", itemPreviewImgs='" + itemPreviewImgs + '\'' +
                 ", invUrl='" + invUrl + '\'' +
+                ", invTitle='" + invTitle + '\'' +
                 ", itemId=" + itemId +
                 ", amount=" + amount +
                 ", itemCostPrice=" + itemCostPrice +
