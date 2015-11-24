@@ -160,6 +160,9 @@
         <if test="id != null and id!=''">
             and t.id = #{id}
         </if>
+        <if test="orMasterInv != null and orMasterInv!=''">
+            and t.or_master_inv = #{orMasterInv}
+        </if>
     </select>
 
     <select id="getAddressList" resultType="domain.Address" parameterType="domain.Address">
@@ -191,9 +194,6 @@
         </if>
         <if test="orDefault != null and orDefault!=''">
             ,or_default = #{orDefault}
-        </if>
-        <if test="userId != null and userId!=''">
-            ,update_mid = #{userId}
         </if>
         where add_id = #{addId}
     </update>

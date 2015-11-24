@@ -51,7 +51,9 @@ public class ThemeServiceImpl implements ThemeService {
             item = themeMapper.getItemBy(item);
             //找到每一个主库存信息
             Inventory inventory = new Inventory();
-            inventory.setId(item.getMasterInvId());
+            inventory.setItemId(item.getId());
+            inventory.setOrMasterInv(true);
+            //去找到主sku
             inventory  = themeMapper.getInvBy(inventory).get(0);
             Map<String,Object> map = new HashMap<>();
             map.put("themeId",theme.getId());
