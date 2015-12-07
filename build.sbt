@@ -49,6 +49,9 @@ libraryDependencies += "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0
 /**
  *************************** resolvers ****************************************************
  */
+resolvers ++= Seq(
+  "Apache" at "https://repo1.maven.org/maven2/"
+)
 // 检查代码中使用的过时类细节
 javacOptions += "-Xlint:deprecation"
 javacOptions += "-Xlint:unchecked"
