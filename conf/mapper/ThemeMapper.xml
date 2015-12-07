@@ -25,7 +25,8 @@
         ${alias}.theme_src_img       ,
         ${alias}.theme_config_info::text   ,
         ${alias}.theme_item::text          ,
-        ${alias}.master_item_tag::text
+        ${alias}.master_item_tag::text,
+        ${alias}.theme_master_img
     </sql>
 
 

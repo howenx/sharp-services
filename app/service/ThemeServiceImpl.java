@@ -7,6 +7,7 @@ import controllers.Application;
 import domain.*;
 import mapper.ThemeMapper;
 import play.Logger;
+import play.api.libs.json.JsPath;
 import play.libs.Json;
 
 import javax.inject.Inject;
@@ -60,7 +61,7 @@ public class ThemeServiceImpl implements ThemeService {
                 Map<String,Object> map = new HashMap<>();
                 map.put("themeId",theme.getId());
                 map.put("itemId",item.getId());
-                map.put("itemMasterImg",Application.IMAGE_URL +item.getItemMasterImg());//主题主商品宣传图
+                map.put("itemMasterImg",Application.IMAGE_URL +theme.getMasterItemTag());//主题主商品宣传图
                 map.put("itemTitle",item.getItemTitle());//主商品标题
                 map.put("itemPrice",inventory.getItemPrice());//主sku价格
                 map.put("itemImg",Application.IMAGE_URL +inventory.getInvImg());//主sku图片
@@ -70,7 +71,15 @@ public class ThemeServiceImpl implements ThemeService {
                 map.put("itemUrl",Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
                 map.put("collectCount",item.getCollectCount());//商品收藏数
                 if (item.getId().equals(theme.getMasterItemId())){
-                    map.put("masterItemTag",theme.getMasterItemTag());//如果是主宣传商品,增加tag
+                    JsonNode jsonNode1 = Json.parse(theme.getMasterItemTag());
+                    if (jsonNode.isArray()){
+                        for (final JsonNode url : jsonNode1){
+                            if (url.has("url")) {
+                                ((ObjectNode) url).put("url",Application.DEPLOY_URL+url.findValue("url").asText());
+                            }
+                        }
+                    }
+                    map.put("masterItemTag",jsonNode1.toString());//如果是主宣传商品,增加tag
                     map.put("orMasterItem",true);
                 }else {
                     map.put("masterItemTag","");
