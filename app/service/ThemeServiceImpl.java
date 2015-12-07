@@ -61,7 +61,7 @@ public class ThemeServiceImpl implements ThemeService {
                 Map<String,Object> map = new HashMap<>();
                 map.put("themeId",theme.getId());
                 map.put("itemId",item.getId());
-                map.put("itemMasterImg",Application.IMAGE_URL +theme.getMasterItemTag());//主题主商品宣传图
+
                 map.put("itemTitle",item.getItemTitle());//主商品标题
                 map.put("itemPrice",inventory.getItemPrice());//主sku价格
                 map.put("itemImg",Application.IMAGE_URL +inventory.getInvImg());//主sku图片
@@ -81,9 +81,7 @@ public class ThemeServiceImpl implements ThemeService {
                     }
                     map.put("masterItemTag",jsonNode1.toString());//如果是主宣传商品,增加tag
                     map.put("orMasterItem",true);
-                }else {
-                    map.put("masterItemTag","");
-                    map.put("orMasterItem",false);
+                    map.put("itemMasterImg",Application.IMAGE_URL +theme.getThemeMasterImg());//主题主商品宣传图
                 }
                 map.put("state",item.getState());//商品状态
                 map.put("invWeight",inventory.getInvWeight());//商品重量
