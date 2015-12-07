@@ -49,11 +49,6 @@ libraryDependencies += "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0
 /**
  *************************** resolvers ****************************************************
  */
-resolvers ++= Seq(
-  "Apache" at "http://repo1.maven.org/maven2/",
-  "jBCrypt Repository" at "http://repo1.maven.org/maven2/org/",
-  "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-)
 // 检查代码中使用的过时类细节
 javacOptions += "-Xlint:deprecation"
 javacOptions += "-Xlint:unchecked"
