@@ -53,29 +53,34 @@ public class ThemeServiceImpl implements ThemeService {
             Inventory inventory = new Inventory();
             inventory.setItemId(item.getId());
             inventory.setOrMasterInv(true);
-            //去找到主sku
-            inventory  = themeMapper.getInvBy(inventory).get(0);
-            Map<String,Object> map = new HashMap<>();
-            map.put("themeId",theme.getId());
-            map.put("itemId",item.getId());
-            map.put("itemMasterImg",Application.IMAGE_URL +item.getItemMasterImg());//主题主商品宣传图
-            map.put("itemTitle",item.getItemTitle());//主商品标题
-            map.put("itemPrice",inventory.getItemPrice());//主sku价格
-            map.put("itemImg",Application.IMAGE_URL +inventory.getInvImg());//主sku图片
-            map.put("itemSrcPrice",inventory.getItemSrcPrice());//主sku原价
-            map.put("itemDiscount",inventory.getItemDiscount());//主sku的折扣
-            map.put("itemSoldAmount",inventory.getSoldAmount());//主sku的销量
-            map.put("itemUrl",Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
-            map.put("collectCount",item.getCollectCount());//商品收藏数
-            if (item.getId().equals(theme.getMasterItemId())){
-                map.put("masterItemTag",theme.getMasterItemTag());//如果是主宣传商品,增加tag
-                map.put("orMasterItem",true);
-            }else {
-                map.put("masterItemTag","");
-                map.put("orMasterItem",false);
+            List<Inventory> inventoryList = themeMapper.getInvBy(inventory);
+            if(inventoryList.size()!=0){
+                //去找到主sku
+                inventory  = inventoryList.get(0);
+                Map<String,Object> map = new HashMap<>();
+                map.put("themeId",theme.getId());
+                map.put("itemId",item.getId());
+                map.put("itemMasterImg",Application.IMAGE_URL +item.getItemMasterImg());//主题主商品宣传图
+                map.put("itemTitle",item.getItemTitle());//主商品标题
+                map.put("itemPrice",inventory.getItemPrice());//主sku价格
+                map.put("itemImg",Application.IMAGE_URL +inventory.getInvImg());//主sku图片
+                map.put("itemSrcPrice",inventory.getItemSrcPrice());//主sku原价
+                map.put("itemDiscount",inventory.getItemDiscount());//主sku的折扣
+                map.put("itemSoldAmount",inventory.getSoldAmount());//主sku的销量
+                map.put("itemUrl",Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
+                map.put("collectCount",item.getCollectCount());//商品收藏数
+                if (item.getId().equals(theme.getMasterItemId())){
+                    map.put("masterItemTag",theme.getMasterItemTag());//如果是主宣传商品,增加tag
+                    map.put("orMasterItem",true);
+                }else {
+                    map.put("masterItemTag","");
+                    map.put("orMasterItem",false);
+                }
+                map.put("invWeight",inventory.getInvWeight());//商品重量
+                map.put("invCustoms",inventory.getInvCustoms());//报关单位
+                map.put("postalTaxRate",inventory.getPostalTaxRate());//发货仓库
+                list.add(map);
             }
-            map.put("state",item.getState());//商品状态
-            list.add(map);
         }
         return Json.toJson(list);
     }

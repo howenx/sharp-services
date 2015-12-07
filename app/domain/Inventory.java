@@ -12,22 +12,26 @@ import java.sql.Timestamp;
  */
 public class Inventory implements Serializable{
 
-    private     Long        id;//库存ID
-    private     String      itemColor;//颜色
-    private     String      itemSize;//尺码
-    private     BigDecimal  itemSrcPrice;//商品原价
-    private     BigDecimal  itemPrice;//商品价格
-    private     BigDecimal  itemDiscount;//商品折扣
-    private     Boolean     orMasterInv;//是否主商品
-    private     String      state;//状态
-    private     BigDecimal  shipFee;//邮费
-    private     String      invArea;//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
-    private     Integer     restrictAmount;//限购数量
-    private     Integer     restAmount;//商品余量
-    private     String      invImg;//sku主图
-    private     String      itemPreviewImgs;//sku预览图
-    private     String      invUrl;//用于方便前段获取库存跳转链接
-    private     String      invTitle;//sku标题
+    private     Long                id;//库存ID
+    private     String              itemColor;//颜色
+    private     String              itemSize;//尺码
+    private     BigDecimal          itemSrcPrice;//商品原价
+    private     BigDecimal          itemPrice;//商品价格
+    private     BigDecimal          itemDiscount;//商品折扣
+    private     Boolean             orMasterInv;//是否主商品
+    private     String              state;//状态
+    private     BigDecimal          shipFee;//邮费
+    private     String              invArea;//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
+    private     Integer             restrictAmount;//限购数量
+    private     Integer             restAmount;//商品余量
+    private     String              invImg;//sku主图
+    private     String              itemPreviewImgs;//sku预览图
+    private     String              invUrl;//用于方便前段获取库存跳转链接
+    private     String              invTitle;//sku标题
+    private     String              invWeight;//商品重量单位g
+    private     String              invCustoms;//报关单位
+    private     String              postalTaxRate;//税率,百分比
+
     @JsonIgnore
     private     Long        itemId;
     @JsonIgnore
@@ -45,11 +49,10 @@ public class Inventory implements Serializable{
     @JsonIgnore
     private     Timestamp   createAt;
 
-
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -66,6 +69,9 @@ public class Inventory implements Serializable{
         this.itemPreviewImgs = itemPreviewImgs;
         this.invUrl = invUrl;
         this.invTitle = invTitle;
+        this.invWeight = invWeight;
+        this.invCustoms = invCustoms;
+        this.postalTaxRate = postalTaxRate;
         this.itemId = itemId;
         this.amount = amount;
         this.itemCostPrice = itemCostPrice;
@@ -204,6 +210,30 @@ public class Inventory implements Serializable{
         this.invTitle = invTitle;
     }
 
+    public String getInvWeight() {
+        return invWeight;
+    }
+
+    public void setInvWeight(String invWeight) {
+        this.invWeight = invWeight;
+    }
+
+    public String getInvCustoms() {
+        return invCustoms;
+    }
+
+    public void setInvCustoms(String invCustoms) {
+        this.invCustoms = invCustoms;
+    }
+
+    public String getPostalTaxRate() {
+        return postalTaxRate;
+    }
+
+    public void setPostalTaxRate(String postalTaxRate) {
+        this.postalTaxRate = postalTaxRate;
+    }
+
     public Long getItemId() {
         return itemId;
     }
@@ -287,6 +317,9 @@ public class Inventory implements Serializable{
                 ", itemPreviewImgs='" + itemPreviewImgs + '\'' +
                 ", invUrl='" + invUrl + '\'' +
                 ", invTitle='" + invTitle + '\'' +
+                ", invWeight='" + invWeight + '\'' +
+                ", invCustoms='" + invCustoms + '\'' +
+                ", postalTaxRate='" + postalTaxRate + '\'' +
                 ", itemId=" + itemId +
                 ", amount=" + amount +
                 ", itemCostPrice=" + itemCostPrice +
