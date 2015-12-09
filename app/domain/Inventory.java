@@ -31,6 +31,8 @@ public class Inventory implements Serializable{
     private     String              invWeight;//商品重量单位g
     private     String              invCustoms;//报关单位
     private     String              postalTaxRate;//税率,百分比
+    private     String              postalStandard;//关税收费标准
+
 
     @JsonIgnore
     private     Long        itemId;
@@ -50,36 +52,6 @@ public class Inventory implements Serializable{
     private     Timestamp   createAt;
 
     public Inventory() {
-    }
-
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
-        this.id = id;
-        this.itemColor = itemColor;
-        this.itemSize = itemSize;
-        this.itemSrcPrice = itemSrcPrice;
-        this.itemPrice = itemPrice;
-        this.itemDiscount = itemDiscount;
-        this.orMasterInv = orMasterInv;
-        this.state = state;
-        this.shipFee = shipFee;
-        this.invArea = invArea;
-        this.restrictAmount = restrictAmount;
-        this.restAmount = restAmount;
-        this.invImg = invImg;
-        this.itemPreviewImgs = itemPreviewImgs;
-        this.invUrl = invUrl;
-        this.invTitle = invTitle;
-        this.invWeight = invWeight;
-        this.invCustoms = invCustoms;
-        this.postalTaxRate = postalTaxRate;
-        this.itemId = itemId;
-        this.amount = amount;
-        this.itemCostPrice = itemCostPrice;
-        this.soldAmount = soldAmount;
-        this.orDestroy = orDestroy;
-        this.destroyAt = destroyAt;
-        this.updateAt = updateAt;
-        this.createAt = createAt;
     }
 
     public Long getId() {
@@ -234,6 +206,14 @@ public class Inventory implements Serializable{
         this.postalTaxRate = postalTaxRate;
     }
 
+    public String getPostalStandard() {
+        return postalStandard;
+    }
+
+    public void setPostalStandard(String postalStandard) {
+        this.postalStandard = postalStandard;
+    }
+
     public Long getItemId() {
         return itemId;
     }
@@ -320,6 +300,7 @@ public class Inventory implements Serializable{
                 ", invWeight='" + invWeight + '\'' +
                 ", invCustoms='" + invCustoms + '\'' +
                 ", postalTaxRate='" + postalTaxRate + '\'' +
+                ", postalStandard='" + postalStandard + '\'' +
                 ", itemId=" + itemId +
                 ", amount=" + amount +
                 ", itemCostPrice=" + itemCostPrice +
@@ -329,5 +310,36 @@ public class Inventory implements Serializable{
                 ", updateAt=" + updateAt +
                 ", createAt=" + createAt +
                 '}';
+    }
+
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+        this.id = id;
+        this.itemColor = itemColor;
+        this.itemSize = itemSize;
+        this.itemSrcPrice = itemSrcPrice;
+        this.itemPrice = itemPrice;
+        this.itemDiscount = itemDiscount;
+        this.orMasterInv = orMasterInv;
+        this.state = state;
+        this.shipFee = shipFee;
+        this.invArea = invArea;
+        this.restrictAmount = restrictAmount;
+        this.restAmount = restAmount;
+        this.invImg = invImg;
+        this.itemPreviewImgs = itemPreviewImgs;
+        this.invUrl = invUrl;
+        this.invTitle = invTitle;
+        this.invWeight = invWeight;
+        this.invCustoms = invCustoms;
+        this.postalTaxRate = postalTaxRate;
+        this.postalStandard = postalStandard;
+        this.itemId = itemId;
+        this.amount = amount;
+        this.itemCostPrice = itemCostPrice;
+        this.soldAmount = soldAmount;
+        this.orDestroy = orDestroy;
+        this.destroyAt = destroyAt;
+        this.updateAt = updateAt;
+        this.createAt = createAt;
     }
 }

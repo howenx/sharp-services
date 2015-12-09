@@ -90,7 +90,8 @@
         ${alias}.inv_title           ,
         ${alias}.inv_weight          ,
         ${alias}.inv_customs         ,
-        COALESCE(${alias}.postal_tax_rate,(select f.rate from tax_code f where f.code = t.postal_tax_code)) as postal_tax_rate
+        COALESCE(${alias}.postal_tax_rate,(select f.rate from tax_code f where f.code = t.postal_tax_code)) as postal_tax_rate,
+        (select parameter_val from sys_parameter where parameter_code='POSTAL_STANDARD') as postalStandard
     </sql>
 
     <sql id="addressColumns">
