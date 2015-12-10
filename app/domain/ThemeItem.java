@@ -1,8 +1,11 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import util.MoneySerializer;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -16,9 +19,12 @@ public class ThemeItem implements Serializable {
     private String      itemImg;   	    //商品图片
     private String      itemUrl;   		//商品详细页面链接
     private String      itemTitle;   	//商品标题
-    private Double      itemPrice;   	//商品价格
-    private Double      itemCostPrice;  //商品原价
-    private Double      itemDiscount;   //商品折扣
+    @JsonSerialize(using = MoneySerializer.class)
+    private BigDecimal      itemPrice;   	//商品价格
+    @JsonSerialize(using = MoneySerializer.class)
+    private BigDecimal      itemCostPrice;  //商品原价
+    @JsonSerialize(using = MoneySerializer.class)
+    private BigDecimal      itemDiscount;   //商品折扣
     private Integer     itemSoldAmount; //商品销量
     private Boolean     orMasterItem;   //是否是主题主打宣传商品
     private String      masterItemImg;  //如果是主宣传商品图片url
@@ -51,8 +57,7 @@ public class ThemeItem implements Serializable {
     public ThemeItem() {
     }
 
-    public ThemeItem(Long id, Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, Double itemPrice, Double itemCostPrice, Double itemDiscount, Integer itemSoldAmount, String onShelvesAt, String offShelvesAt, Boolean orMasterItem, String masterItemImg, String masterItemTag, Integer collectCount, String state, Integer likeCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
-        this.id = id;
+    public ThemeItem(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemImg, String masterItemTag, Integer collectCount, String state, String onShelvesAt, String offShelvesAt, Long id, Integer likeCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
         this.themeId = themeId;
         this.itemId = itemId;
         this.itemImg = itemImg;
@@ -62,13 +67,14 @@ public class ThemeItem implements Serializable {
         this.itemCostPrice = itemCostPrice;
         this.itemDiscount = itemDiscount;
         this.itemSoldAmount = itemSoldAmount;
-        this.onShelvesAt = onShelvesAt;
-        this.offShelvesAt = offShelvesAt;
         this.orMasterItem = orMasterItem;
         this.masterItemImg = masterItemImg;
         this.masterItemTag = masterItemTag;
         this.collectCount = collectCount;
         this.state = state;
+        this.onShelvesAt = onShelvesAt;
+        this.offShelvesAt = offShelvesAt;
+        this.id = id;
         this.likeCount = likeCount;
         this.sortNu = sortNu;
         this.orDestory = orDestory;
@@ -77,14 +83,6 @@ public class ThemeItem implements Serializable {
         this.updateUid = updateUid;
         this.createAt = createAt;
         this.createUid = createUid;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getThemeId() {
@@ -127,27 +125,27 @@ public class ThemeItem implements Serializable {
         this.itemTitle = itemTitle;
     }
 
-    public Double getItemPrice() {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    public void setItemPrice(Double itemPrice) {
+    public void setItemPrice(BigDecimal itemPrice) {
         this.itemPrice = itemPrice;
     }
 
-    public Double getItemCostPrice() {
+    public BigDecimal getItemCostPrice() {
         return itemCostPrice;
     }
 
-    public void setItemCostPrice(Double itemCostPrice) {
+    public void setItemCostPrice(BigDecimal itemCostPrice) {
         this.itemCostPrice = itemCostPrice;
     }
 
-    public Double getItemDiscount() {
+    public BigDecimal getItemDiscount() {
         return itemDiscount;
     }
 
-    public void setItemDiscount(Double itemDiscount) {
+    public void setItemDiscount(BigDecimal itemDiscount) {
         this.itemDiscount = itemDiscount;
     }
 
@@ -157,22 +155,6 @@ public class ThemeItem implements Serializable {
 
     public void setItemSoldAmount(Integer itemSoldAmount) {
         this.itemSoldAmount = itemSoldAmount;
-    }
-
-    public String getOnShelvesAt() {
-        return onShelvesAt;
-    }
-
-    public void setOnShelvesAt(String onShelvesAt) {
-        this.onShelvesAt = onShelvesAt;
-    }
-
-    public String getOffShelvesAt() {
-        return offShelvesAt;
-    }
-
-    public void setOffShelvesAt(String offShelvesAt) {
-        this.offShelvesAt = offShelvesAt;
     }
 
     public Boolean getOrMasterItem() {
@@ -213,6 +195,30 @@ public class ThemeItem implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getOnShelvesAt() {
+        return onShelvesAt;
+    }
+
+    public void setOnShelvesAt(String onShelvesAt) {
+        this.onShelvesAt = onShelvesAt;
+    }
+
+    public String getOffShelvesAt() {
+        return offShelvesAt;
+    }
+
+    public void setOffShelvesAt(String offShelvesAt) {
+        this.offShelvesAt = offShelvesAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getLikeCount() {
@@ -282,8 +288,7 @@ public class ThemeItem implements Serializable {
     @Override
     public String toString() {
         return "ThemeItem{" +
-                "id=" + id +
-                ", themeId=" + themeId +
+                "themeId=" + themeId +
                 ", itemId=" + itemId +
                 ", itemImg='" + itemImg + '\'' +
                 ", itemUrl='" + itemUrl + '\'' +
@@ -292,13 +297,14 @@ public class ThemeItem implements Serializable {
                 ", itemCostPrice=" + itemCostPrice +
                 ", itemDiscount=" + itemDiscount +
                 ", itemSoldAmount=" + itemSoldAmount +
-                ", onShelvesAt='" + onShelvesAt + '\'' +
-                ", offShelvesAt='" + offShelvesAt + '\'' +
                 ", orMasterItem=" + orMasterItem +
                 ", masterItemImg='" + masterItemImg + '\'' +
                 ", masterItemTag='" + masterItemTag + '\'' +
                 ", collectCount=" + collectCount +
                 ", state='" + state + '\'' +
+                ", onShelvesAt='" + onShelvesAt + '\'' +
+                ", offShelvesAt='" + offShelvesAt + '\'' +
+                ", id=" + id +
                 ", likeCount=" + likeCount +
                 ", sortNu=" + sortNu +
                 ", orDestory=" + orDestory +
