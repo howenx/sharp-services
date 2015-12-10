@@ -12,6 +12,7 @@ import play.libs.Json;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,10 +64,10 @@ public class ThemeServiceImpl implements ThemeService {
                 map.put("itemId",item.getId());
 
                 map.put("itemTitle",item.getItemTitle());//主商品标题
-                map.put("itemPrice",inventory.getItemPrice());//主sku价格
+                map.put("itemPrice",inventory.getItemPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku价格
                 map.put("itemImg",Application.IMAGE_URL +inventory.getInvImg());//主sku图片
-                map.put("itemSrcPrice",inventory.getItemSrcPrice());//主sku原价
-                map.put("itemDiscount",inventory.getItemDiscount());//主sku的折扣
+                map.put("itemSrcPrice",inventory.getItemSrcPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku原价
+                map.put("itemDiscount",inventory.getItemDiscount().setScale(1, BigDecimal.ROUND_DOWN).toPlainString());//主sku的折扣
                 map.put("itemSoldAmount",inventory.getSoldAmount());//主sku的销量
                 map.put("itemUrl",Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
                 map.put("collectCount",item.getCollectCount());//商品收藏数
