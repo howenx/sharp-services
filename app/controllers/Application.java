@@ -68,7 +68,6 @@ public class Application extends Controller {
                     return map;
                 }).collect(Collectors.toList());
 
-
                 try {
                     result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                     result.putPOJO("slider", Json.toJson(sliderImgList));
@@ -110,7 +109,7 @@ public class Application extends Controller {
                 return ok(result);
             }
         } catch (Exception ex) {
-            Logger.error("server exception:" + ex.toString());
+            Logger.error("server exception:" + ex.getMessage());
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(result);
         }
