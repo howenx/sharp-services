@@ -35,7 +35,8 @@
         ${alias}.img,
         ${alias}.sort_nu,
         ${alias}.create_at,
-        ${alias}.item_target
+        ${alias}.item_target,
+        ${alias}.target_type
     </sql>
 
     <sql id="itemColumns">
@@ -84,7 +85,6 @@
         ${alias}.create_at           ,
         ${alias}.or_master_inv       ,
         ${alias}.state               ,
-        ${alias}.ship_fee            ,
         case when ${alias}.inv_area='H' then '杭州保税区'  when ${alias}.inv_area='G' then '广州保税区' when ${alias}.inv_area='Z' then '韩国直邮' else '自营' end as inv_area,
         ${alias}.restrict_amount     ,
         ${alias}.inv_title           ,
@@ -94,14 +94,6 @@
         (select parameter_val from sys_parameter where parameter_code='POSTAL_STANDARD') as postalStandard
     </sql>
 
-    <sql id="addressColumns">
-        ${alias}.add_id,
-        ${alias}.or_default,
-        ${alias}.tel,
-        ${alias}.name,
-        ${alias}.delivery_city,
-        ${alias}.delivery_detail
-    </sql>
 
     <!--  首页主题图分页显示  -->
     <select id="getThemes" resultType="domain.Theme" parameterType="map">
@@ -170,47 +162,4 @@
             and t.or_master_inv = #{orMasterInv}
         </if>
     </select>
-
-    <select id="getAddressList" resultType="domain.Address" parameterType="domain.Address">
-        select
-        <include refid="addressColumns">
-            <property name="alias" value="t"/>
-        </include>
-        from id_address t
-        where 1=1 and t.or_destroy=false
-        <if test="userId != null and userId!=''">
-            and t.user_id = #{userId}
-        </if>
-        ORDER BY t.or_default DESC
-    </select>
-
-    <update id="updateAddress" parameterType="domain.Address">
-        update id_address set update_at = CURRENT_TIMESTAMP(0)
-        <if test="name != null and name!=''">
-            ,name=#{name}
-        </if>
-        <if test="tel != null and tel!=''">
-            ,tel=#{tel}
-        </if>
-        <if test="deliveryCity != null and deliveryCity!=''">
-            ,delivery_city=#{deliveryCity}
-        </if>
-        <if test="deliveryDetail != null and deliveryDetail!=''">
-            ,delivery_detail=#{deliveryDetail}
-        </if>
-        <if test="orDefault != null and orDefault!=''">
-            ,or_default = #{orDefault}
-        </if>
-        where add_id = #{addId}
-    </update>
-
-    <insert id="insertAddress" parameterType="domain.Address" useGeneratedKeys="true" keyProperty="addId">
-        insert into id_address (user_id,name,tel,delivery_city,delivery_detail,create_at)
-        values (#{userId},#{name},#{tel},#{deliveryCity},#{deliveryDetail},CURRENT_TIMESTAMP(0))
-    </insert>
-
-    <delete id="deleteAddress" parameterType="domain.Address">
-        delete from id_address
-        where add_id = #{addId}
-    </delete>
 </mapper>

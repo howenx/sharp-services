@@ -20,12 +20,4 @@ public interface ThemeMapper {
     Item getItemBy(Item item);
 
     List<Inventory> getInvBy(Inventory inventory);
-
-    List<Address> getAddressList(Address address);
-
-    Integer updateAddress(Address address);
-
-    Integer insertAddress(Address address);
-
-    Integer deleteAddress(Address address);
 }

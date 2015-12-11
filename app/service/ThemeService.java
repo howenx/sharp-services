@@ -1,14 +1,12 @@
 package service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import domain.Address;
 import domain.Slider;
 import domain.Theme;
-import domain.ThemeItem;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * For homepage theme list display function.
@@ -16,16 +14,12 @@ import java.util.Map;
  */
 public interface ThemeService {
 
-    List<Theme> getThemes(int pageSize, int offset);
+    Optional<List<Theme>> getThemes(int pageSize, int offset);
 
-    JsonNode getThemeList(Long itemId);
+    Optional<JsonNode> getThemeList(Long itemId);
 
-    List<Slider> getSlider();
+    Optional<List<Slider>> getSlider();
 
-    Map<String,Object> getItemDetail(Long id, Long skuId);
-
-    List<Address> getAddress(Long userId);
-
-    Boolean handleAddress(Address address,Integer handle);
+    Optional<Map<String,Object>> getItemDetail(Long id, Long skuId) ;
 
 }

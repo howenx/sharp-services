@@ -14,8 +14,18 @@ public class Slider implements Serializable{
     private Integer sortNu;
     private Timestamp createAt;
     private String  itemTarget;
+    private String  targetType;
 
     public Slider() {
+    }
+
+    public Slider(Long id, String img, Integer sortNu, Timestamp createAt, String itemTarget, String targetType) {
+        this.id = id;
+        this.img = img;
+        this.sortNu = sortNu;
+        this.createAt = createAt;
+        this.itemTarget = itemTarget;
+        this.targetType = targetType;
     }
 
     public Long getId() {
@@ -58,12 +68,12 @@ public class Slider implements Serializable{
         this.itemTarget = itemTarget;
     }
 
-    public Slider(Long id, String img, Integer sortNu, Timestamp createAt, String itemTarget) {
-        this.id = id;
-        this.img = img;
-        this.sortNu = sortNu;
-        this.createAt = createAt;
-        this.itemTarget = itemTarget;
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 
     @Override
@@ -74,6 +84,7 @@ public class Slider implements Serializable{
                 ", sortNu=" + sortNu +
                 ", createAt=" + createAt +
                 ", itemTarget='" + itemTarget + '\'' +
+                ", targetType='" + targetType + '\'' +
                 '}';
     }
 }

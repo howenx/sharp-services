@@ -11,39 +11,39 @@ import java.sql.Timestamp;
  */
 public class Item implements Serializable {
 
-    private Long        id;//商品ID
-    private String      itemTitle ;//商品标题
-    private String      itemMasterImg;//商品主图,用于列表页显示的图片
-    private String      onShelvesAt;//上架时间
-    private String      offShelvesAt;//下架时间
-    private String    itemDetailImgs;//商品详细图片
-    private String    itemFeatures;//商品参数
-    private Long        themeId;//商品属于主题的ID
-    private String      state;//商品状态 'Y'--正常,'D'--下架,'N'--删除,'K'--售空
-    private String      shareUrl;//分享链接
-    private Long        collectCount;//收藏数
-    private String      itemNotice;//商品重要布告
-    private String    publicity;//优惠区域显示信息（包括发货区域，多久后发货）
-    private Long        masterInvId;//主SKU的ID
+    private Long id;//商品ID
+    private String itemTitle;//商品标题
+    private String itemMasterImg;//商品主图,用于列表页显示的图片
+    private String onShelvesAt;//上架时间
+    private String offShelvesAt;//下架时间
+    private String itemDetailImgs;//商品详细图片
+    private String itemFeatures;//商品参数
+    private Long themeId;//商品属于主题的ID
+    private String state;//商品状态 'Y'--正常,'D'--下架,'N'--删除,'K'--售空
+    private String shareUrl;//分享链接
+    private Long collectCount;//收藏数
+    private String itemNotice;//商品重要布告
+    private String publicity;//优惠区域显示信息（包括发货区域，多久后发货）
+    private Long masterInvId;//主SKU的ID
 
     @JsonIgnore
-    private Long        cateId ;
+    private Long cateId;
     @JsonIgnore
-    private Long        brandId;
+    private Long brandId;
     @JsonIgnore
-    private String      supplyMerch ;
+    private String supplyMerch;
     @JsonIgnore
-    private Long        shareCount;
+    private Long shareCount;
     @JsonIgnore
-    private Long        browseCount;
+    private Long browseCount;
     @JsonIgnore
-    private Boolean     orDestroy;
+    private Boolean orDestroy;
     @JsonIgnore
-    private Timestamp   destroyAt;
+    private Timestamp destroyAt;
     @JsonIgnore
-    private Timestamp   updateAt;
+    private Timestamp updateAt;
     @JsonIgnore
-    private Timestamp   createAt;
+    private Timestamp createAt;
 
     public Item() {
     }
