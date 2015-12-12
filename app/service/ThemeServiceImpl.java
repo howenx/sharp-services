@@ -127,7 +127,94 @@ public class ThemeServiceImpl implements ThemeService {
                 List<String> itemDetailImgsList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
 
                 //使用Java8 Stream写法,增加图片地址前缀
-                item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> Application.IMAGE_URL + s).collect(Collectors.toList())).toString());
+                item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> {
+                    Logger.error("详情页URL: "+Application.IMAGE_URL + s);
+                    return Application.IMAGE_URL + s;
+                }).collect(Collectors.toList())).toString());
+
+                item.setItemMasterImg(Application.IMAGE_URL + item.getItemMasterImg());
+
+                map.put("main", item);
+
+                Inventory inventory = new Inventory();
+                inventory.setItemId(item.getId());
+
+                //遍历库存list 对其进行相应的处理
+                List<Inventory> list = themeMapper.getInvBy(inventory).stream().map(l -> {
+
+                    //拼接sku链接
+                    if (null != l.getInvUrl() && !"".equals(l.getInvUrl())) {
+                        l.setInvUrl(controllers.Application.DEPLOY_URL + l.getInvUrl());
+                    } else {
+                        l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
+                    }
+
+                    //SKU图片
+                    l.setInvImg(Application.IMAGE_URL + l.getInvImg());
+
+                    //判断是否是当前需要显示的sku
+                    if (!skuId.equals(((Integer) (-1)).longValue()) && !l.getId().equals(skuId)) {
+                        l.setOrMasterInv(false);
+                    } else if (l.getId().equals(skuId)) {
+                        l.setOrMasterInv(true);
+                    }
+
+                    //将Json字符串转成list
+                    List<String> previewList = new ArrayList<>();
+                    try {
+                        previewList = mapper.readValue(l.getItemPreviewImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    } catch (IOException e) {
+                        Logger.error("getItemDetail->list: " + e.getMessage());
+                    }
+                    //使用Java8 Stream写法,增加图片地址前缀
+                    l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> Application.IMAGE_URL + s).collect(Collectors.toList())).toString());
+                    return l;
+                }).collect(Collectors.toList());
+
+                map.put("stock", list);
+                return Optional.of(map);
+            } catch (Exception ex) {
+                Logger.error("getItemDetail: " + ex.getMessage());
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * 组装返回详细页面数据
+     *
+     * @param id 商品主键
+     * @return map
+     */
+    @Override
+    public Optional<Map<String, Object>> getItemDetailWeb(Long id, Long skuId) {
+
+        Item item = new Item();
+        item.setId(id);
+
+        Map<String, Object> map = new HashMap<>();
+        Optional<Item> itemOptional = Optional.ofNullable(themeMapper.getItemBy(item));
+        if (itemOptional.isPresent()) {
+            try {
+                item = itemOptional.get();
+                //将Json字符串转成list
+                List<String> itemDetailImgsList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+
+                StringBuilder stringBuilder;
+                stringBuilder = new StringBuilder("<!DOCTYPE HTML><html><meta charset='UTF-8'><title>Image Canvas</title></head><style>body {margin: 0px;} p {width: 100%;line-height: 24px;font-size: 12px;text-align: left;margin: 0px auto 0 auto;padding: 0;}p img{float: none;margin: 0;padding: 0;border: 0;vertical-align: top;}</style><body><p>");
+
+                //使用Java8 Stream写法,增加图片地址前缀
+                itemDetailImgsList.stream().map((s) -> {
+                    stringBuilder.append("<img width=\"100%\" src=\"").append(Application.IMAGE_URL).append(s).append("\">");
+                    Logger.error("详情页URL: "+Application.IMAGE_URL + s);
+                    return Application.IMAGE_URL + s;
+                }).collect(Collectors.toList());
+
+                stringBuilder.append("</p></body></html>");
+
+                item.setItemDetailImgs(stringBuilder.toString());
 
                 item.setItemMasterImg(Application.IMAGE_URL + item.getItemMasterImg());
 

@@ -142,6 +142,33 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * 获取详细界面,以webView形式返回
+     *
+     * @param id    商品ID
+     * @param skuId 库存ID
+     * @return 返回JSON
+     */
+    public Result getItemDetailWeb(Long id, Long skuId) {
+        //组合结果集
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Optional<Map<String, Object>> mapOptional = themeService.getItemDetailWeb(id, skuId);
+            if (mapOptional.isPresent()) {
+                map = mapOptional.get();
+                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
+                return ok(Json.toJson(map));
+            } else {
+                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex())));
+                return ok(Json.toJson(map));
+            }
+        } catch (Exception ex) {
+            Logger.error("server exception:" + ex.getMessage());
+            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(Json.toJson(map));
+        }
+    }
+
     public void setThemeService(ThemeService themeService) {
         this.themeService = themeService;
     }

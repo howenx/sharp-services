@@ -22,4 +22,5 @@ public interface ThemeService {
 
     Optional<Map<String,Object>> getItemDetail(Long id, Long skuId) ;
 
+    Optional<Map<String,Object>> getItemDetailWeb(Long id, Long skuId) ;
 }
