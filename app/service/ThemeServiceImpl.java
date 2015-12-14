@@ -73,6 +73,7 @@ public class ThemeServiceImpl implements ThemeService {
                     map.put("itemDiscount", inventory.getItemDiscount().setScale(1, BigDecimal.ROUND_DOWN).toPlainString());//主sku的折扣
                     map.put("itemSoldAmount", inventory.getSoldAmount());//主sku的销量
                     map.put("itemUrl", Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
+                    map.put("itemUrlAndroid", Application.DEPLOY_URL + "/comm/detail/web/" + item.getId());//主sku的销量
                     map.put("collectCount", item.getCollectCount());//商品收藏数
                     if (item.getId().equals(theme.getMasterItemId())) {
                         JsonNode jsonNode1 = Json.parse(theme.getMasterItemTag());
