@@ -67,10 +67,15 @@ public class Application extends Controller {
                     map.put("url", IMAGE_URL + l.getImg());
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
 
-                    Pattern p=Pattern.compile("[1-9]\\d*$");
-                    Matcher m=p.matcher(l.getItemTarget());
+                    Pattern p=Pattern.compile("\\d+");
 
-                    if (l.getTargetType().equals("D")) map.put("itemTargetAndroid", DEPLOY_URL +"/comm/detail/web/"+ m.group(1));
+                    if (l.getTargetType().equals("D")) {
+                        Matcher m=p.matcher(l.getItemTarget());
+                        while(m.find()) {
+                            System.out.println(m.group());
+                            map.put("itemTargetAndroid", DEPLOY_URL +"/comm/detail/web/"+ m.group());
+                        }
+                    }
                     map.put("targetType", l.getTargetType());
                     return map;
                 }).collect(Collectors.toList());
