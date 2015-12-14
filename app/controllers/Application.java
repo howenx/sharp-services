@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Application extends Controller {
@@ -64,6 +66,11 @@ public class Application extends Controller {
                     Map<String, Object> map = new HashMap<>();
                     map.put("url", IMAGE_URL + l.getImg());
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
+
+                    Pattern p=Pattern.compile("[1-9]\\d*$");
+                    Matcher m=p.matcher(l.getItemTarget());
+
+                    if (l.getTargetType().equals("D")) map.put("itemTargetAndroid", DEPLOY_URL +"/comm/detail/web/"+ m.group(1));
                     map.put("targetType", l.getTargetType());
                     return map;
                 }).collect(Collectors.toList());
