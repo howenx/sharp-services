@@ -2,13 +2,17 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import domain.Cart;
 import domain.Message;
 import domain.Slider;
 import domain.Theme;
+import filters.UserAuth;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
+import service.CartService;
 import service.ThemeService;
 
 import javax.inject.Inject;
@@ -23,7 +27,7 @@ import java.util.stream.Collectors;
 public class Application extends Controller {
 
     //每页固定的取数
-    public static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 200;
 
     //图片服务器url
     public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
@@ -33,6 +37,9 @@ public class Application extends Controller {
 
     @Inject
     private ThemeService themeService;
+
+    @Inject
+    private CartService cartService;
 
 
     /**
@@ -72,7 +79,6 @@ public class Application extends Controller {
                     if (l.getTargetType().equals("D")) {
                         Matcher m=p.matcher(l.getItemTarget());
                         while(m.find()) {
-                            System.out.println(m.group());
                             map.put("itemTargetAndroid", DEPLOY_URL +"/comm/detail/web/"+ m.group());
                         }
                     }
@@ -107,10 +113,19 @@ public class Application extends Controller {
      * @param themeId 主题ID
      * @return 返回主题列表JSON
      */
+    @Security.Authenticated(UserAuth.class)
     public Result getThemeList(Long themeId) {
+        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
         //组合结果集
         ObjectNode result = Json.newObject();
         try {
+
+            if (userId.isPresent()){
+                Cart cart = new Cart();
+                cart.setUserId(userId.get());
+                result.putPOJO("cartNum",cartService.getCartByUserSku(cart).size());
+            }
+
             Optional<JsonNode> listOptional = themeService.getThemeList(themeId);
             if (listOptional.isPresent()) {
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
@@ -134,13 +149,20 @@ public class Application extends Controller {
      * @param skuId 库存ID
      * @return 返回JSON
      */
+    @Security.Authenticated(UserAuth.class)
     public Result getItemDetail(Long id, Long skuId) {
+        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
             Optional<Map<String, Object>> mapOptional = themeService.getItemDetail(id, skuId);
             if (mapOptional.isPresent()) {
                 map = mapOptional.get();
+                if (userId.isPresent()){
+                    Cart cart = new Cart();
+                    cart.setUserId(userId.get());
+                    map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
             } else {
@@ -183,5 +205,9 @@ public class Application extends Controller {
 
     public void setThemeService(ThemeService themeService) {
         this.themeService = themeService;
+    }
+
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
     }
 }

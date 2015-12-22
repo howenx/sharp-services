@@ -45,10 +45,13 @@ public class Theme implements Serializable {
     @JsonIgnore
     private     String      themeMasterImg;
 
+    @JsonIgnore
+    private     Integer     themeNum;
+
     public Theme() {
     }
 
-    public Theme(Long id, String themeImg, String themeUrl, String title, Timestamp startAt, Timestamp endAt, Integer sortNu, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String themeSrcImg, String themeConfigInfo, String themeItem, String masterItemTag, Long masterItemId, String themeMasterImg) {
+    public Theme(Long id, String themeImg, String themeUrl, String title, Timestamp startAt, Timestamp endAt, Integer sortNu, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String themeSrcImg, String themeConfigInfo, String themeItem, String masterItemTag, Long masterItemId, String themeMasterImg, Integer themeNum) {
         this.id = id;
         this.themeImg = themeImg;
         this.themeUrl = themeUrl;
@@ -66,6 +69,7 @@ public class Theme implements Serializable {
         this.masterItemTag = masterItemTag;
         this.masterItemId = masterItemId;
         this.themeMasterImg = themeMasterImg;
+        this.themeNum = themeNum;
     }
 
     public Long getId() {
@@ -204,6 +208,14 @@ public class Theme implements Serializable {
         this.themeMasterImg = themeMasterImg;
     }
 
+    public Integer getThemeNum() {
+        return themeNum;
+    }
+
+    public void setThemeNum(Integer themeNum) {
+        this.themeNum = themeNum;
+    }
+
     @Override
     public String toString() {
         return "Theme{" +
@@ -224,6 +236,7 @@ public class Theme implements Serializable {
                 ", masterItemTag='" + masterItemTag + '\'' +
                 ", masterItemId=" + masterItemId +
                 ", themeMasterImg='" + themeMasterImg + '\'' +
+                ", themeNum=" + themeNum +
                 '}';
     }
 }
