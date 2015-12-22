@@ -26,7 +26,7 @@
         ${alias}.theme_config_info::text   ,
         ${alias}.theme_item::text          ,
         ${alias}.master_item_tag::text,
-        ${alias}.theme_master_img,
+        ${alias}.theme_master_img
         <!--count(*) over() theme_num-->
     </sql>
 
