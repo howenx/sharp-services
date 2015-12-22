@@ -183,13 +183,20 @@ public class Application extends Controller {
      * @param skuId 库存ID
      * @return 返回JSON
      */
+    @Security.Authenticated(UserAuth.class)
     public Result getItemDetailWeb(Long id, Long skuId) {
+        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
             Optional<Map<String, Object>> mapOptional = themeService.getItemDetailWeb(id, skuId);
             if (mapOptional.isPresent()) {
                 map = mapOptional.get();
+                if (userId.isPresent()){
+                    Cart cart = new Cart();
+                    cart.setUserId(userId.get());
+                    map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
             } else {
