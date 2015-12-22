@@ -7,6 +7,7 @@ import domain.Message;
 import domain.Slider;
 import domain.Theme;
 import filters.UserAuth;
+import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -41,7 +42,8 @@ public class Application extends Controller {
     @Inject
     private CartService cartService;
 
-
+    @Inject
+    private MemcachedClient cache;
     /**
      * 获取主页
      *
@@ -113,17 +115,21 @@ public class Application extends Controller {
      * @param themeId 主题ID
      * @return 返回主题列表JSON
      */
-    @Security.Authenticated(UserAuth.class)
     public Result getThemeList(Long themeId) {
-        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
+        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         ObjectNode result = Json.newObject();
         try {
 
-            if (userId.isPresent()){
-                Cart cart = new Cart();
-                cart.setUserId(userId.get());
-                result.putPOJO("cartNum",cartService.getCartByUserSku(cart).size());
+            if (header.isPresent()) {
+                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                if (token.isPresent()) {
+                    JsonNode userJson = Json.parse(token.get());
+                    Long userId = Long.valueOf(userJson.findValue("id").asText());
+                    Cart cart = new Cart();
+                    cart.setUserId(userId);
+                    result.putPOJO("cartNum",cartService.getCartByUserSku(cart).size());
+                }
             }
 
             Optional<JsonNode> listOptional = themeService.getThemeList(themeId);
@@ -149,19 +155,23 @@ public class Application extends Controller {
      * @param skuId 库存ID
      * @return 返回JSON
      */
-    @Security.Authenticated(UserAuth.class)
     public Result getItemDetail(Long id, Long skuId) {
-        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
+        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
             Optional<Map<String, Object>> mapOptional = themeService.getItemDetail(id, skuId);
             if (mapOptional.isPresent()) {
                 map = mapOptional.get();
-                if (userId.isPresent()){
-                    Cart cart = new Cart();
-                    cart.setUserId(userId.get());
-                    map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                if (header.isPresent()) {
+                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                    if (token.isPresent()) {
+                        JsonNode userJson = Json.parse(token.get());
+                        Long userId = Long.valueOf(userJson.findValue("id").asText());
+                        Cart cart = new Cart();
+                        cart.setUserId(userId);
+                        map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                    }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
@@ -183,19 +193,23 @@ public class Application extends Controller {
      * @param skuId 库存ID
      * @return 返回JSON
      */
-    @Security.Authenticated(UserAuth.class)
     public Result getItemDetailWeb(Long id, Long skuId) {
-        Optional<Long> userId = Optional.ofNullable((Long)ctx().args.get("userId"));
+        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
             Optional<Map<String, Object>> mapOptional = themeService.getItemDetailWeb(id, skuId);
             if (mapOptional.isPresent()) {
                 map = mapOptional.get();
-                if (userId.isPresent()){
-                    Cart cart = new Cart();
-                    cart.setUserId(userId.get());
-                    map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                if (header.isPresent()) {
+                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                    if (token.isPresent()) {
+                        JsonNode userJson = Json.parse(token.get());
+                        Long userId = Long.valueOf(userJson.findValue("id").asText());
+                        Cart cart = new Cart();
+                        cart.setUserId(userId);
+                        map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                    }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
