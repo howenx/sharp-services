@@ -128,7 +128,10 @@ public class Application extends Controller {
                     Long userId = Long.valueOf(userJson.findValue("id").asText());
                     Cart cart = new Cart();
                     cart.setUserId(userId);
-                    result.putPOJO("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                    Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
+                    if (cartList.isPresent()){
+                        result.putPOJO("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                    }
                 }
             }
 
@@ -170,7 +173,10 @@ public class Application extends Controller {
                         Long userId = Long.valueOf(userJson.findValue("id").asText());
                         Cart cart = new Cart();
                         cart.setUserId(userId);
-                        map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
+                        if (cartList.isPresent()){
+                            map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        }
                     }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
@@ -208,8 +214,10 @@ public class Application extends Controller {
                         Long userId = Long.valueOf(userJson.findValue("id").asText());
                         Cart cart = new Cart();
                         cart.setUserId(userId);
-                        map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
-                    }
+                        Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
+                        if (cartList.isPresent()){
+                            map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        }                    }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
