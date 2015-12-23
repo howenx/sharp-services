@@ -128,7 +128,7 @@ public class Application extends Controller {
                     Long userId = Long.valueOf(userJson.findValue("id").asText());
                     Cart cart = new Cart();
                     cart.setUserId(userId);
-                    result.putPOJO("cartNum",cartService.getCartByUserSku(cart).size());
+                    result.putPOJO("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
                 }
             }
 
@@ -170,7 +170,7 @@ public class Application extends Controller {
                         Long userId = Long.valueOf(userJson.findValue("id").asText());
                         Cart cart = new Cart();
                         cart.setUserId(userId);
-                        map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                        map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
                     }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
@@ -208,7 +208,7 @@ public class Application extends Controller {
                         Long userId = Long.valueOf(userJson.findValue("id").asText());
                         Cart cart = new Cart();
                         cart.setUserId(userId);
-                        map.put("cartNum",cartService.getCartByUserSku(cart).size());
+                        map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
                     }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));

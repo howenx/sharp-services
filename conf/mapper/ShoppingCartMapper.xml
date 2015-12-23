@@ -22,7 +22,7 @@
         ,${alias}.update_at
         ,${alias}.order_id
         ,${alias}.status
-        <!--,count(*) over() cart_num-->
+        ,sum(${alias}.amount) over() cart_num
     </sql>
 
     <!---  获取用户购物车,以用户ID或者CartID    -->
@@ -32,7 +32,7 @@
             <property name="alias" value="t"/>
         </include>
         from sp_cart t
-        where 1=1 and t.status in ('I','G')
+        where 1=1 and t.status='I'
         <if test="cartId!=null and cartId !=''">
             and t.cart_id = #{cartId}
         </if>
