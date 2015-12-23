@@ -6,13 +6,11 @@ import domain.Cart;
 import domain.Message;
 import domain.Slider;
 import domain.Theme;
-import filters.UserAuth;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.Security;
 import service.CartService;
 import service.ThemeService;
 
@@ -44,6 +42,7 @@ public class Application extends Controller {
 
     @Inject
     private MemcachedClient cache;
+
     /**
      * 获取主页
      *
@@ -76,12 +75,12 @@ public class Application extends Controller {
                     map.put("url", IMAGE_URL + l.getImg());
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
 
-                    Pattern p=Pattern.compile("\\d+");
+                    Pattern p = Pattern.compile("\\d+");
 
                     if (l.getTargetType().equals("D")) {
-                        Matcher m=p.matcher(l.getItemTarget());
-                        while(m.find()) {
-                            map.put("itemTargetAndroid", DEPLOY_URL +"/comm/detail/web/"+ m.group());
+                        Matcher m = p.matcher(l.getItemTarget());
+                        while (m.find()) {
+                            map.put("itemTargetAndroid", DEPLOY_URL + "/comm/detail/web/" + m.group());
                         }
                     }
                     map.put("targetType", l.getTargetType());
@@ -129,8 +128,8 @@ public class Application extends Controller {
                     Cart cart = new Cart();
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                    if (cartList.isPresent()){
-                        result.putPOJO("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                    if (cartList.isPresent() && cartList.get().size()>0) {
+                        result.putPOJO("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
                     }
                 }
             }
@@ -174,8 +173,8 @@ public class Application extends Controller {
                         Cart cart = new Cart();
                         cart.setUserId(userId);
                         Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent()){
-                            map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        if (cartList.isPresent() && cartList.get().size()>0) {
+                            map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
                         }
                     }
                 }
@@ -215,9 +214,10 @@ public class Application extends Controller {
                         Cart cart = new Cart();
                         cart.setUserId(userId);
                         Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent()){
-                            map.put("cartNum",cartService.getCartByUserSku(cart).get(0).getCartNum());
-                        }                    }
+                        if (cartList.isPresent() && cartList.get().size()>0) {
+                            map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        }
+                    }
                 }
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 return ok(Json.toJson(map));
