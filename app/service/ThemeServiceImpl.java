@@ -88,7 +88,41 @@ public class ThemeServiceImpl implements ThemeService {
                         map.put("orMasterItem", true);
                         map.put("itemMasterImg", Application.IMAGE_URL + theme.getThemeMasterImg());//主题主商品宣传图
                     }
-                    map.put("state", item.getState());//商品状态
+
+                    //遍历所有sku状态,如果所有sku状态均为下架或者售空,则提示商品是售空或者下架
+                    Inventory invState = new Inventory();
+                    inventory.setItemId(item.getId());
+                    List<Inventory> invStateList = themeMapper.getInvBy(inventory);
+                    int countK=0;
+                    int countD=0;
+                    int count=0;
+                    //单个sku状态  'Y'--正常,'D'--下架,'N'--删除,'K'--售空
+                    for (Inventory inv:invStateList){
+                        switch (inv.getState()) {
+                            case "Y":
+                                map.put("state", "Y");//商品状态
+                                break;
+                            case "K":
+                                countK++;
+                                break;
+                            case "D":
+                                countD++;
+                                break;
+                            default:
+                                count++;
+                                break;
+                        }
+                    }
+                    if (count==invStateList.size()){
+                        map.put("state", "K");//商品状态
+                    }
+                    if (countK==invStateList.size()){
+                        map.put("state", "K");//商品状态
+                    }
+                    if (countD==invStateList.size()){
+                        map.put("state", "D");//商品状态
+                    }
+
                     map.put("invWeight", inventory.getInvWeight());//商品重量
                     map.put("invCustoms", inventory.getInvCustoms());//报关单位
                     map.put("invArea", inventory.getInvArea());//仓储名称

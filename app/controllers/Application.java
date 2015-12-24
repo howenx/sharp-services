@@ -31,6 +31,9 @@ public class Application extends Controller {
     //图片服务器url
     public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
 
+    //阿里云图片服务器url
+    public static final String ALI_IMAGE_URL = play.Play.application().configuration().getString("ali.image.server.url");
+
     //发布服务器url
     public static final String DEPLOY_URL = play.Play.application().configuration().getString("deploy.server.url");
 
@@ -72,11 +75,12 @@ public class Application extends Controller {
                 //slider取出链接
                 List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("url", IMAGE_URL + l.getImg());
+                    map.put("url", ALI_IMAGE_URL + l.getImg());
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
 
                     Pattern p = Pattern.compile("\\d+");
 
+                    //如果是需要跳转至详细页,则取出商品ID,然后拼接一个安卓版本的url
                     if (l.getTargetType().equals("D")) {
                         Matcher m = p.matcher(l.getItemTarget());
                         while (m.find()) {
