@@ -126,6 +126,7 @@ public class ThemeServiceImpl implements ThemeService {
                     map.put("invWeight", inventory.getInvWeight());//商品重量
                     map.put("invCustoms", inventory.getInvCustoms());//报关单位
                     map.put("invArea", inventory.getInvArea());//仓储名称
+                    map.put("invAreaNm", inventory.getInvAreaNm());//仓储名称
                     map.put("postalTaxRate", inventory.getPostalTaxRate());//发货仓库
                     list.add(map);
                 }
