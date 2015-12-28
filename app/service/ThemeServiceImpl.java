@@ -164,7 +164,6 @@ public class ThemeServiceImpl implements ThemeService {
 
                 //使用Java8 Stream写法,增加图片地址前缀
                 item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> {
-                    Logger.error("详情页URL: "+Application.IMAGE_URL + s);
                     return Application.IMAGE_URL + s;
                 }).collect(Collectors.toList())).toString());
 
@@ -244,7 +243,6 @@ public class ThemeServiceImpl implements ThemeService {
                 //使用Java8 Stream写法,增加图片地址前缀
                 itemDetailImgsList.stream().map((s) -> {
                     stringBuilder.append("<img width=\"100%\" src=\"").append(Application.IMAGE_URL).append(s).append("\">");
-                    Logger.error("详情页URL: "+Application.IMAGE_URL + s);
                     return Application.IMAGE_URL + s;
                 }).collect(Collectors.toList());
 

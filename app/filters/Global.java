@@ -11,10 +11,10 @@ import play.Logger;
 public class Global extends GlobalSettings {
 
     public void onStart(Application app) {
-        Logger.error("Application has started");
+//        Logger.error("Application has started");
     }
 
     public void onStop(Application app) {
-        Logger.error("Application shutdown...");
+//        Logger.error("Application shutdown...");
     }
 }
