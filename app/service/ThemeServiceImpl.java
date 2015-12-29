@@ -70,8 +70,8 @@ public class ThemeServiceImpl implements ThemeService {
                     map.put("itemPrice", inventory.getItemPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku价格
 
                     JsonNode jsonNode_invimg = Json.parse(inventory.getInvImg());
-                    if (jsonNode_invimg.has("url")){
-                        ((ObjectNode)jsonNode_invimg).put("url",Application.IMAGE_URL +jsonNode_invimg.get("url").asText());
+                    if (jsonNode_invimg.has("url")) {
+                        ((ObjectNode) jsonNode_invimg).put("url", Application.IMAGE_URL + jsonNode_invimg.get("url").asText());
                         map.put("itemImg", Json.stringify(jsonNode_invimg));//主sku图片
                     }
                     map.put("itemSrcPrice", inventory.getItemSrcPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku原价
@@ -92,8 +92,8 @@ public class ThemeServiceImpl implements ThemeService {
                         map.put("masterItemTag", jsonNode1.toString());//如果是主宣传商品,增加tag
                         map.put("orMasterItem", true);
                         JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
-                        if (jsonNode_ThemeMasterImg.has("url")){
-                            ((ObjectNode)jsonNode_ThemeMasterImg).put("url",Application.IMAGE_URL +jsonNode_ThemeMasterImg.get("url").asText());
+                        if (jsonNode_ThemeMasterImg.has("url")) {
+                            ((ObjectNode) jsonNode_ThemeMasterImg).put("url", Application.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
                             map.put("itemMasterImg", Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
                         }
                     }
@@ -102,11 +102,11 @@ public class ThemeServiceImpl implements ThemeService {
                     Inventory invState = new Inventory();
                     inventory.setItemId(item.getId());
                     List<Inventory> invStateList = themeMapper.getInvBy(inventory);
-                    int countK=0;
-                    int countD=0;
-                    int count=0;
+                    int countK = 0;
+                    int countD = 0;
+                    int count = 0;
                     //单个sku状态  'Y'--正常,'D'--下架,'N'--删除,'K'--售空
-                    for (Inventory inv:invStateList){
+                    for (Inventory inv : invStateList) {
                         switch (inv.getState()) {
                             case "Y":
                                 map.put("state", "Y");//商品状态
@@ -122,13 +122,13 @@ public class ThemeServiceImpl implements ThemeService {
                                 break;
                         }
                     }
-                    if (count==invStateList.size()){
+                    if (count == invStateList.size()) {
                         map.put("state", "K");//商品状态
                     }
-                    if (countK==invStateList.size()){
+                    if (countK == invStateList.size()) {
                         map.put("state", "K");//商品状态
                     }
-                    if (countD==invStateList.size()){
+                    if (countD == invStateList.size()) {
                         map.put("state", "D");//商品状态
                     }
 
@@ -169,10 +169,15 @@ public class ThemeServiceImpl implements ThemeService {
             try {
                 item = itemOptional.get();
                 //将Json字符串转成list
-                List<String> itemDetailImgsList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                List<List<String>> listList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, List.class));
+
+                List<String> detailsList = new ArrayList<>();
+                listList.forEach(l -> {
+                    l.forEach(detailsList::add);
+                });
 
                 //使用Java8 Stream写法,增加图片地址前缀
-                item.setItemDetailImgs(Json.toJson(itemDetailImgsList.stream().map((s) -> {
+                item.setItemDetailImgs(Json.toJson(detailsList.stream().map((s) -> {
                     return Application.IMAGE_URL + s;
                 }).collect(Collectors.toList())).toString());
 
@@ -188,19 +193,19 @@ public class ThemeServiceImpl implements ThemeService {
 
                     //拼接sku链接
                     if (null != l.getInvUrl() && !"".equals(l.getInvUrl())) {
-                        l.setInvUrl(controllers.Application.DEPLOY_URL + l.getInvUrl());
+                        l.setInvUrl(Application.DEPLOY_URL + l.getInvUrl());
                     } else {
-                        l.setInvUrl(controllers.Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
+                        l.setInvUrl(Application.DEPLOY_URL + "/comm/detail/" + id + "/" + l.getId());
                     }
 
                     //SKU图片
-                    if (l.getInvImg().contains("url")){
+                    if (l.getInvImg().contains("url")) {
                         JsonNode jsonNode_InvImg = Json.parse(l.getInvImg());
-                        if (jsonNode_InvImg.has("url")){
-                            ((ObjectNode)jsonNode_InvImg).put("url",Application.IMAGE_URL +jsonNode_InvImg.get("url").asText());
+                        if (jsonNode_InvImg.has("url")) {
+                            ((ObjectNode) jsonNode_InvImg).put("url", Application.IMAGE_URL + jsonNode_InvImg.get("url").asText());
                             l.setInvImg(Json.stringify(jsonNode_InvImg));
                         }
-                    }else l.setInvImg(Application.IMAGE_URL +l.getInvImg());
+                    } else l.setInvImg(Application.IMAGE_URL + l.getInvImg());
 
 
                     //判断是否是当前需要显示的sku
@@ -210,24 +215,17 @@ public class ThemeServiceImpl implements ThemeService {
                         l.setOrMasterInv(true);
                     }
 
-                    //将Json字符串转成list
-                    List<String> previewList = new ArrayList<>();
-                    try {
-                        previewList = mapper.readValue(l.getItemPreviewImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-                    } catch (IOException e) {
-                        Logger.error("getItemDetail->list: " + e.getMessage());
-                    }
-                    //使用Java8 Stream写法,增加图片地址前缀
-                    l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> {
-                        if (s.contains("url")){
-                            JsonNode jsonNode_s = Json.parse(s);
-                            if (jsonNode_s.has("url")){
-                                ((ObjectNode)jsonNode_s).put("url",Application.IMAGE_URL +jsonNode_s.get("url").asText());
-                            }
-                            return Json.stringify(jsonNode_s);
-                        }else return Application.IMAGE_URL +s;
+                    JsonNode js = Json.parse(l.getItemPreviewImgs());
 
-                    }).collect(Collectors.toList())).toString());
+                    if (js.isArray()) {
+                        for (JsonNode j : js) {
+                            if (j.has("url")) {
+                                ((ObjectNode) j).put("url", Application.IMAGE_URL + j.get("url").asText());
+                            }
+                        }
+                    }
+                    l.setItemPreviewImgs(js.toString());
+
                     return l;
                 }).collect(Collectors.toList());
 
@@ -259,14 +257,19 @@ public class ThemeServiceImpl implements ThemeService {
         if (itemOptional.isPresent()) {
             try {
                 item = itemOptional.get();
-                //将Json字符串转成list
-                List<String> itemDetailImgsList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+
+                List<List<String>> listList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, List.class));
+
+                List<String> detailsList = new ArrayList<>();
+                listList.forEach(l -> {
+                    l.forEach(detailsList::add);
+                });
 
                 StringBuilder stringBuilder;
                 stringBuilder = new StringBuilder("<!DOCTYPE HTML><html><meta charset='UTF-8'><title>Image Canvas</title></head><style>body {margin: 0px;} p {width: 100%;line-height: 24px;font-size: 12px;text-align: left;margin: 0px auto 0 auto;padding: 0;}p img{float: none;margin: 0;padding: 0;border: 0;vertical-align: top;}</style><body><p>");
 
                 //使用Java8 Stream写法,增加图片地址前缀
-                itemDetailImgsList.stream().map((s) -> {
+                detailsList.stream().map((s) -> {
                     stringBuilder.append("<img width=\"100%\" src=\"").append(Application.IMAGE_URL).append(s).append("\">");
                     return Application.IMAGE_URL + s;
                 }).collect(Collectors.toList());
@@ -293,13 +296,13 @@ public class ThemeServiceImpl implements ThemeService {
                     }
 
                     //SKU图片
-                    if (l.getInvImg().contains("url")){
+                    if (l.getInvImg().contains("url")) {
                         JsonNode jsonNode_InvImg = Json.parse(l.getInvImg());
-                        if (jsonNode_InvImg.has("url")){
-                            ((ObjectNode)jsonNode_InvImg).put("url",Application.IMAGE_URL +jsonNode_InvImg.get("url").asText());
+                        if (jsonNode_InvImg.has("url")) {
+                            ((ObjectNode) jsonNode_InvImg).put("url", Application.IMAGE_URL + jsonNode_InvImg.get("url").asText());
                             l.setInvImg(Json.stringify(jsonNode_InvImg));
                         }
-                    }else l.setInvImg(Application.IMAGE_URL +l.getInvImg());
+                    } else l.setInvImg(Application.IMAGE_URL + l.getInvImg());
 
                     //判断是否是当前需要显示的sku
                     if (!skuId.equals(((Integer) (-1)).longValue()) && !l.getId().equals(skuId)) {
@@ -308,27 +311,22 @@ public class ThemeServiceImpl implements ThemeService {
                         l.setOrMasterInv(true);
                     }
 
-                    //将Json字符串转成list
-                    List<String> previewList = new ArrayList<>();
-                    try {
-                        previewList = mapper.readValue(l.getItemPreviewImgs(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-                    } catch (IOException e) {
-                        Logger.error("getItemDetail->list: " + e.getMessage());
-                    }
-                    //使用Java8 Stream写法,增加图片地址前缀
-                    l.setItemPreviewImgs(Json.toJson(previewList.stream().map((s) -> {
-                        if (s.contains("url")){
-                            JsonNode jsonNode_s = Json.parse(s);
-                            if (jsonNode_s.has("url")){
-                                ((ObjectNode)jsonNode_s).put("url",Application.IMAGE_URL +jsonNode_s.get("url").asText());
+                    JsonNode js = Json.parse(l.getItemPreviewImgs());
+
+                    if (js.isArray()) {
+                        for (JsonNode j : js) {
+                            if (j.has("url")) {
+                                ((ObjectNode) j).put("url", Application.IMAGE_URL + j.get("url").asText());
                             }
-                            return Json.stringify(jsonNode_s);
-                        }else return Application.IMAGE_URL +s;
-                    }).collect(Collectors.toList())).toString());
+                        }
+                    }
+                    l.setItemPreviewImgs(js.toString());
+
                     return l;
                 }).collect(Collectors.toList());
 
                 map.put("stock", list);
+
                 return Optional.of(map);
             } catch (Exception ex) {
                 Logger.error("getItemDetail: " + ex.getMessage());

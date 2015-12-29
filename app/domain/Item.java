@@ -13,6 +13,7 @@ public class Item implements Serializable {
 
     private Long id;//商品ID
     private String itemTitle;//商品标题
+    @JsonIgnore
     private String itemMasterImg;//商品主图,用于列表页显示的图片
     private String onShelvesAt;//上架时间
     private String offShelvesAt;//下架时间
