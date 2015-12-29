@@ -61,7 +61,13 @@ public class Application extends Controller {
 
         if (listOptional.isPresent()) {
             List<Theme> themeList = listOptional.get().stream().map(l -> {
-                l.setThemeImg(IMAGE_URL + l.getThemeImg());
+                if (l.getThemeImg().contains("url")){
+                    JsonNode jsonNode1 = Json.parse(l.getThemeImg());
+                    if (jsonNode1.has("url")){
+                        ((ObjectNode)jsonNode1).put("url",IMAGE_URL +jsonNode1.get("url").asText());
+                        l.setThemeImg(Json.stringify(jsonNode1));
+                    }
+                }else l.setThemeImg(IMAGE_URL +l.getThemeImg());
                 l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
                 return l;
             }).collect(Collectors.toList());
@@ -72,7 +78,17 @@ public class Application extends Controller {
                 //slider取出链接
                 List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("url", IMAGE_URL + l.getImg());
+                    if (l.getImg().contains("url")){
+                        JsonNode jsonNode2 = Json.parse(l.getImg());
+                        if (jsonNode2.has("url")){
+                            ((ObjectNode)jsonNode2).put("url",IMAGE_URL +jsonNode2.get("url").asText());
+                            map.put("url", Json.stringify(jsonNode2));
+                        }
+                    }
+                    else{
+                        map.put("url", IMAGE_URL +l.getImg());
+                    }
+
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
 
                     Pattern p = Pattern.compile("\\d+");
