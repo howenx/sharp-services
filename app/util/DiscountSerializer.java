@@ -11,9 +11,9 @@ import java.math.BigDecimal;
  * Json BigDecimal deal
  * Created by howen on 15/12/10.
  */
-public class MoneySerializer extends JsonSerializer<BigDecimal> {
+public class DiscountSerializer extends JsonSerializer<BigDecimal> {
     @Override
     public void serialize(BigDecimal value, JsonGenerator jgen, SerializerProvider provider) throws IOException{
-        jgen.writeString(value.setScale(2, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());
+        jgen.writeString(value.setScale(1, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());
     }
 }

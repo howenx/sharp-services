@@ -67,15 +67,15 @@ public class ThemeServiceImpl implements ThemeService {
                     map.put("itemId", item.getId());
 
                     map.put("itemTitle", item.getItemTitle());//主商品标题
-                    map.put("itemPrice", inventory.getItemPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku价格
+                    map.put("itemPrice", inventory.getItemPrice().setScale(2, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku价格
 
                     JsonNode jsonNode_invimg = Json.parse(inventory.getInvImg());
                     if (jsonNode_invimg.has("url")) {
                         ((ObjectNode) jsonNode_invimg).put("url", Application.IMAGE_URL + jsonNode_invimg.get("url").asText());
                         map.put("itemImg", Json.stringify(jsonNode_invimg));//主sku图片
                     }
-                    map.put("itemSrcPrice", inventory.getItemSrcPrice().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());//主sku原价
-                    map.put("itemDiscount", inventory.getItemDiscount().setScale(1, BigDecimal.ROUND_DOWN).toPlainString());//主sku的折扣
+                    map.put("itemSrcPrice", inventory.getItemSrcPrice().setScale(2, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku原价
+                    map.put("itemDiscount", inventory.getItemDiscount().setScale(1, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku的折扣
                     map.put("itemSoldAmount", inventory.getSoldAmount());//主sku的销量
                     map.put("itemUrl", Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
                     map.put("itemUrlAndroid", Application.DEPLOY_URL + "/comm/detail/web/" + item.getId());//主sku的销量
