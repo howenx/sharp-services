@@ -61,13 +61,13 @@ public class Application extends Controller {
 
         if (listOptional.isPresent()) {
             List<Theme> themeList = listOptional.get().stream().map(l -> {
-                if (l.getThemeImg().contains("url")){
+                if (l.getThemeImg().contains("url")) {
                     JsonNode jsonNode1 = Json.parse(l.getThemeImg());
-                    if (jsonNode1.has("url")){
-                        ((ObjectNode)jsonNode1).put("url",IMAGE_URL +jsonNode1.get("url").asText());
+                    if (jsonNode1.has("url")) {
+                        ((ObjectNode) jsonNode1).put("url", IMAGE_URL + jsonNode1.get("url").asText());
                         l.setThemeImg(Json.stringify(jsonNode1));
                     }
-                }else l.setThemeImg(IMAGE_URL +l.getThemeImg());
+                } else l.setThemeImg(IMAGE_URL + l.getThemeImg());
                 l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
                 return l;
             }).collect(Collectors.toList());
@@ -78,15 +78,14 @@ public class Application extends Controller {
                 //slider取出链接
                 List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
                     Map<String, Object> map = new HashMap<>();
-                    if (l.getImg().contains("url")){
+                    if (l.getImg().contains("url")) {
                         JsonNode jsonNode2 = Json.parse(l.getImg());
-                        if (jsonNode2.has("url")){
-                            ((ObjectNode)jsonNode2).put("url",IMAGE_URL +jsonNode2.get("url").asText());
+                        if (jsonNode2.has("url")) {
+                            ((ObjectNode) jsonNode2).put("url", IMAGE_URL + jsonNode2.get("url").asText());
                             map.put("url", Json.stringify(jsonNode2));
                         }
-                    }
-                    else{
-                        map.put("url", IMAGE_URL +l.getImg());
+                    } else {
+                        map.put("url", IMAGE_URL + l.getImg());
                     }
 
                     map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
@@ -145,7 +144,7 @@ public class Application extends Controller {
                     Cart cart = new Cart();
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                    if (cartList.isPresent() && cartList.get().size()>0) {
+                    if (cartList.isPresent() && cartList.get().size() > 0) {
                         result.putPOJO("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
                     }
                 }
@@ -190,7 +189,7 @@ public class Application extends Controller {
                         Cart cart = new Cart();
                         cart.setUserId(userId);
                         Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent() && cartList.get().size()>0) {
+                        if (cartList.isPresent() && cartList.get().size() > 0) {
                             map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
                         }
                     }
@@ -231,7 +230,7 @@ public class Application extends Controller {
                         Cart cart = new Cart();
                         cart.setUserId(userId);
                         Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent() && cartList.get().size()>0) {
+                        if (cartList.isPresent() && cartList.get().size() > 0) {
                             map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
                         }
                     }
@@ -242,6 +241,32 @@ public class Application extends Controller {
                 map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex())));
                 return ok(Json.toJson(map));
             }
+        } catch (Exception ex) {
+            Logger.error("server exception:" + ex.getMessage());
+            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+            return ok(Json.toJson(map));
+        }
+    }
+
+    public Result getCartAmount() {
+        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (header.isPresent()) {
+                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                if (token.isPresent()) {
+                    JsonNode userJson = Json.parse(token.get());
+                    Long userId = Long.valueOf(userJson.findValue("id").asText());
+                    Cart cart = new Cart();
+                    cart.setUserId(userId);
+                    Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
+                    if (cartList.isPresent() && cartList.get().size() > 0) {
+                        map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
+                    }
+                }
+            }
+            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
+            return ok(Json.toJson(map));
         } catch (Exception ex) {
             Logger.error("server exception:" + ex.getMessage());
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
