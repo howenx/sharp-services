@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Application;
-import domain.Inventory;
-import domain.Item;
-import domain.Slider;
-import domain.Theme;
+import domain.*;
 import mapper.ThemeMapper;
 import play.Logger;
 import play.libs.Json;
@@ -16,6 +13,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +46,44 @@ public class ThemeServiceImpl implements ThemeService {
         Optional<Theme> themeOptional = Optional.ofNullable(themeMapper.getThemeBy(theme));
         if (themeOptional.isPresent()) {
             theme = themeOptional.get();
-            List<Map> list = new ArrayList<>();
+            ThemeBasic themeBasic = new ThemeBasic();
+            themeBasic.setThemeId(themeId);
+
+            JsonNode jsonNodeTag = Json.parse(theme.getMasterItemTag());
+            if (jsonNodeTag.isArray()) {
+                for (final JsonNode url : jsonNodeTag) {
+                    if (url.has("url")) {
+                        ((ObjectNode) url).put("url", Application.DEPLOY_URL + url.findValue("url").asText());
+                    }
+                }
+            }
+            themeBasic.setMasterItemTag(Json.stringify(jsonNodeTag));
+
+            Pattern p = Pattern.compile("\\d+");
+            JsonNode jsonNodeTagAndroid = Json.parse(theme.getMasterItemTag());
+            if (jsonNodeTagAndroid.isArray()) {
+                for (final JsonNode url : jsonNodeTagAndroid) {
+                    if (url.has("url")) {
+                        Matcher m = p.matcher(url.findValue("url").asText());
+                        while (m.find()) {
+                            ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/detail/web/" + m.group());
+                        }
+
+                    }
+                }
+            }
+            themeBasic.setMasterItemTagAndroid(Json.stringify(jsonNodeTagAndroid));
+
+            JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
+            if (jsonNode_ThemeMasterImg.has("url")) {
+                ((ObjectNode) jsonNode_ThemeMasterImg).put("url", Application.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
+                themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
+            }
+
+            List<ThemeItem>  themeItems = new ArrayList<>();
+
             JsonNode jsonNode = Json.parse(theme.getThemeItem());
+
             for (final JsonNode objNode : jsonNode) {
                 //获取每一个Item
                 Item item = new Item();
@@ -62,43 +97,23 @@ public class ThemeServiceImpl implements ThemeService {
                 if (inventoryList.size() != 0) {
                     //去找到主sku
                     inventory = inventoryList.get(0);
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("themeId", theme.getId());
-                    map.put("itemId", item.getId());
 
-                    map.put("itemTitle", item.getItemTitle());//主商品标题
-                    map.put("itemPrice", inventory.getItemPrice().setScale(2, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku价格
+                    ThemeItem themeItem = new ThemeItem();
 
-                    JsonNode jsonNode_invimg = Json.parse(inventory.getInvImg());
-                    if (jsonNode_invimg.has("url")) {
-                        ((ObjectNode) jsonNode_invimg).put("url", Application.IMAGE_URL + jsonNode_invimg.get("url").asText());
-                        map.put("itemImg", Json.stringify(jsonNode_invimg));//主sku图片
-                    }
-                    map.put("itemSrcPrice", inventory.getItemSrcPrice().setScale(2, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku原价
-                    map.put("itemDiscount", inventory.getItemDiscount().setScale(1, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());//主sku的折扣
-                    map.put("itemSoldAmount", inventory.getSoldAmount());//主sku的销量
-                    map.put("itemUrl", Application.DEPLOY_URL + "/comm/detail/" + item.getId());//主sku的销量
-                    map.put("itemUrlAndroid", Application.DEPLOY_URL + "/comm/detail/web/" + item.getId());//主sku的销量
-                    map.put("collectCount", item.getCollectCount());//商品收藏数
-                    if (item.getId().equals(theme.getMasterItemId())) {
-                        JsonNode jsonNode1 = Json.parse(theme.getMasterItemTag());
-                        if (jsonNode.isArray()) {
-                            for (final JsonNode url : jsonNode1) {
-                                if (url.has("url")) {
-                                    ((ObjectNode) url).put("url", Application.DEPLOY_URL + url.findValue("url").asText());
-                                }
-                            }
-                        }
-                        map.put("masterItemTag", jsonNode1.toString());//如果是主宣传商品,增加tag
-                        map.put("orMasterItem", true);
-                        JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
-                        if (jsonNode_ThemeMasterImg.has("url")) {
-                            ((ObjectNode) jsonNode_ThemeMasterImg).put("url", Application.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
-                            map.put("itemMasterImg", Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
-                        }
-                    }
+                    themeItem.setItemId(inventory.getItemId());
+                    themeItem.setItemTitle(inventory.getInvTitle());
+                    themeItem.setCollectCount(item.getCollectCount());
+                    themeItem.setItemDiscount(inventory.getItemDiscount());
+                    themeItem.setItemImg(inventory.getInvImg());
+                    themeItem.setItemPrice(inventory.getItemPrice());
+                    themeItem.setItemSoldAmount(inventory.getSoldAmount());
+                    themeItem.setItemSrcPrice(inventory.getItemSrcPrice());
+                    themeItem.setItemTitle(inventory.getInvTitle());
+                    themeItem.setItemUrl( Application.DEPLOY_URL + "/comm/detail/" + item.getId());
+                    themeItem.setItemUrlAndroid(Application.DEPLOY_URL + "/comm/detail/web/" + item.getId());
 
-                    //遍历所有sku状态,如果所有sku状态均为下架或者售空,则提示商品是售空或者下架
+
+                    //遍历所有sku状态,如果所有则sku状态均为下架或者售空,提示商品是售空或者下架
                     Inventory invState = new Inventory();
                     inventory.setItemId(item.getId());
                     List<Inventory> invStateList = themeMapper.getInvBy(inventory);
@@ -109,7 +124,7 @@ public class ThemeServiceImpl implements ThemeService {
                     for (Inventory inv : invStateList) {
                         switch (inv.getState()) {
                             case "Y":
-                                map.put("state", "Y");//商品状态
+                                themeItem.setState("Y");
                                 break;
                             case "K":
                                 countK++;
@@ -123,24 +138,22 @@ public class ThemeServiceImpl implements ThemeService {
                         }
                     }
                     if (count == invStateList.size()) {
-                        map.put("state", "K");//商品状态
+                        themeItem.setState("K");
                     }
                     if (countK == invStateList.size()) {
-                        map.put("state", "K");//商品状态
+                        themeItem.setState("K");//商品状态
                     }
                     if (countD == invStateList.size()) {
-                        map.put("state", "D");//商品状态
+                        themeItem.setState("D");//商品状态
                     }
 
-                    map.put("invWeight", inventory.getInvWeight());//商品重量
-                    map.put("invCustoms", inventory.getInvCustoms());//报关单位
-                    map.put("invArea", inventory.getInvArea());//仓储名称
-                    map.put("invAreaNm", inventory.getInvAreaNm());//仓储名称
-                    map.put("postalTaxRate", inventory.getPostalTaxRate());//发货仓库
-                    list.add(map);
+                    themeItems.add(themeItem);
                 }
             }
-            return Optional.ofNullable(Json.toJson(list));
+
+            themeBasic.setThemeItemList(themeItems);
+
+            return Optional.ofNullable(Json.toJson(themeBasic));
         } else {
             return Optional.empty();
         }

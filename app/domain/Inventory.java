@@ -39,7 +39,7 @@ public class Inventory implements Serializable{
     private     String              invCustoms;//报关单位
     private     String              postalTaxRate;//税率,百分比
     private     String              postalStandard;//关税收费标准
-    private     String              invAreaNm;
+    private     String              invAreaNm;//仓储地名称
 
 
     @JsonIgnore

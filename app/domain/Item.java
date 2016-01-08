@@ -22,7 +22,7 @@ public class Item implements Serializable {
     private Long themeId;//商品属于主题的ID
     private String state;//商品状态 'Y'--正常,'D'--下架,'N'--删除,'K'--售空
     private String shareUrl;//分享链接
-    private Long collectCount;//收藏数
+    private Integer collectCount;//收藏数
     private String itemNotice;//商品重要布告
     private String publicity;//优惠区域显示信息（包括发货区域，多久后发货）
     private Long masterInvId;//主SKU的ID
@@ -49,7 +49,7 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Long id, String itemTitle, String itemMasterImg, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, String shareUrl, Long collectCount, String itemNotice, String publicity, Long masterInvId, Long cateId, Long brandId, String supplyMerch, Long shareCount, Long browseCount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Item(Long id, String itemTitle, String itemMasterImg, String onShelvesAt, String offShelvesAt, String itemDetailImgs, String itemFeatures, Long themeId, String state, String shareUrl, Integer collectCount, String itemNotice, String publicity, Long masterInvId, Long cateId, Long brandId, String supplyMerch, Long shareCount, Long browseCount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
         this.id = id;
         this.itemTitle = itemTitle;
         this.itemMasterImg = itemMasterImg;
@@ -155,11 +155,11 @@ public class Item implements Serializable {
         this.shareUrl = shareUrl;
     }
 
-    public Long getCollectCount() {
+    public Integer getCollectCount() {
         return collectCount;
     }
 
-    public void setCollectCount(Long collectCount) {
+    public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
     }
 
@@ -267,14 +267,14 @@ public class Item implements Serializable {
                 ", itemMasterImg='" + itemMasterImg + '\'' +
                 ", onShelvesAt='" + onShelvesAt + '\'' +
                 ", offShelvesAt='" + offShelvesAt + '\'' +
-                ", itemDetailImgs=" + itemDetailImgs +
-                ", itemFeatures=" + itemFeatures +
+                ", itemDetailImgs='" + itemDetailImgs + '\'' +
+                ", itemFeatures='" + itemFeatures + '\'' +
                 ", themeId=" + themeId +
                 ", state='" + state + '\'' +
                 ", shareUrl='" + shareUrl + '\'' +
                 ", collectCount=" + collectCount +
                 ", itemNotice='" + itemNotice + '\'' +
-                ", publicity=" + publicity +
+                ", publicity='" + publicity + '\'' +
                 ", masterInvId=" + masterInvId +
                 ", cateId=" + cateId +
                 ", brandId=" + brandId +

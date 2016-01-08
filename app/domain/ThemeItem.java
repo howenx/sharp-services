@@ -14,83 +14,53 @@ import java.sql.Timestamp;
  */
 public class ThemeItem implements Serializable {
 
-    private Long        themeId;   	    //主题ID
-    private Long        itemId;   	    //商品ID
-    private String      itemImg;   	    //商品图片
-    private String      itemUrl;   		//商品详细页面链接
-    private String      itemTitle;   	//商品标题
+
+
+    private     Long            itemId;   	            //商品ID
+    private     String          itemImg;   	            //商品图片
+    private     String          itemUrl;   		        //商品详细页面链接
+    private     String          itemUrlAndroid;   		//商品详细页面链接Android
+    private     String          itemTitle;   	        //商品标题
     @JsonSerialize(using = MoneySerializer.class)
-    private BigDecimal      itemPrice;   	//商品价格
+    private     BigDecimal      itemSrcPrice;   	    //商品价格
     @JsonSerialize(using = MoneySerializer.class)
-    private BigDecimal      itemCostPrice;  //商品原价
+    private     BigDecimal      itemPrice;              //商品原价
     @JsonSerialize(using = MoneySerializer.class)
-    private BigDecimal      itemDiscount;   //商品折扣
-    private Integer     itemSoldAmount; //商品销量
-    private Boolean     orMasterItem;   //是否是主题主打宣传商品
-    private String      masterItemImg;  //如果是主宣传商品图片url
-    private String      masterItemTag;	//如果是主打宣传商品，会需要tag json串
-    private Integer     collectCount;   //商品收藏数
-    private String      state;          //商品状态
+    private     BigDecimal      itemDiscount;           //商品折扣
+    private     Integer         itemSoldAmount;         //商品销量
+    private     Integer         collectCount;           //收藏数
+    private     String          state;                  //商品状态
     @JsonIgnore
-    private String      onShelvesAt;    //商品销售起始时间
+    private     String          invArea;                //库存区域
     @JsonIgnore
-    private String      offShelvesAt;   //商品销售终止时间
+    private     String          postalTaxRate;          //税率,百分比
     @JsonIgnore
-    private Long        id;				//主键
+    private     String          postalStandard;         //关税收费标准
     @JsonIgnore
-    private Integer     likeCount;   	//商品点赞数
+    private     String          invAreaNm;              //仓储地名称
     @JsonIgnore
-    private Integer     sortNu;   		//商品排序
-    @JsonIgnore
-    private Boolean     orDestory;      //是否删除,
-    @JsonIgnore
-    private Long        destoryUid;   	//删除操作用户id,
-    @JsonIgnore
-    private Timestamp   updateAt;    	//更新时间,
-    @JsonIgnore
-    private Long        updateUid;    	//更新操作用户id,
-    @JsonIgnore
-    private Timestamp   createAt;     	//创建时间
-    @JsonIgnore
-    private Long        createUid;    	//创建操作用户id
+    private     String          invWeight;              //商品重量单位g
 
     public ThemeItem() {
     }
 
-    public ThemeItem(Long themeId, Long itemId, String itemImg, String itemUrl, String itemTitle, BigDecimal itemPrice, BigDecimal itemCostPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Boolean orMasterItem, String masterItemImg, String masterItemTag, Integer collectCount, String state, String onShelvesAt, String offShelvesAt, Long id, Integer likeCount, Integer sortNu, Boolean orDestory, Long destoryUid, Timestamp updateAt, Long updateUid, Timestamp createAt, Long createUid) {
-        this.themeId = themeId;
+    public ThemeItem(Long itemId, String itemImg, String itemUrl, String itemUrlAndroid, String itemTitle, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Integer collectCount, String state, String invArea, String postalTaxRate, String postalStandard, String invAreaNm, String invWeight) {
         this.itemId = itemId;
         this.itemImg = itemImg;
         this.itemUrl = itemUrl;
+        this.itemUrlAndroid = itemUrlAndroid;
         this.itemTitle = itemTitle;
+        this.itemSrcPrice = itemSrcPrice;
         this.itemPrice = itemPrice;
-        this.itemCostPrice = itemCostPrice;
         this.itemDiscount = itemDiscount;
         this.itemSoldAmount = itemSoldAmount;
-        this.orMasterItem = orMasterItem;
-        this.masterItemImg = masterItemImg;
-        this.masterItemTag = masterItemTag;
         this.collectCount = collectCount;
         this.state = state;
-        this.onShelvesAt = onShelvesAt;
-        this.offShelvesAt = offShelvesAt;
-        this.id = id;
-        this.likeCount = likeCount;
-        this.sortNu = sortNu;
-        this.orDestory = orDestory;
-        this.destoryUid = destoryUid;
-        this.updateAt = updateAt;
-        this.updateUid = updateUid;
-        this.createAt = createAt;
-        this.createUid = createUid;
-    }
-
-    public Long getThemeId() {
-        return themeId;
-    }
-
-    public void setThemeId(Long themeId) {
-        this.themeId = themeId;
+        this.invArea = invArea;
+        this.postalTaxRate = postalTaxRate;
+        this.postalStandard = postalStandard;
+        this.invAreaNm = invAreaNm;
+        this.invWeight = invWeight;
     }
 
     public Long getItemId() {
@@ -117,6 +87,14 @@ public class ThemeItem implements Serializable {
         this.itemUrl = itemUrl;
     }
 
+    public String getItemUrlAndroid() {
+        return itemUrlAndroid;
+    }
+
+    public void setItemUrlAndroid(String itemUrlAndroid) {
+        this.itemUrlAndroid = itemUrlAndroid;
+    }
+
     public String getItemTitle() {
         return itemTitle;
     }
@@ -125,20 +103,20 @@ public class ThemeItem implements Serializable {
         this.itemTitle = itemTitle;
     }
 
+    public BigDecimal getItemSrcPrice() {
+        return itemSrcPrice;
+    }
+
+    public void setItemSrcPrice(BigDecimal itemSrcPrice) {
+        this.itemSrcPrice = itemSrcPrice;
+    }
+
     public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
     public void setItemPrice(BigDecimal itemPrice) {
         this.itemPrice = itemPrice;
-    }
-
-    public BigDecimal getItemCostPrice() {
-        return itemCostPrice;
-    }
-
-    public void setItemCostPrice(BigDecimal itemCostPrice) {
-        this.itemCostPrice = itemCostPrice;
     }
 
     public BigDecimal getItemDiscount() {
@@ -157,30 +135,6 @@ public class ThemeItem implements Serializable {
         this.itemSoldAmount = itemSoldAmount;
     }
 
-    public Boolean getOrMasterItem() {
-        return orMasterItem;
-    }
-
-    public void setOrMasterItem(Boolean orMasterItem) {
-        this.orMasterItem = orMasterItem;
-    }
-
-    public String getMasterItemImg() {
-        return masterItemImg;
-    }
-
-    public void setMasterItemImg(String masterItemImg) {
-        this.masterItemImg = masterItemImg;
-    }
-
-    public String getMasterItemTag() {
-        return masterItemTag;
-    }
-
-    public void setMasterItemTag(String masterItemTag) {
-        this.masterItemTag = masterItemTag;
-    }
-
     public Integer getCollectCount() {
         return collectCount;
     }
@@ -197,122 +151,65 @@ public class ThemeItem implements Serializable {
         this.state = state;
     }
 
-    public String getOnShelvesAt() {
-        return onShelvesAt;
+    public String getInvArea() {
+        return invArea;
     }
 
-    public void setOnShelvesAt(String onShelvesAt) {
-        this.onShelvesAt = onShelvesAt;
+    public void setInvArea(String invArea) {
+        this.invArea = invArea;
     }
 
-    public String getOffShelvesAt() {
-        return offShelvesAt;
+    public String getPostalTaxRate() {
+        return postalTaxRate;
     }
 
-    public void setOffShelvesAt(String offShelvesAt) {
-        this.offShelvesAt = offShelvesAt;
+    public void setPostalTaxRate(String postalTaxRate) {
+        this.postalTaxRate = postalTaxRate;
     }
 
-    public Long getId() {
-        return id;
+    public String getPostalStandard() {
+        return postalStandard;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPostalStandard(String postalStandard) {
+        this.postalStandard = postalStandard;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
+    public String getInvAreaNm() {
+        return invAreaNm;
     }
 
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
+    public void setInvAreaNm(String invAreaNm) {
+        this.invAreaNm = invAreaNm;
     }
 
-    public Integer getSortNu() {
-        return sortNu;
+    public String getInvWeight() {
+        return invWeight;
     }
 
-    public void setSortNu(Integer sortNu) {
-        this.sortNu = sortNu;
-    }
-
-    public Boolean getOrDestory() {
-        return orDestory;
-    }
-
-    public void setOrDestory(Boolean orDestory) {
-        this.orDestory = orDestory;
-    }
-
-    public Long getDestoryUid() {
-        return destoryUid;
-    }
-
-    public void setDestoryUid(Long destoryUid) {
-        this.destoryUid = destoryUid;
-    }
-
-    public Timestamp getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Timestamp updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public Long getUpdateUid() {
-        return updateUid;
-    }
-
-    public void setUpdateUid(Long updateUid) {
-        this.updateUid = updateUid;
-    }
-
-    public Timestamp getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Timestamp createAt) {
-        this.createAt = createAt;
-    }
-
-    public Long getCreateUid() {
-        return createUid;
-    }
-
-    public void setCreateUid(Long createUid) {
-        this.createUid = createUid;
+    public void setInvWeight(String invWeight) {
+        this.invWeight = invWeight;
     }
 
     @Override
     public String toString() {
         return "ThemeItem{" +
-                "themeId=" + themeId +
-                ", itemId=" + itemId +
+                "itemId=" + itemId +
                 ", itemImg='" + itemImg + '\'' +
                 ", itemUrl='" + itemUrl + '\'' +
+                ", itemUrlAndroid='" + itemUrlAndroid + '\'' +
                 ", itemTitle='" + itemTitle + '\'' +
+                ", itemSrcPrice=" + itemSrcPrice +
                 ", itemPrice=" + itemPrice +
-                ", itemCostPrice=" + itemCostPrice +
                 ", itemDiscount=" + itemDiscount +
                 ", itemSoldAmount=" + itemSoldAmount +
-                ", orMasterItem=" + orMasterItem +
-                ", masterItemImg='" + masterItemImg + '\'' +
-                ", masterItemTag='" + masterItemTag + '\'' +
                 ", collectCount=" + collectCount +
                 ", state='" + state + '\'' +
-                ", onShelvesAt='" + onShelvesAt + '\'' +
-                ", offShelvesAt='" + offShelvesAt + '\'' +
-                ", id=" + id +
-                ", likeCount=" + likeCount +
-                ", sortNu=" + sortNu +
-                ", orDestory=" + orDestory +
-                ", destoryUid=" + destoryUid +
-                ", updateAt=" + updateAt +
-                ", updateUid=" + updateUid +
-                ", createAt=" + createAt +
-                ", createUid=" + createUid +
+                ", invArea='" + invArea + '\'' +
+                ", postalTaxRate='" + postalTaxRate + '\'' +
+                ", postalStandard='" + postalStandard + '\'' +
+                ", invAreaNm='" + invAreaNm + '\'' +
+                ", invWeight='" + invWeight + '\'' +
                 '}';
     }
 }
