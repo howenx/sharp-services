@@ -104,7 +104,11 @@ public class ThemeServiceImpl implements ThemeService {
                     themeItem.setItemTitle(inventory.getInvTitle());
                     themeItem.setCollectCount(item.getCollectCount());
                     themeItem.setItemDiscount(inventory.getItemDiscount());
-                    themeItem.setItemImg(inventory.getInvImg());
+                    JsonNode jsonNodeInvImg = Json.parse(inventory.getInvImg());
+                    if (jsonNodeInvImg.has("url")) {
+                        ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                        themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
+                    }
                     themeItem.setItemPrice(inventory.getItemPrice());
                     themeItem.setItemSoldAmount(inventory.getSoldAmount());
                     themeItem.setItemSrcPrice(inventory.getItemSrcPrice());
