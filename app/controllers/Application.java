@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class Application extends Controller {
 
     //每页固定的取数
-    public static final int PAGE_SIZE = 200;
+    public static final int PAGE_SIZE = Integer.valueOf(play.Play.application().configuration().getString("theme.page.size"));
 
     //图片服务器url
     public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
@@ -43,6 +43,7 @@ public class Application extends Controller {
     @Inject
     private MemcachedClient cache;
 
+
     /**
      * 获取主页
      *
@@ -50,77 +51,97 @@ public class Application extends Controller {
      * @return 主页JSON
      */
     public Result getIndex(int pageNum) {
-
-        //计算从第几条开始取数据
-        int offset = (pageNum - 1) * PAGE_SIZE;
-
-        Optional<List<Theme>> listOptional = themeService.getThemes(PAGE_SIZE, offset);
-
-        //组合结果集
         ObjectNode result = Json.newObject();
+        if (pageNum>0){
 
-        if (listOptional.isPresent()) {
-            List<Theme> themeList = listOptional.get().stream().map(l -> {
-                if (l.getThemeImg().contains("url")) {
-                    JsonNode jsonNode1 = Json.parse(l.getThemeImg());
-                    if (jsonNode1.has("url")) {
-                        ((ObjectNode) jsonNode1).put("url", IMAGE_URL + jsonNode1.get("url").asText());
-                        l.setThemeImg(Json.stringify(jsonNode1));
-                    }
-                } else l.setThemeImg(IMAGE_URL + l.getThemeImg());
-                l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
-                return l;
-            }).collect(Collectors.toList());
+            //计算从第几条开始取数据
+            int offset = (pageNum - 1) * PAGE_SIZE;
 
-            Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
+            Optional<List<Theme>> listOptional = themeService.getThemes(PAGE_SIZE, offset);
 
-            if (listOptionalSlider.isPresent()) {
-                //slider取出链接
-                List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
-                    Map<String, Object> map = new HashMap<>();
-                    if (l.getImg().contains("url")) {
-                        JsonNode jsonNode2 = Json.parse(l.getImg());
-                        if (jsonNode2.has("url")) {
-                            ((ObjectNode) jsonNode2).put("url", IMAGE_URL + jsonNode2.get("url").asText());
-                            map.put("url", Json.stringify(jsonNode2));
+
+            if (listOptional.isPresent()) {
+                List<Theme> themeList = listOptional.get().stream().map(l -> {
+                    if (l.getThemeImg().contains("url")) {
+                        JsonNode jsonNode1 = Json.parse(l.getThemeImg());
+                        if (jsonNode1.has("url")) {
+                            ((ObjectNode) jsonNode1).put("url", IMAGE_URL + jsonNode1.get("url").asText());
+                            l.setThemeImg(Json.stringify(jsonNode1));
                         }
-                    } else {
-                        map.put("url", IMAGE_URL + l.getImg());
-                    }
-
-                    map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
-
-                    Pattern p = Pattern.compile("\\d+");
-
-                    //如果是需要跳转至详细页,则取出商品ID,然后拼接一个安卓版本的url
-                    if (l.getTargetType().equals("D")) {
-                        Matcher m = p.matcher(l.getItemTarget());
-                        while (m.find()) {
-                            map.put("itemTargetAndroid", DEPLOY_URL + "/comm/detail/web/" + m.group());
-                        }
-                    }
-                    map.put("targetType", l.getTargetType());
-                    return map;
+                    } else l.setThemeImg(IMAGE_URL + l.getThemeImg());
+                    l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
+                    return l;
                 }).collect(Collectors.toList());
 
-                try {
+                int page_count = 0;
+                if (themeList.size()>0){
+                    page_count = themeList.get(0).getThemeNum()/PAGE_SIZE+1;
+                }
+
+                if (pageNum==1){
+                    Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
+
+                    if (listOptionalSlider.isPresent()) {
+                        //slider取出链接
+                        List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
+                            Map<String, Object> map = new HashMap<>();
+                            if (l.getImg().contains("url")) {
+                                JsonNode jsonNode2 = Json.parse(l.getImg());
+                                if (jsonNode2.has("url")) {
+                                    ((ObjectNode) jsonNode2).put("url", IMAGE_URL + jsonNode2.get("url").asText());
+                                    map.put("url", Json.stringify(jsonNode2));
+                                }
+                            } else {
+                                map.put("url", IMAGE_URL + l.getImg());
+                            }
+
+                            map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
+
+                            Pattern p = Pattern.compile("\\d+");
+
+                            //如果是需要跳转至详细页,则取出商品ID,然后拼接一个安卓版本的url
+                            if (l.getTargetType().equals("D")) {
+                                Matcher m = p.matcher(l.getItemTarget());
+                                while (m.find()) {
+                                    map.put("itemTargetAndroid", DEPLOY_URL + "/comm/detail/web/" + m.group());
+                                }
+                            }
+                            map.put("targetType", l.getTargetType());
+                            return map;
+                        }).collect(Collectors.toList());
+
+                        try {
+                            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
+                            result.putPOJO("slider", Json.toJson(sliderImgList));
+                            result.putPOJO("theme", Json.toJson(themeList));
+                            result.putPOJO("page_count", page_count);
+                            return ok(result);
+                        } catch (Exception ex) {
+                            Logger.error("server exception:" + ex.toString());
+                            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+                            return ok(result);
+                        }
+                    } else {
+                        result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex())));
+                        return ok(result);
+                    }
+                }else{
                     result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                    result.putPOJO("slider", Json.toJson(sliderImgList));
                     result.putPOJO("theme", Json.toJson(themeList));
-                    return ok(result);
-                } catch (Exception ex) {
-                    Logger.error("server exception:" + ex.toString());
-                    result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
+                    result.putPOJO("page_count", page_count);
                     return ok(result);
                 }
+
             } else {
-                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex())));
+                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex())));
                 return ok(result);
             }
-        } else {
-            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex())));
-            return ok(result);
+        }else{
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.BAD_PARAMETER.getIndex()), Message.ErrorCode.BAD_PARAMETER.getIndex())));
+            return badRequest(result);
         }
+
+
 
     }
 
@@ -131,9 +152,9 @@ public class Application extends Controller {
      * @return 返回主题列表JSON
      */
     public Result getThemeList(Long themeId) {
+        ObjectNode result = Json.newObject();
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
-        ObjectNode result = Json.newObject();
         try {
 
             if (header.isPresent()) {
@@ -154,6 +175,7 @@ public class Application extends Controller {
             if (listOptional.isPresent()) {
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                 result.putPOJO("themeList", themeService.getThemeList(themeId).get());
+
                 return ok(result);
             } else {
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex())));
@@ -248,6 +270,10 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * 获取购物车数量
+     * @return result
+     */
     public Result getCartAmount() {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         Map<String, Object> map = new HashMap<>();
@@ -272,17 +298,5 @@ public class Application extends Controller {
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(Json.toJson(map));
         }
-    }
-
-    public void setThemeService(ThemeService themeService) {
-        this.themeService = themeService;
-    }
-
-    public void setCartService(CartService cartService) {
-        this.cartService = cartService;
-    }
-
-    public void setCache(MemcachedClient cache) {
-        this.cache = cache;
     }
 }
