@@ -21,7 +21,7 @@ GET     /comm/views/privacy                                         controllers.
 GET     /comm/views/agreement                                       controllers.CommonViewCtrl.agreement()
 
 
-GET     /hmm/android/download/:fileName                             controllers.CommonViewCtrl.androidDownload(fileName:String)
+GET     /hmm/app/download/:fileName                                 controllers.CommonViewCtrl.androidDownload(fileName:String)
 
 
 # Map static resources from the /public folder to the /assets URL path
