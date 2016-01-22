@@ -18,6 +18,6 @@ public class CommonViewCtrl extends Controller {
     }
 
     public Result agreement(){
-        return ok(views.html.userservice.render());
+        return ok(views.html.agreement.render());
     }
 }
