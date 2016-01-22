@@ -49,30 +49,33 @@ public class ThemeServiceImpl implements ThemeService {
             ThemeBasic themeBasic = new ThemeBasic();
             themeBasic.setThemeId(themeId);
 
-            JsonNode jsonNodeTag = Json.parse(theme.getMasterItemTag());
-            if (jsonNodeTag.isArray()) {
-                for (final JsonNode url : jsonNodeTag) {
-                    if (url.has("url")) {
-                        ((ObjectNode) url).put("url", Application.DEPLOY_URL + url.findValue("url").asText());
-                    }
-                }
-            }
-            themeBasic.setMasterItemTag(Json.stringify(jsonNodeTag));
-
-            Pattern p = Pattern.compile("\\d+");
-            JsonNode jsonNodeTagAndroid = Json.parse(theme.getMasterItemTag());
-            if (jsonNodeTagAndroid.isArray()) {
-                for (final JsonNode url : jsonNodeTagAndroid) {
-                    if (url.has("url")) {
-                        Matcher m = p.matcher(url.findValue("url").asText());
-                        while (m.find()) {
-                            ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/detail/web/" + m.group());
+            if(!theme.getMasterItemTag().equals("") && theme.getMasterItemTag()!=null){
+                JsonNode jsonNodeTag = Json.parse(theme.getMasterItemTag());
+                if (jsonNodeTag.isArray()) {
+                    for (final JsonNode url : jsonNodeTag) {
+                        if (url.has("url")) {
+                            ((ObjectNode) url).put("url", Application.DEPLOY_URL + url.findValue("url").asText());
                         }
-
                     }
                 }
+                themeBasic.setMasterItemTag(Json.stringify(jsonNodeTag));
+
+                Pattern p = Pattern.compile("\\d+");
+                JsonNode jsonNodeTagAndroid = Json.parse(theme.getMasterItemTag());
+                if (jsonNodeTagAndroid.isArray()) {
+                    for (final JsonNode url : jsonNodeTagAndroid) {
+                        if (url.has("url")) {
+                            Matcher m = p.matcher(url.findValue("url").asText());
+                            while (m.find()) {
+                                ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/detail/web/" + m.group());
+                            }
+
+                        }
+                    }
+                }
+                themeBasic.setMasterItemTagAndroid(Json.stringify(jsonNodeTagAndroid));
             }
-            themeBasic.setMasterItemTagAndroid(Json.stringify(jsonNodeTagAndroid));
+
 
             JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
             if (jsonNode_ThemeMasterImg.has("url")) {
