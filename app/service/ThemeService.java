@@ -1,11 +1,8 @@
 package service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import domain.Slider;
-import domain.Theme;
+import domain.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -16,11 +13,13 @@ public interface ThemeService {
 
     Optional<List<Theme>> getThemes(int pageSize, int offset);
 
-    Optional<JsonNode> getThemeList(Long itemId);
-
     Optional<List<Slider>> getSlider();
 
-    Optional<Map<String,Object>> getItemDetail(Long id, Long skuId) ;
+    Theme getThemeBy(Long themeId);
 
-    Optional<Map<String,Object>> getItemDetailWeb(Long id, Long skuId) ;
+    Item getItemBy(Item item);
+
+    List<Inventory> getInvBy(Inventory inventory);
+
+    List<VaryPrice> getVaryPriceBy(VaryPrice varyPrice);
 }

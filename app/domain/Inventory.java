@@ -1,5 +1,6 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import util.DiscountSerializer;
@@ -41,6 +42,19 @@ public class Inventory implements Serializable{
     private     String              postalStandard;//关税收费标准
     private     String              invAreaNm;//仓储地名称
 
+    private     String              shareUrl;//分享链接
+    private     Integer             collectCount;//收藏数
+    private     Integer             browseCount;//浏览次数
+
+    @JsonIgnore
+    private     String              themeId;//主题ID的Json
+
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    private     Timestamp           startAt;      //开始时间
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    private     Timestamp           endAt;        //结束时间
+
+
 
     @JsonIgnore
     private     Long        itemId;
@@ -58,11 +72,13 @@ public class Inventory implements Serializable{
     private     Timestamp   updateAt;
     @JsonIgnore
     private     Timestamp   createAt;
+    @JsonIgnore
+    private     String      itemDetail;
 
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, String shareUrl, Integer collectCount, Integer browseCount, String themeId, Timestamp startAt, Timestamp endAt, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String itemDetail) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -84,6 +100,12 @@ public class Inventory implements Serializable{
         this.postalTaxRate = postalTaxRate;
         this.postalStandard = postalStandard;
         this.invAreaNm = invAreaNm;
+        this.shareUrl = shareUrl;
+        this.collectCount = collectCount;
+        this.browseCount = browseCount;
+        this.themeId = themeId;
+        this.startAt = startAt;
+        this.endAt = endAt;
         this.itemId = itemId;
         this.amount = amount;
         this.itemCostPrice = itemCostPrice;
@@ -92,7 +114,9 @@ public class Inventory implements Serializable{
         this.destroyAt = destroyAt;
         this.updateAt = updateAt;
         this.createAt = createAt;
+        this.itemDetail = itemDetail;
     }
+
 
     public Long getId() {
         return id;
@@ -262,6 +286,54 @@ public class Inventory implements Serializable{
         this.invAreaNm = invAreaNm;
     }
 
+    public String getShareUrl() {
+        return shareUrl;
+    }
+
+    public void setShareUrl(String shareUrl) {
+        this.shareUrl = shareUrl;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
+    }
+
+    public Integer getBrowseCount() {
+        return browseCount;
+    }
+
+    public void setBrowseCount(Integer browseCount) {
+        this.browseCount = browseCount;
+    }
+
+    public String getThemeId() {
+        return themeId;
+    }
+
+    public void setThemeId(String themeId) {
+        this.themeId = themeId;
+    }
+
+    public Timestamp getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Timestamp startAt) {
+        this.startAt = startAt;
+    }
+
+    public Timestamp getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Timestamp endAt) {
+        this.endAt = endAt;
+    }
+
     public Long getItemId() {
         return itemId;
     }
@@ -326,6 +398,14 @@ public class Inventory implements Serializable{
         this.createAt = createAt;
     }
 
+    public String getItemDetail() {
+        return itemDetail;
+    }
+
+    public void setItemDetail(String itemDetail) {
+        this.itemDetail = itemDetail;
+    }
+
     @Override
     public String toString() {
         return "Inventory{" +
@@ -350,6 +430,12 @@ public class Inventory implements Serializable{
                 ", postalTaxRate='" + postalTaxRate + '\'' +
                 ", postalStandard='" + postalStandard + '\'' +
                 ", invAreaNm='" + invAreaNm + '\'' +
+                ", shareUrl='" + shareUrl + '\'' +
+                ", collectCount=" + collectCount +
+                ", browseCount=" + browseCount +
+                ", themeId='" + themeId + '\'' +
+                ", startAt=" + startAt +
+                ", endAt=" + endAt +
                 ", itemId=" + itemId +
                 ", amount=" + amount +
                 ", itemCostPrice=" + itemCostPrice +
@@ -358,6 +444,7 @@ public class Inventory implements Serializable{
                 ", destroyAt=" + destroyAt +
                 ", updateAt=" + updateAt +
                 ", createAt=" + createAt +
+                ", itemDetail='" + itemDetail + '\'' +
                 '}';
     }
 }

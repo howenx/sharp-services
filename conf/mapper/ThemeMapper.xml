@@ -27,7 +27,9 @@
         ${alias}.theme_item::text          ,
         ${alias}.master_item_tag::text,
         ${alias}.theme_master_img,
-        count(*) over() theme_num
+        count(*) over() theme_num,
+        type,
+        h5_link
     </sql>
 
 
@@ -63,7 +65,8 @@
         ${alias}.update_at          ,
         ${alias}.create_at          ,
         ${alias}.master_inv_id      ,
-        ${alias}.publicity::text
+        ${alias}.publicity::text    ,
+        ${alias}.item_detail
     </sql>
 
     <sql id="invColumns">
@@ -102,7 +105,14 @@
         ${alias}.inv_weight          ,
         ${alias}.inv_customs         ,
         COALESCE(${alias}.postal_tax_rate,(select f.rate from tax_code f where f.code = t.postal_tax_code)) as postal_tax_rate,
-        (select parameter_val from sys_parameter where parameter_code='POSTAL_STANDARD') as postalStandard
+        (select parameter_val from sys_parameter where parameter_code='POSTAL_STANDARD') as postalStandard,
+        share_url             ,
+        share_count           ,
+        collect_count         ,
+        browse_count          ,
+        theme_id,
+        start_at,
+        end_at
     </sql>
 
 

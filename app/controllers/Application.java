@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Application extends Controller {
@@ -52,7 +50,7 @@ public class Application extends Controller {
      */
     public Result getIndex(int pageNum) {
         ObjectNode result = Json.newObject();
-        if (pageNum>0){
+        if (pageNum > 0) {
 
             //计算从第几条开始取数据
             int offset = (pageNum - 1) * PAGE_SIZE;
@@ -69,63 +67,51 @@ public class Application extends Controller {
                             l.setThemeImg(Json.stringify(jsonNode1));
                         }
                     } else l.setThemeImg(IMAGE_URL + l.getThemeImg());
-                    l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
+
+
+                    if (l.getType().equals("ordinary")) {
+                        l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
+                    }
+                    else {
+                        l.setThemeUrl(l.getH5Link());
+                    }
+
                     return l;
                 }).collect(Collectors.toList());
 
                 int page_count = 0;
-                if (themeList.size()>0){
-                    page_count = themeList.get(0).getThemeNum()/PAGE_SIZE+1;
+                if (themeList.size() > 0) {
+                    page_count = themeList.get(0).getThemeNum() / PAGE_SIZE + 1;
                 }
 
-                if (pageNum==1){
+                if (pageNum == 1) {
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
 
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
-                        List<Map> sliderImgList = listOptionalSlider.get().stream().map(l -> {
-                            Map<String, Object> map = new HashMap<>();
-                            if (l.getImg().contains("url")) {
-                                JsonNode jsonNode2 = Json.parse(l.getImg());
+                        List<Slider> sliderImgList = listOptionalSlider.get().stream().map(s -> {
+                            if (s.getImg().contains("url")) {
+                                JsonNode jsonNode2 = Json.parse(s.getImg());
                                 if (jsonNode2.has("url")) {
                                     ((ObjectNode) jsonNode2).put("url", IMAGE_URL + jsonNode2.get("url").asText());
-                                    map.put("url", Json.stringify(jsonNode2));
-                                }
-                            } else {
-                                map.put("url", IMAGE_URL + l.getImg());
-                            }
-
-                            map.put("itemTarget", DEPLOY_URL + l.getItemTarget());
-
-                            Pattern p = Pattern.compile("\\d+");
-
-                            //如果是需要跳转至详细页,则取出商品ID,然后拼接一个安卓版本的url
-                            if (l.getTargetType().equals("D")) {
-                                Matcher m = p.matcher(l.getItemTarget());
-                                while (m.find()) {
-                                    map.put("itemTargetAndroid", DEPLOY_URL + "/comm/detail/web/" + m.group());
+                                    s.setUrl(Json.stringify(jsonNode2));
                                 }
                             }
-                            map.put("targetType", l.getTargetType());
-                            return map;
+                            s.setItemTarget(DEPLOY_URL + s.getItemTarget());
+                            return s;
                         }).collect(Collectors.toList());
 
-                        try {
-                            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                            result.putPOJO("slider", Json.toJson(sliderImgList));
-                            result.putPOJO("theme", Json.toJson(themeList));
-                            result.putPOJO("page_count", page_count);
-                            return ok(result);
-                        } catch (Exception ex) {
-                            Logger.error("server exception:" + ex.toString());
-                            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-                            return ok(result);
-                        }
+                        result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
+                        result.putPOJO("slider", Json.toJson(sliderImgList));
+                        result.putPOJO("theme", Json.toJson(themeList));
+                        result.putPOJO("page_count", page_count);
+                        return ok(result);
+
                     } else {
                         result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SLIDER_NULL_EXCEPTION.getIndex())));
                         return ok(result);
                     }
-                }else{
+                } else {
                     result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
                     result.putPOJO("theme", Json.toJson(themeList));
                     result.putPOJO("page_count", page_count);
@@ -136,142 +122,15 @@ public class Application extends Controller {
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_NULL_EXCEPTION.getIndex())));
                 return ok(result);
             }
-        }else{
+        } else {
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.BAD_PARAMETER.getIndex()), Message.ErrorCode.BAD_PARAMETER.getIndex())));
             return badRequest(result);
-        }
-
-
-
-    }
-
-    /**
-     * 获取主题列表
-     *
-     * @param themeId 主题ID
-     * @return 返回主题列表JSON
-     */
-    public Result getThemeList(Long themeId) {
-        ObjectNode result = Json.newObject();
-        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
-        //组合结果集
-        try {
-
-            if (header.isPresent()) {
-                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
-                if (token.isPresent()) {
-                    JsonNode userJson = Json.parse(token.get());
-                    Long userId = Long.valueOf(userJson.findValue("id").asText());
-                    Cart cart = new Cart();
-                    cart.setUserId(userId);
-                    Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                    if (cartList.isPresent() && cartList.get().size() > 0) {
-                        result.putPOJO("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
-                    }
-                }
-            }
-
-            Optional<JsonNode> listOptional = themeService.getThemeList(themeId);
-            if (listOptional.isPresent()) {
-                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                result.putPOJO("themeList", themeService.getThemeList(themeId).get());
-
-                return ok(result);
-            } else {
-                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex())));
-                return ok(result);
-            }
-        } catch (Exception ex) {
-            Logger.error("server exception:" + ex.getMessage());
-            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-            return ok(result);
-        }
-    }
-
-    /**
-     * 获取详细界面
-     *
-     * @param id    商品ID
-     * @param skuId 库存ID
-     * @return 返回JSON
-     */
-    public Result getItemDetail(Long id, Long skuId) {
-        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
-        //组合结果集
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Optional<Map<String, Object>> mapOptional = themeService.getItemDetail(id, skuId);
-            if (mapOptional.isPresent()) {
-                map = mapOptional.get();
-                if (header.isPresent()) {
-                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
-                    if (token.isPresent()) {
-                        JsonNode userJson = Json.parse(token.get());
-                        Long userId = Long.valueOf(userJson.findValue("id").asText());
-                        Cart cart = new Cart();
-                        cart.setUserId(userId);
-                        Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent() && cartList.get().size() > 0) {
-                            map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
-                        }
-                    }
-                }
-                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                return ok(Json.toJson(map));
-            } else {
-                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex())));
-                return ok(Json.toJson(map));
-            }
-        } catch (Exception ex) {
-            Logger.error("server exception:" + ex.getMessage());
-            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-            return ok(Json.toJson(map));
-        }
-    }
-
-    /**
-     * 获取详细界面,以webView形式返回
-     *
-     * @param id    商品ID
-     * @param skuId 库存ID
-     * @return 返回JSON
-     */
-    public Result getItemDetailWeb(Long id, Long skuId) {
-        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
-        //组合结果集
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Optional<Map<String, Object>> mapOptional = themeService.getItemDetailWeb(id, skuId);
-            if (mapOptional.isPresent()) {
-                map = mapOptional.get();
-                if (header.isPresent()) {
-                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
-                    if (token.isPresent()) {
-                        JsonNode userJson = Json.parse(token.get());
-                        Long userId = Long.valueOf(userJson.findValue("id").asText());
-                        Cart cart = new Cart();
-                        cart.setUserId(userId);
-                        Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                        if (cartList.isPresent() && cartList.get().size() > 0) {
-                            map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
-                        }
-                    }
-                }
-                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                return ok(Json.toJson(map));
-            } else {
-                map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex()), Message.ErrorCode.SKU_DETAIL_NULL_EXCEPTION.getIndex())));
-                return ok(Json.toJson(map));
-            }
-        } catch (Exception ex) {
-            Logger.error("server exception:" + ex.getMessage());
-            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-            return ok(Json.toJson(map));
         }
     }
 
     /**
      * 获取购物车数量
+     *
      * @return result
      */
     public Result getCartAmount() {

@@ -6,23 +6,26 @@
 
 
 # Theme service
-GET     /index/$pageNum<[0-9]+>                                     controllers.Application.getIndex(pageNum:Int)
-GET     /topic/list/$themeId<[0-9]+>                                controllers.Application.getThemeList(themeId:Long)
-GET     /comm/detail/$id<[0-9]+>                                    controllers.Application.getItemDetail(id:Long,skuId: Long ?= -1)
-GET     /comm/detail/$id<[0-9]+>/$skuId<[0-9]+>                     controllers.Application.getItemDetail(id:Long,skuId:Long)
-GET     /comm/detail/web/$id<[0-9]+>                                controllers.Application.getItemDetailWeb(id:Long,skuId: Long ?= -1)
-GET     /comm/detail/web/$id<[0-9]+>/$skuId<[0-9]+>                 controllers.Application.getItemDetailWeb(id:Long,skuId:Long)
-GET     /comm/cart/amount                                           controllers.Application.getCartAmount()
+GET     /index/$pageNum<[0-9]+>                                               controllers.Application.getIndex(pageNum:Int)
+GET     /topic/list/$themeId<[0-9]+>                                          controllers.ThemeListCtrl.getThemeList(themeId:Long)
+GET     /comm/cart/amount                                                     controllers.Application.getCartAmount()
 
 
 #views
-GET     /comm/views/about                                           controllers.CommonViewCtrl.aboutUs()
-GET     /comm/views/privacy                                         controllers.CommonViewCtrl.privacy()
-GET     /comm/views/agreement                                       controllers.CommonViewCtrl.agreement()
+GET     /comm/views/about                                                     controllers.CommonViewCtrl.aboutUs()
+GET     /comm/views/privacy                                                   controllers.CommonViewCtrl.privacy()
+GET     /comm/views/agreement                                                 controllers.CommonViewCtrl.agreement()
 
 
-GET     /hmm/app/download/:fileName                                 controllers.CommonViewCtrl.androidDownload(fileName:String)
+#Detail
+GET     /comm/detail/$id<[0-9]+>                                              controllers.DetailCtrl.getItemDetail(web:Integer ?=1,id:Long,skuId: Long ?= -1,varyId: Long ?= -1)
+GET     /comm/detail/$id<[0-9]+>/$skuId<[0-9]+>                               controllers.DetailCtrl.getItemDetail(web:Integer ?=1,id:Long,skuId:Long,varyId: Long ?= -1)
+GET     /comm/detail/$id<[0-9]+>/$skuId<[0-9]+>/$varyId<[0-9]+>               controllers.DetailCtrl.getItemDetail(web:Integer ?=1,id:Long,skuId:Long,varyId: Long)
+
+
+#PinDetail
+GET     /comm/pin/detail/$itemId<[0-9]+>/$skuId<[0-9]+>/$pinId<[0-9]+>        controllers.DetailCtrl.getPinDetail(web:Integer ?=1,itemId:Long,skuId:Long,pinId: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                                                         controllers.Assets.versioned(path="/public", file: Asset)

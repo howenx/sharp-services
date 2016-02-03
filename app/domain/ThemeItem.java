@@ -14,12 +14,9 @@ import java.sql.Timestamp;
  */
 public class ThemeItem implements Serializable {
 
-
-
-    private     Long            itemId;   	            //商品ID
     private     String          itemImg;   	            //商品图片
     private     String          itemUrl;   		        //商品详细页面链接
-    private     String          itemUrlAndroid;   		//商品详细页面链接Android
+
     private     String          itemTitle;   	        //商品标题
     @JsonSerialize(using = MoneySerializer.class)
     private     BigDecimal      itemSrcPrice;   	    //商品价格
@@ -30,6 +27,15 @@ public class ThemeItem implements Serializable {
     private     Integer         itemSoldAmount;         //商品销量
     private     Integer         collectCount;           //收藏数
     private     String          state;                  //商品状态
+
+
+    private     String          itemType;               //主题展示的商品类型
+    private     String          startAt;                //开售时间
+    private     String          endAt;                  //截止时间
+
+
+    @JsonIgnore
+    private     Long            itemId;   	            //商品ID
     @JsonIgnore
     private     String          invArea;                //库存区域
     @JsonIgnore
@@ -40,11 +46,14 @@ public class ThemeItem implements Serializable {
     private     String          invAreaNm;              //仓储地名称
     @JsonIgnore
     private     String          invWeight;              //商品重量单位g
+    @JsonIgnore
+    private     String          itemUrlAndroid;   		//商品详细页面链接Android
 
     public ThemeItem() {
     }
 
-    public ThemeItem(Long itemId, String itemImg, String itemUrl, String itemUrlAndroid, String itemTitle, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Integer collectCount, String state, String invArea, String postalTaxRate, String postalStandard, String invAreaNm, String invWeight) {
+
+    public ThemeItem(Long itemId, String itemImg, String itemUrl, String itemUrlAndroid, String itemTitle, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Integer itemSoldAmount, Integer collectCount, String state, String invArea, String postalTaxRate, String postalStandard, String invAreaNm, String invWeight, String itemType, String startAt, String endAt) {
         this.itemId = itemId;
         this.itemImg = itemImg;
         this.itemUrl = itemUrl;
@@ -61,6 +70,9 @@ public class ThemeItem implements Serializable {
         this.postalStandard = postalStandard;
         this.invAreaNm = invAreaNm;
         this.invWeight = invWeight;
+        this.itemType = itemType;
+        this.startAt = startAt;
+        this.endAt = endAt;
     }
 
     public Long getItemId() {
@@ -191,6 +203,30 @@ public class ThemeItem implements Serializable {
         this.invWeight = invWeight;
     }
 
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(String startAt) {
+        this.startAt = startAt;
+    }
+
+    public String getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(String endAt) {
+        this.endAt = endAt;
+    }
+
     @Override
     public String toString() {
         return "ThemeItem{" +
@@ -210,6 +246,9 @@ public class ThemeItem implements Serializable {
                 ", postalStandard='" + postalStandard + '\'' +
                 ", invAreaNm='" + invAreaNm + '\'' +
                 ", invWeight='" + invWeight + '\'' +
+                ", itemType='" + itemType + '\'' +
+                ", startAt='" + startAt + '\'' +
+                ", endAt='" + endAt + '\'' +
                 '}';
     }
 }
