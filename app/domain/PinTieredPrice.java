@@ -13,7 +13,6 @@ import java.sql.Timestamp;
  */
 public class PinTieredPrice implements Serializable {
 
-    @JsonIgnore
     private Long id;                        //阶梯价格ID
     @JsonIgnore
     private String masterCouponClass;       //团长返券类别

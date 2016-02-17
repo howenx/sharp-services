@@ -47,19 +47,20 @@ public class DetailCtrl extends Controller {
     /**
      * 获取商品详情
      *
-     * @param web    用于判断是详情页需要html还是图片
-     * @param id     商品ID
+     * @param itemId     商品ID
      * @param skuId  库存ID
      * @param varyId 多样化价格ID
      * @return json
      */
-    public Result getItemDetail(Integer web, Long id, Long skuId, Long varyId) {
+    public Result getItemDetail(Integer subjectFlag, Long itemId, Long skuId, Long varyId) {
 
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
-            map = detailMid.getDetail(web, id, skuId, varyId);
+            if (subjectFlag == 1) {
+                map = detailMid.getDetail(itemId, skuId, varyId, -1L);
+            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId);
 
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
@@ -77,6 +78,7 @@ public class DetailCtrl extends Controller {
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.error("server exception:" + ex.getLocalizedMessage());
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(Json.toJson(map));
@@ -86,18 +88,17 @@ public class DetailCtrl extends Controller {
     /**
      * 获取拼购详情页
      *
-     * @param web   用于判断是详情页需要html还是图片
      * @param id    商品ID
      * @param skuId 库存ID
      * @param pinId 拼购库存ID
      * @return json
      */
-    public Result getPinDetail(Integer web, Long id, Long skuId, Long pinId) {
+    public Result getPinDetail(Long id, Long skuId, Long pinId) {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
         try {
-            map = detailMid.getPinDetail(web, id, skuId, pinId);
+            map = detailMid.getPinDetail(id, skuId, pinId);
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                 if (token.isPresent()) {
@@ -114,11 +115,11 @@ public class DetailCtrl extends Controller {
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.error("server exception:" + ex.getLocalizedMessage());
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(Json.toJson(map));
         }
     }
-
 
 }

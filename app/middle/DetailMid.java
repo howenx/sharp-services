@@ -2,7 +2,6 @@ package middle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Application;
 import domain.*;
@@ -43,24 +42,23 @@ public class DetailMid {
     /**
      * 获取商品详情
      *
-     * @param id     商品id
+     * @param itemId 商品id
      * @param skuId  库存ID
      * @param varyId 多样化价格id
      * @return map
      */
-    public Map<String, Object> getDetail(Integer web, Long id, Long skuId, Long varyId) {
+    public Map<String, Object> getDetail(Long itemId, Long skuId, Long varyId, Long subjectId) {
 
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("main", getItem(web,id));
-            map.put("stock", getStock(web, id, skuId, varyId));
+            map.put("main", getItem(itemId));
+            map.put("stock", getStock(itemId, skuId, varyId, subjectId));
             return map;
         } catch (Exception ex) {
             Logger.error("getItemDetail: " + ex.getMessage());
             ex.printStackTrace();
             return null;
         }
-
     }
 
     /**
@@ -70,16 +68,15 @@ public class DetailMid {
      * @return item
      * @throws IOException
      */
-    private Item getItem(Integer web,Long itemId) throws IOException {
+    private Item getItem(Long itemId) throws IOException {
 
         Item item = new Item();
         item.setId(itemId);
         Optional<Item> itemOptional = Optional.ofNullable(themeService.getItemBy(item));
         if (itemOptional.isPresent()) {
             item = itemOptional.get();
-            Logger.error("这>>>>>>>"+item.toString());
             //将Json字符串转成list
-            if (item.getItemDetailImgs()!=null){
+            if (item.getItemDetailImgs() != null) {
                 List<List<String>> listList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, List.class));
 
                 //商品详情全是图片
@@ -100,7 +97,7 @@ public class DetailMid {
 
                 item.setItemDetailImgs(stringBuilder.toString());
 
-            }else if (item.getItemDetail()!=null){
+            } else if (item.getItemDetail() != null) {
 
                 //商品详情是html
                 StringBuilder stringBuilder;
@@ -124,7 +121,7 @@ public class DetailMid {
      * @param varyId 多样化价格ID
      * @return list
      */
-    private List<Inventory> getStock(Integer web, Long itemId, Long skuId, Long varyId) {
+    private List<Inventory> getStock(Long itemId, Long skuId, Long varyId, Long subjectId) {
 
         Inventory inventory = new Inventory();
         inventory.setItemId(itemId);
@@ -163,6 +160,9 @@ public class DetailMid {
             }
             l.setItemPreviewImgs(js.toString());
 
+            l.setSkuType("item");
+            l.setSkuTypeId(l.getId());
+
             //是否是多样化价格产品
             if (!varyId.equals(((Integer) (-1)).longValue())) {
                 VaryPrice varyPrice = new VaryPrice();
@@ -174,7 +174,19 @@ public class DetailMid {
                     l.setItemPrice(varyPrice.getPrice());
                     l.setState(varyPrice.getStatus());
                     l.setInvUrl(Application.DEPLOY_URL + "/comm/detail/" + itemId + "/" + l.getId() + "/" + varyId);
+                    l.setSkuType("vary");
+                    l.setSkuTypeId(varyId);
                 }
+            }
+
+            //是否自定义价格
+            if (!subjectId.equals(((Integer) (-1)).longValue())) {
+                SubjectPrice subjectPrice = themeService.getSbjPriceById(subjectId);
+                l.setItemPrice(subjectPrice.getPrice());
+                l.setItemDiscount(subjectPrice.getDiscount());
+                l.setInvUrl(Application.DEPLOY_URL + "/comm/subject/detail/" + itemId + "/" + l.getId() + "/" + subjectId);
+                l.setSkuType("customize");
+                l.setSkuTypeId(subjectId);
             }
             return l;
         }).collect(Collectors.toList());
@@ -183,20 +195,21 @@ public class DetailMid {
 
     /**
      * 获取拼购商品详情
-     * @param web 用于判断是详情页需要html还是图片
+     *
      * @param itemId 商品ID
-     * @param skuId 库存ID
-     * @param pinId 拼购ID
+     * @param skuId  库存ID
+     * @param pinId  拼购ID
      * @return map
      */
-    public Map<String, Object> getPinDetail(Integer web,Long itemId, Long skuId, Long pinId) {
+    public Map<String, Object> getPinDetail(Long itemId, Long skuId, Long pinId) {
 
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("main", getItem(web,itemId));
-            map.put("stock", getPinInvDetail(web,itemId, skuId, pinId));
+            map.put("main", getItem(itemId));
+            map.put("stock", getPinInvDetail(itemId, skuId, pinId));
             return map;
         } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.error("getItemDetail: " + ex.getMessage());
             return null;
         }
@@ -204,15 +217,13 @@ public class DetailMid {
 
     /**
      * 获取拼购库存详情
-     * @param web 用于判断是详情页需要html还是图片
+     *
      * @param itemId 商品ID
-     * @param skuId 库存ID
-     * @param pinId 拼购ID
+     * @param skuId  库存ID
+     * @param pinId  拼购ID
      * @return PinInvDetail
      */
-    private PinInvDetail getPinInvDetail(Integer web,Long itemId, Long skuId, Long pinId) {
-
-        pinId = 621171L;
+    private PinInvDetail getPinInvDetail(Long itemId, Long skuId, Long pinId) {
 
         PinInvDetail pinInvDetail = new PinInvDetail();
 
@@ -222,7 +233,6 @@ public class DetailMid {
 
         if (inventoryList.size() > 0) {
 
-            //
             inventory = inventoryList.get(0);
             pinInvDetail.setInvArea(inventory.getInvArea());//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
             pinInvDetail.setRestAmount(inventory.getRestAmount());//商品余量
@@ -245,6 +255,11 @@ public class DetailMid {
             pinInvDetail.setCollectCount(inventory.getCollectCount());//收藏数
             pinInvDetail.setBrowseCount(inventory.getBrowseCount());//浏览次数
             pinInvDetail.setSoldAmount(inventory.getSoldAmount());//已售出数量
+            pinInvDetail.setInvPrice(inventory.getItemPrice());//商品原价
+            pinInvDetail.setSkuType("pin");//商品类型拼购商品
+            pinInvDetail.setSkuTypeId(pinId);//拼购ID
+
+
             JsonNode js_invImg = Json.parse(inventory.getInvImg());
             if (js_invImg.has("url")) {
                 ((ObjectNode) js_invImg).put("url", Application.IMAGE_URL + js_invImg.get("url").asText());
@@ -253,24 +268,24 @@ public class DetailMid {
         }
 
         PinSku pinSku = promotionService.getPinSkuById(pinId);
-        pinInvDetail.setPinId(pinId);                                   //拼购ID
-        pinInvDetail.setShareUrl(pinSku.getShareUrl());                 //分享短连接
+
+        pinInvDetail.setId(skuId);                                   //库存ID
+        if (pinSku.getShareUrl() != null) pinInvDetail.setShareUrl(pinSku.getShareUrl()); //分享短连接
         pinInvDetail.setStatus(pinSku.getStatus());                     //状态
         pinInvDetail.setPinTitle(pinSku.getPinTitle());                 //拼购商品标题
         pinInvDetail.setStartAt(pinSku.getStartAt());                   //开始时间
         pinInvDetail.setEndAt(pinSku.getEndAt());                       //结束时间
-//        pinInvDetail.setPinPriceRule(pinSku.getPinPriceRule());         //价格阶梯
         pinInvDetail.setRestrictAmount(pinSku.getRestrictAmount());     //每个ID限购数量
         pinInvDetail.setFloorPrice(pinSku.getFloorPrice());             //拼购最低价
         pinInvDetail.setPinDiscount(pinSku.getPinDiscount());           //拼购最低折扣
 
         List<PinTieredPrice> pinTieredPrices = promotionService.getTieredPriceByPinId(pinId);
 
-        pinTieredPrices=pinTieredPrices.stream().map(pinTieredPrice -> {
-            if (pinTieredPrice.getMasterCouponClass()!=null && !Objects.equals(pinTieredPrice.getMasterCouponClass(), "")){
+        pinTieredPrices = pinTieredPrices.stream().map(pinTieredPrice -> {
+            if (pinTieredPrice.getMasterCouponClass() != null && !Objects.equals(pinTieredPrice.getMasterCouponClass(), "")) {
                 pinTieredPrice.setMasterCouponClassName(GenCouponCode.CouponClassCode.getName(Integer.valueOf(pinTieredPrice.getMasterCouponClass())));
             }
-            if (pinTieredPrice.getMemberCouponClass()!=null && !Objects.equals(pinTieredPrice.getMemberCouponClass(), "")){
+            if (pinTieredPrice.getMemberCouponClass() != null && !Objects.equals(pinTieredPrice.getMemberCouponClass(), "")) {
                 pinTieredPrice.setMemberCouponClassName(GenCouponCode.CouponClassCode.getName(Integer.valueOf(pinTieredPrice.getMemberCouponClass())));
             }
             return pinTieredPrice;
@@ -278,12 +293,6 @@ public class DetailMid {
 
         pinInvDetail.setPinTieredPrices(pinTieredPrices);       //设置价格
 
-
-        //拼购跳转链接
-//        switch (web){
-//            case 1:pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);break;
-//            case 2:pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/web/" + itemId + "/" + skuId + "/" + pinId);break;
-//        }
         pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);
         return pinInvDetail;
     }

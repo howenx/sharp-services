@@ -2,6 +2,7 @@ package service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.*;
+import mapper.SubjectPriceMapper;
 import mapper.ThemeMapper;
 import mapper.VaryPriceMapper;
 
@@ -22,6 +23,9 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Inject
     private VaryPriceMapper varyPriceMapper;
+
+    @Inject
+    private SubjectPriceMapper subjectPriceMapper;
 
     //将Json串转换成List
     final static ObjectMapper mapper = new ObjectMapper();
@@ -60,6 +64,11 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public List<VaryPrice> getVaryPriceBy(VaryPrice varyPrice) {
         return varyPriceMapper.getVaryPriceBy(varyPrice);
+    }
+
+    @Override
+    public SubjectPrice getSbjPriceById(Long id) {
+        return subjectPriceMapper.getSbjPriceById(id);
     }
 
     public void setThemeMapper(ThemeMapper themeMapper) {

@@ -80,6 +80,7 @@ public class ThemeListCtrl extends Controller {
                 return ok(result);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.error("server exception:" + ex.getMessage());
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(result);

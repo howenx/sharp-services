@@ -46,6 +46,10 @@ public class Inventory implements Serializable{
     private     Integer             collectCount;//收藏数
     private     Integer             browseCount;//浏览次数
 
+    private     String              skuType;//商品类型 1.vary,2.item,3.customize,4.pin
+
+    private     Long                skuTypeId;//商品类型所对应的ID
+
     @JsonIgnore
     private     String              themeId;//主题ID的Json
 
@@ -53,7 +57,6 @@ public class Inventory implements Serializable{
     private     Timestamp           startAt;      //开始时间
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     private     Timestamp           endAt;        //结束时间
-
 
 
     @JsonIgnore
@@ -78,7 +81,7 @@ public class Inventory implements Serializable{
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, String shareUrl, Integer collectCount, Integer browseCount, String themeId, Timestamp startAt, Timestamp endAt, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String itemDetail) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, String shareUrl, Integer collectCount, Integer browseCount, String skuType, Long skuTypeId, String themeId, Timestamp startAt, Timestamp endAt, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String itemDetail) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -103,6 +106,8 @@ public class Inventory implements Serializable{
         this.shareUrl = shareUrl;
         this.collectCount = collectCount;
         this.browseCount = browseCount;
+        this.skuType = skuType;
+        this.skuTypeId = skuTypeId;
         this.themeId = themeId;
         this.startAt = startAt;
         this.endAt = endAt;
@@ -116,7 +121,6 @@ public class Inventory implements Serializable{
         this.createAt = createAt;
         this.itemDetail = itemDetail;
     }
-
 
     public Long getId() {
         return id;
@@ -310,6 +314,22 @@ public class Inventory implements Serializable{
         this.browseCount = browseCount;
     }
 
+    public String getSkuType() {
+        return skuType;
+    }
+
+    public void setSkuType(String skuType) {
+        this.skuType = skuType;
+    }
+
+    public Long getSkuTypeId() {
+        return skuTypeId;
+    }
+
+    public void setSkuTypeId(Long skuTypeId) {
+        this.skuTypeId = skuTypeId;
+    }
+
     public String getThemeId() {
         return themeId;
     }
@@ -433,6 +453,8 @@ public class Inventory implements Serializable{
                 ", shareUrl='" + shareUrl + '\'' +
                 ", collectCount=" + collectCount +
                 ", browseCount=" + browseCount +
+                ", skuType='" + skuType + '\'' +
+                ", skuTypeId=" + skuTypeId +
                 ", themeId='" + themeId + '\'' +
                 ", startAt=" + startAt +
                 ", endAt=" + endAt +

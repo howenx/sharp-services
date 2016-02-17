@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class PinInvDetail {
 
-    private Long pinId;         //拼购ID
+    private Long id;         //商品库存ID
     private String shareUrl;    //分享短连接
     private String status;      //状态
     private String pinTitle;    //拼购商品标题
@@ -48,6 +48,9 @@ public class PinInvDetail {
     private     Integer             browseCount;//浏览次数
     private     Integer             soldAmount;//卖出数量
     private     String              invImg;//sku主图
+    private     BigDecimal          invPrice;//商品原有价格
+    private     String              skuType;//商品类型
+    private     Long                skuTypeId;//商品类型所对应的ID
 
     //item
     @JsonIgnore
@@ -62,8 +65,8 @@ public class PinInvDetail {
     public PinInvDetail() {
     }
 
-    public PinInvDetail(Long pinId, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, String itemDetailImgs, String itemFeatures, String publicity, String detail) {
-        this.pinId = pinId;
+    public PinInvDetail(Long id, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, BigDecimal invPrice, String skuType, Long skuTypeId, String itemDetailImgs, String itemFeatures, String publicity, String detail) {
+        this.id = id;
         this.shareUrl = shareUrl;
         this.status = status;
         this.pinTitle = pinTitle;
@@ -87,18 +90,21 @@ public class PinInvDetail {
         this.browseCount = browseCount;
         this.soldAmount = soldAmount;
         this.invImg = invImg;
+        this.invPrice = invPrice;
+        this.skuType = skuType;
+        this.skuTypeId = skuTypeId;
         this.itemDetailImgs = itemDetailImgs;
         this.itemFeatures = itemFeatures;
         this.publicity = publicity;
         this.detail = detail;
     }
 
-    public Long getPinId() {
-        return pinId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPinId(Long pinId) {
-        this.pinId = pinId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getShareUrl() {
@@ -285,6 +291,30 @@ public class PinInvDetail {
         this.invImg = invImg;
     }
 
+    public BigDecimal getInvPrice() {
+        return invPrice;
+    }
+
+    public void setInvPrice(BigDecimal invPrice) {
+        this.invPrice = invPrice;
+    }
+
+    public String getSkuType() {
+        return skuType;
+    }
+
+    public void setSkuType(String skuType) {
+        this.skuType = skuType;
+    }
+
+    public Long getSkuTypeId() {
+        return skuTypeId;
+    }
+
+    public void setSkuTypeId(Long skuTypeId) {
+        this.skuTypeId = skuTypeId;
+    }
+
     public String getItemDetailImgs() {
         return itemDetailImgs;
     }
@@ -320,7 +350,7 @@ public class PinInvDetail {
     @Override
     public String toString() {
         return "PinInvDetail{" +
-                "pinId=" + pinId +
+                "id=" + id +
                 ", shareUrl='" + shareUrl + '\'' +
                 ", status='" + status + '\'' +
                 ", pinTitle='" + pinTitle + '\'' +
@@ -344,6 +374,9 @@ public class PinInvDetail {
                 ", browseCount=" + browseCount +
                 ", soldAmount=" + soldAmount +
                 ", invImg='" + invImg + '\'' +
+                ", invPrice=" + invPrice +
+                ", skuType='" + skuType + '\'' +
+                ", skuTypeId=" + skuTypeId +
                 ", itemDetailImgs='" + itemDetailImgs + '\'' +
                 ", itemFeatures='" + itemFeatures + '\'' +
                 ", publicity='" + publicity + '\'' +
