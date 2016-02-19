@@ -78,10 +78,12 @@ public class Inventory implements Serializable{
     @JsonIgnore
     private     String      itemDetail;
 
+    private Long collectId; //暂用的收藏ID
+
     public Inventory() {
     }
 
-    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, String shareUrl, Integer collectCount, Integer browseCount, String skuType, Long skuTypeId, String themeId, Timestamp startAt, Timestamp endAt, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String itemDetail) {
+    public Inventory(Long id, String itemColor, String itemSize, BigDecimal itemSrcPrice, BigDecimal itemPrice, BigDecimal itemDiscount, Boolean orMasterInv, String state, BigDecimal shipFee, String invArea, Integer restrictAmount, Integer restAmount, String invImg, String itemPreviewImgs, String invUrl, String invTitle, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, String shareUrl, Integer collectCount, Integer browseCount, String skuType, Long skuTypeId, String themeId, Timestamp startAt, Timestamp endAt, Long itemId, Integer amount, BigDecimal itemCostPrice, Integer soldAmount, Boolean orDestroy, Timestamp destroyAt, Timestamp updateAt, Timestamp createAt, String itemDetail,Long collectId) {
         this.id = id;
         this.itemColor = itemColor;
         this.itemSize = itemSize;
@@ -120,6 +122,7 @@ public class Inventory implements Serializable{
         this.updateAt = updateAt;
         this.createAt = createAt;
         this.itemDetail = itemDetail;
+        this.collectId=collectId;
     }
 
     public Long getId() {
@@ -424,6 +427,14 @@ public class Inventory implements Serializable{
 
     public void setItemDetail(String itemDetail) {
         this.itemDetail = itemDetail;
+    }
+
+    public Long getCollectId() {
+        return collectId;
+    }
+
+    public void setCollectId(Long collectId) {
+        this.collectId = collectId;
     }
 
     @Override

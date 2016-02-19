@@ -1,6 +1,7 @@
 package mapper;
 
 import domain.Cart;
+import domain.Collect;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface ShoppingCartMapper {
     List<Cart> getCartByUserSku(Cart cart) throws Exception;
+    List<Collect> selectCollect(Collect collect)throws Exception;
+
 }

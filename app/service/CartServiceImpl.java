@@ -1,6 +1,7 @@
 package service;
 
 import domain.Cart;
+import domain.Collect;
 import mapper.ShoppingCartMapper;
 
 import javax.inject.Inject;
@@ -18,6 +19,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> getCartByUserSku(Cart cart) throws Exception {
         return shoppingCartMapper.getCartByUserSku(cart);
+    }
+
+    @Override
+    public List<Collect> selectCollect(Collect collect) throws Exception {
+        return shoppingCartMapper.selectCollect(collect);
     }
 
 }

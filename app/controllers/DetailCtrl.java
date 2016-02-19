@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import domain.Cart;
+import domain.Collect;
 import domain.Message;
 import middle.DetailMid;
 import net.spy.memcached.MemcachedClient;
@@ -14,10 +15,7 @@ import service.PromotionService;
 import service.ThemeService;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 商品详情页
@@ -57,16 +55,13 @@ public class DetailCtrl extends Controller {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
+        Long userId=-1L;
         try {
-            if (subjectFlag == 1) {
-                map = detailMid.getDetail(itemId, skuId, varyId, -1L);
-            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId);
-
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                 if (token.isPresent()) {
                     JsonNode userJson = Json.parse(token.get());
-                    Long userId = Long.valueOf(userJson.findValue("id").asText());
+                    userId = Long.valueOf(userJson.findValue("id").asText());
                     Cart cart = new Cart();
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
@@ -75,6 +70,11 @@ public class DetailCtrl extends Controller {
                     }
                 }
             }
+            if (subjectFlag == 1) {
+                map = detailMid.getDetail(itemId, skuId, varyId, -1L,userId);
+            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId,userId);
+
+
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
@@ -97,13 +97,14 @@ public class DetailCtrl extends Controller {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
+        Long userId=-1L;
         try {
-            map = detailMid.getPinDetail(id, skuId, pinId);
+
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                 if (token.isPresent()) {
                     JsonNode userJson = Json.parse(token.get());
-                    Long userId = Long.valueOf(userJson.findValue("id").asText());
+                    userId = Long.valueOf(userJson.findValue("id").asText());
                     Cart cart = new Cart();
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
@@ -112,6 +113,7 @@ public class DetailCtrl extends Controller {
                     }
                 }
             }
+            map = detailMid.getPinDetail(id, skuId, pinId,userId);
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
