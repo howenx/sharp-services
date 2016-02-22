@@ -1,6 +1,9 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import util.DiscountSerializer;
+import util.MoneySerializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,7 +17,9 @@ public class SubjectPrice implements Serializable {
     private Long id;
     private Long themeId;
     private Long invId;
+    @JsonSerialize(using = MoneySerializer.class)
     private BigDecimal price;
+    @JsonSerialize(using = DiscountSerializer.class)
     private BigDecimal discount;
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     private Timestamp createAt;

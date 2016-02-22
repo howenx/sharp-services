@@ -1,6 +1,8 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import util.MoneySerializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,6 +17,7 @@ public class PinActivity implements Serializable {
     private Long pinId;         //拼购ID
     private Long masterUserId;  //团长用户ID
     private int personNum;      //拼购人数
+    @JsonSerialize(using = MoneySerializer.class)
     private BigDecimal pinPrice;//拼购价格
     private int joinPersons;    //已参加活动人数
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")

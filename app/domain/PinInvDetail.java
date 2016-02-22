@@ -48,6 +48,7 @@ public class PinInvDetail {
     private     Integer             browseCount;//浏览次数
     private     Integer             soldAmount;//卖出数量
     private     String              invImg;//sku主图
+    @JsonSerialize(using = MoneySerializer.class)
     private     BigDecimal          invPrice;//商品原有价格
     private     String              skuType;//商品类型
     private     Long                skuTypeId;//商品类型所对应的ID

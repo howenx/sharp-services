@@ -270,7 +270,7 @@ public class DetailMid {
         PinSku pinSku = promotionService.getPinSkuById(pinId);
 
         pinInvDetail.setId(skuId);                                   //库存ID
-        if (pinSku.getShareUrl() != null) pinInvDetail.setShareUrl(pinSku.getShareUrl()); //分享短连接
+        if (pinSku.getShareUrl() != null && !pinSku.getShareUrl().equals("")) pinInvDetail.setShareUrl(pinSku.getShareUrl()); //分享短连接
         pinInvDetail.setStatus(pinSku.getStatus());                     //状态
         pinInvDetail.setPinTitle(pinSku.getPinTitle());                 //拼购商品标题
         pinInvDetail.setStartAt(pinSku.getStartAt());                   //开始时间
