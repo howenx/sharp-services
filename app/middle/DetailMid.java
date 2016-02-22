@@ -45,14 +45,15 @@ public class DetailMid {
      * @param itemId 商品id
      * @param skuId  库存ID
      * @param varyId 多样化价格id
+     * @param userId 用户userId,未登录为-1
      * @return map
      */
-    public Map<String, Object> getDetail(Long itemId, Long skuId, Long varyId, Long subjectId) {
+    public Map<String, Object> getDetail(Long itemId, Long skuId, Long varyId, Long subjectId,Long userId) {
 
         Map<String, Object> map = new HashMap<>();
         try {
             map.put("main", getItem(itemId));
-            map.put("stock", getStock(itemId, skuId, varyId, subjectId));
+            map.put("stock", getStock(itemId, skuId, varyId, subjectId,userId));
             return map;
         } catch (Exception ex) {
             Logger.error("getItemDetail: " + ex.getMessage());
@@ -121,7 +122,7 @@ public class DetailMid {
      * @param varyId 多样化价格ID
      * @return list
      */
-    private List<Inventory> getStock(Long itemId, Long skuId, Long varyId, Long subjectId) {
+    private List<Inventory> getStock(Long itemId, Long skuId, Long varyId, Long subjectId,Long userId) {
 
         Inventory inventory = new Inventory();
         inventory.setItemId(itemId);
@@ -163,7 +164,7 @@ public class DetailMid {
             l.setSkuType("item");
             l.setSkuTypeId(l.getId());
 
-            //是否是多样化价格产品
+            //是否是多样化价格产品 //vary
             if (!varyId.equals(((Integer) (-1)).longValue())) {
                 VaryPrice varyPrice = new VaryPrice();
                 varyPrice.setId(varyId);
@@ -179,7 +180,7 @@ public class DetailMid {
                 }
             }
 
-            //是否自定义价格
+            //是否自定义价格 customs
             if (!subjectId.equals(((Integer) (-1)).longValue())) {
                 SubjectPrice subjectPrice = themeService.getSbjPriceById(subjectId);
                 l.setItemPrice(subjectPrice.getPrice());
@@ -188,6 +189,29 @@ public class DetailMid {
                 l.setSkuType("customize");
                 l.setSkuTypeId(subjectId);
             }
+
+            if (!userId.equals(((Integer) (-1)).longValue())) {
+                //用户收藏信息
+                Collect collect = new Collect();
+                collect.setUserId(userId);
+                collect.setSkuId(l.getId());
+                collect.setSkuType(l.getSkuType());
+                collect.setSkuTypeId(l.getSkuTypeId());
+                Logger.info("=====item collect userId="+userId+",collectId="+l.getCollectId()+",skuId="+collect.getSkuId()+",skuType="+collect.getSkuType()+",skuTypeId="+collect.getSkuTypeId());
+                try{
+                    Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
+                    if (collectList.isPresent()&&collectList.get().size()>0) {
+                        l.setCollectId(collectList.get().get(0).getCollectId());
+                        Logger.info("item collect userId="+userId+",collectId="+l.getCollectId()+",skuId="+collect.getSkuId()+",skuType="+collect.getSkuType()+",skuTypeId="+collect.getSkuTypeId());
+                    }else{
+                        Logger.info("item not collect userId="+userId+",collectId="+l.getCollectId()+",skuId="+collect.getSkuId()
+                                +",skuType="+collect.getSkuType()+",skuTypeId="+collect.getSkuTypeId()+",collectList.isPresent()="+collectList.isPresent());
+                    }
+                }catch (Exception ex){
+                    Logger.error("cartService.selectCollect exception "+ ex.getMessage());
+                }
+            }
+
             return l;
         }).collect(Collectors.toList());
 
@@ -201,12 +225,12 @@ public class DetailMid {
      * @param pinId  拼购ID
      * @return map
      */
-    public Map<String, Object> getPinDetail(Long itemId, Long skuId, Long pinId) {
+    public Map<String, Object> getPinDetail(Long itemId, Long skuId, Long pinId,Long userId) {
 
         Map<String, Object> map = new HashMap<>();
         try {
             map.put("main", getItem(itemId));
-            map.put("stock", getPinInvDetail(itemId, skuId, pinId));
+            map.put("stock", getPinInvDetail(itemId, skuId, pinId,userId));
             return map;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -223,7 +247,7 @@ public class DetailMid {
      * @param pinId  拼购ID
      * @return PinInvDetail
      */
-    private PinInvDetail getPinInvDetail(Long itemId, Long skuId, Long pinId) {
+    private PinInvDetail getPinInvDetail(Long itemId, Long skuId, Long pinId,Long userId) {
 
         PinInvDetail pinInvDetail = new PinInvDetail();
 
@@ -294,6 +318,24 @@ public class DetailMid {
         pinInvDetail.setPinTieredPrices(pinTieredPrices);       //设置价格
 
         pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);
+
+        if (!userId.equals(((Integer) (-1)).longValue())) {
+            //用户收藏信息
+            Collect collect = new Collect();
+            collect.setUserId(userId);
+            collect.setSkuId(pinInvDetail.getId());
+            collect.setSkuType(pinInvDetail.getSkuType());
+            collect.setSkuTypeId(pinInvDetail.getSkuTypeId());
+            try{
+                Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
+                if (collectList.isPresent()&&collectList.get().size()>0) {
+                    pinInvDetail.setCollectId(collectList.get().get(0).getCollectId());
+                    Logger.info("pin collect userId="+userId+",collectId="+pinInvDetail.getCollectId());
+                }
+            }catch (Exception ex){
+                Logger.error("cartService.selectCollect exception"+ ex.getMessage());
+            }
+        }
         return pinInvDetail;
     }
 

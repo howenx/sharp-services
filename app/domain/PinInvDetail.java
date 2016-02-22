@@ -62,11 +62,12 @@ public class PinInvDetail {
     private String publicity;//优惠区域显示信息（包括发货区域，多久后发货)
     @JsonIgnore
     private String detail;//商品详情
+    private Long collectId; //暂用的收藏ID
 
     public PinInvDetail() {
     }
 
-    public PinInvDetail(Long id, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, BigDecimal invPrice, String skuType, Long skuTypeId, String itemDetailImgs, String itemFeatures, String publicity, String detail) {
+    public PinInvDetail(Long id, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, BigDecimal invPrice, String skuType, Long skuTypeId, String itemDetailImgs, String itemFeatures, String publicity, String detail,Long collectId) {
         this.id = id;
         this.shareUrl = shareUrl;
         this.status = status;
@@ -98,6 +99,7 @@ public class PinInvDetail {
         this.itemFeatures = itemFeatures;
         this.publicity = publicity;
         this.detail = detail;
+        this.collectId=collectId;
     }
 
     public Long getId() {
@@ -346,6 +348,14 @@ public class PinInvDetail {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public Long getCollectId() {
+        return collectId;
+    }
+
+    public void setCollectId(Long collectId) {
+        this.collectId = collectId;
     }
 
     @Override
