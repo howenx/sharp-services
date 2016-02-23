@@ -189,6 +189,7 @@ public class DetailMid {
                 l.setSkuType("customize");
                 l.setSkuTypeId(subjectId);
             }
+            l.setCollectId(0L);
 
             if (!userId.equals(((Integer) (-1)).longValue())) {
                 //用户收藏信息
@@ -197,7 +198,6 @@ public class DetailMid {
                 collect.setSkuId(l.getId());
                 collect.setSkuType(l.getSkuType());
                 collect.setSkuTypeId(l.getSkuTypeId());
-                Logger.info("=====item collect userId="+userId+",collectId="+l.getCollectId()+",skuId="+collect.getSkuId()+",skuType="+collect.getSkuType()+",skuTypeId="+collect.getSkuTypeId());
                 try{
                     Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
                     if (collectList.isPresent()&&collectList.get().size()>0) {
@@ -324,7 +324,7 @@ public class DetailMid {
         pinInvDetail.setPinTieredPrices(pinTieredPrices);       //设置价格
 
         pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);
-
+        pinInvDetail.setCollectId(0L);
         if (!userId.equals(((Integer) (-1)).longValue())) {
             //用户收藏信息
             Collect collect = new Collect();

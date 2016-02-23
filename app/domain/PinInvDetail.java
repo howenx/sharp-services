@@ -66,7 +66,7 @@ public class PinInvDetail {
     private String publicity;//优惠区域显示信息（包括发货区域，多久后发货)
     @JsonIgnore
     private String detail;//商品详情
-    private Long collectId; //暂用的收藏ID
+    private Long collectId=0L; //暂用的收藏ID
 
     public PinInvDetail() {
     }

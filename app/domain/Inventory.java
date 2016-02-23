@@ -78,7 +78,7 @@ public class Inventory implements Serializable{
     @JsonIgnore
     private     String      itemDetail;
 
-    private Long collectId; //暂用的收藏ID
+    private Long collectId=0L; //暂用的收藏ID
 
     public Inventory() {
     }
