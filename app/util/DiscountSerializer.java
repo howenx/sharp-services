@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class DiscountSerializer extends JsonSerializer<BigDecimal> {
     @Override
     public void serialize(BigDecimal value, JsonGenerator jgen, SerializerProvider provider) throws IOException{
-        jgen.writeString(value.setScale(1, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());
+        if (value!=null) jgen.writeString(value.setScale(1, BigDecimal.ROUND_DOWN).stripTrailingZeros().toPlainString());
+        else jgen.writeNull();
     }
 }

@@ -114,6 +114,7 @@ public class DetailCtrl extends Controller {
                 }
             }
             map = detailMid.getPinDetail(id, skuId, pinId,userId);
+//            Logger.error("这你妈的\n"+Json.toJson(map));
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {

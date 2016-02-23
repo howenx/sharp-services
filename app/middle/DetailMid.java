@@ -258,6 +258,9 @@ public class DetailMid {
         if (inventoryList.size() > 0) {
 
             inventory = inventoryList.get(0);
+
+            Logger.error("这但擦拭的发生的:\n"+inventory.toString());
+
             pinInvDetail.setInvArea(inventory.getInvArea());//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
             pinInvDetail.setRestAmount(inventory.getRestAmount());//商品余量
 
@@ -273,6 +276,9 @@ public class DetailMid {
 
             pinInvDetail.setInvWeight(inventory.getInvWeight());//商品重量单位g
             pinInvDetail.setInvCustoms(inventory.getInvCustoms());//报关单位
+
+//            Logger.error("擦你妈蛋\n"+inventory.getPostalTaxRate());
+
             pinInvDetail.setPostalTaxRate(inventory.getPostalTaxRate());//税率,百分比
             pinInvDetail.setPostalStandard(inventory.getPostalStandard());//关税收费标准
             pinInvDetail.setInvAreaNm(inventory.getInvAreaNm());//仓储地名称

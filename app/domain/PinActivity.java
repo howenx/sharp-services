@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
+ *
  * Created by tiffany on 16/1/20.
  */
 public class PinActivity implements Serializable {

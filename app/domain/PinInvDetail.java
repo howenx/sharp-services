@@ -53,6 +53,10 @@ public class PinInvDetail {
     private     String              skuType;//商品类型
     private     Long                skuTypeId;//商品类型所对应的ID
 
+    @JsonIgnore
+    private Integer         orRestrictAmount;//是否超出限购数量,0:可以继续下单,1:当前已经成功购买数量等于限购数量
+
+
     //item
     @JsonIgnore
     private String itemDetailImgs;//商品详细图片
@@ -67,7 +71,7 @@ public class PinInvDetail {
     public PinInvDetail() {
     }
 
-    public PinInvDetail(Long id, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, BigDecimal invPrice, String skuType, Long skuTypeId, String itemDetailImgs, String itemFeatures, String publicity, String detail,Long collectId) {
+    public PinInvDetail(Long id, String shareUrl, String status, String pinTitle, Timestamp startAt, Timestamp endAt, String pinPriceRule, int restrictAmount, String floorPrice, BigDecimal pinDiscount, List<PinTieredPrice> pinTieredPrices, String pinRedirectUrl, String invArea, Integer restAmount, String itemPreviewImgs, String invWeight, String invCustoms, String postalTaxRate, String postalStandard, String invAreaNm, Integer collectCount, Integer browseCount, Integer soldAmount, String invImg, BigDecimal invPrice, String skuType, Long skuTypeId, Integer orRestrictAmount, String itemDetailImgs, String itemFeatures, String publicity, String detail, Long collectId) {
         this.id = id;
         this.shareUrl = shareUrl;
         this.status = status;
@@ -95,11 +99,12 @@ public class PinInvDetail {
         this.invPrice = invPrice;
         this.skuType = skuType;
         this.skuTypeId = skuTypeId;
+        this.orRestrictAmount = orRestrictAmount;
         this.itemDetailImgs = itemDetailImgs;
         this.itemFeatures = itemFeatures;
         this.publicity = publicity;
         this.detail = detail;
-        this.collectId=collectId;
+        this.collectId = collectId;
     }
 
     public Long getId() {
@@ -318,6 +323,14 @@ public class PinInvDetail {
         this.skuTypeId = skuTypeId;
     }
 
+    public Integer getOrRestrictAmount() {
+        return orRestrictAmount;
+    }
+
+    public void setOrRestrictAmount(Integer orRestrictAmount) {
+        this.orRestrictAmount = orRestrictAmount;
+    }
+
     public String getItemDetailImgs() {
         return itemDetailImgs;
     }
@@ -388,10 +401,12 @@ public class PinInvDetail {
                 ", invPrice=" + invPrice +
                 ", skuType='" + skuType + '\'' +
                 ", skuTypeId=" + skuTypeId +
+                ", orRestrictAmount=" + orRestrictAmount +
                 ", itemDetailImgs='" + itemDetailImgs + '\'' +
                 ", itemFeatures='" + itemFeatures + '\'' +
                 ", publicity='" + publicity + '\'' +
                 ", detail='" + detail + '\'' +
+                ", collectId=" + collectId +
                 '}';
     }
 }
