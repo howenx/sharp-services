@@ -79,7 +79,7 @@ public class Application extends Controller {
 
                 int page_count = 0;
                 if (themeList.size() > 0) {
-                    page_count = themeList.get(0).getThemeNum() / PAGE_SIZE + 1;
+                    page_count = themeList.get(0).getThemeNum()%PAGE_SIZE==0 ? themeList.get(0).getThemeNum() / PAGE_SIZE:themeList.get(0).getThemeNum() / PAGE_SIZE + 1;
                 }
 
                 Long userId=-1L;
