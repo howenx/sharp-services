@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  */
 public class Theme implements Serializable {
 
+    @JsonIgnore
     private     Long        id;//主题ID
     private     String      themeImg;//主题图片
     private     String      themeUrl;//跳转到主题列表页的链接

@@ -2,7 +2,6 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import domain.Cart;
-import domain.Collect;
 import domain.Message;
 import middle.DetailMid;
 import net.spy.memcached.MemcachedClient;
@@ -15,7 +14,10 @@ import service.PromotionService;
 import service.ThemeService;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * 商品详情页
@@ -66,15 +68,13 @@ public class DetailCtrl extends Controller {
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
                     if (cartList.isPresent() && cartList.get().size() > 0) {
-                        map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        map.put("cartNum", cartList.get().get(0).getCartNum());
                     }
                 }
             }
             if (subjectFlag == 1) {
                 map = detailMid.getDetail(itemId, skuId, varyId, -1L,userId);
             } else map = detailMid.getDetail(itemId, skuId, -1L, varyId,userId);
-
-
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
@@ -99,7 +99,6 @@ public class DetailCtrl extends Controller {
         Map<String, Object> map = new HashMap<>();
         Long userId=-1L;
         try {
-
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                 if (token.isPresent()) {
@@ -109,12 +108,11 @@ public class DetailCtrl extends Controller {
                     cart.setUserId(userId);
                     Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
                     if (cartList.isPresent() && cartList.get().size() > 0) {
-                        map.put("cartNum", cartService.getCartByUserSku(cart).get(0).getCartNum());
+                        map.put("cartNum", cartList.get().get(0).getCartNum());
                     }
                 }
             }
             map = detailMid.getPinDetail(id, skuId, pinId,userId);
-//            Logger.error("这你妈的\n"+Json.toJson(map));
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
