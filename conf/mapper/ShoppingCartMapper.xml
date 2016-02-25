@@ -74,4 +74,44 @@
         </if>
         ORDER BY create_at DESC,sku_id
     </select>
+
+    <!--获取未读消息类型-->
+    <select id="getNotReadMsgNum" parameterType="domain.MsgRec" resultType="java.lang.Integer">
+        select count(id) from sp_msg_rec where 1=1 and del_status=1
+        <if test="userId!=null and userId!=''">
+            and user_id = #{userId}
+        </if>
+        <if test="readStatus!=null and readStatus!=''">
+            and read_status = #{readStatus}
+        </if>
+        <if test="msgType!=null and msgType!=''">
+            and msg_type = #{msgType}
+        </if>
+    </select>
+    <sql id="MsgColumns">
+        ${alias}.msg_id,
+        ${alias}.msg_title,
+        ${alias}.msg_content,
+        ${alias}.msg_type,
+        ${alias}.msg_img,
+        ${alias}.msg_url,
+        ${alias}.create_at,
+        ${alias}.end_at,
+        ${alias}.target_type
+    </sql>
+    <!--获取未接收的未过期的系统消息 -->
+    <select id="getNotRecMsg" parameterType="java.lang.Long" resultType="domain.Msg">
+        select
+        <include refid="MsgColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from sp_msg t where 1=1
+        and now()&lt;t.end_at
+        and not exists(
+        select r.msg_id from sp_msg_rec r
+        where r.user_id =#{value}
+        and t.msg_id=r.msg_id
+        )
+    </select>
+
 </mapper>

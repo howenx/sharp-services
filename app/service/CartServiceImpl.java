@@ -2,6 +2,8 @@ package service;
 
 import domain.Cart;
 import domain.Collect;
+import domain.Msg;
+import domain.MsgRec;
 import mapper.ShoppingCartMapper;
 
 import javax.inject.Inject;
@@ -24,6 +26,16 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Collect> selectCollect(Collect collect) throws Exception {
         return shoppingCartMapper.selectCollect(collect);
+    }
+
+    @Override
+    public Integer getNotReadMsgNum(MsgRec msgRec) {
+        return shoppingCartMapper.getNotReadMsgNum(msgRec);
+    }
+
+    @Override
+    public List<Msg> getNotRecMsg(Long userId) {
+        return shoppingCartMapper.getNotRecMsg(userId);
     }
 
 }

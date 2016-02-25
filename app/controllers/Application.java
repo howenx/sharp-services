@@ -2,10 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import domain.Cart;
-import domain.Message;
-import domain.Slider;
-import domain.Theme;
+import domain.*;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
@@ -50,6 +47,7 @@ public class Application extends Controller {
      */
     public Result getIndex(int pageNum) {
         ObjectNode result = Json.newObject();
+
         if (pageNum > 0) {
 
             //计算从第几条开始取数据
@@ -84,9 +82,21 @@ public class Application extends Controller {
                     page_count = themeList.get(0).getThemeNum() / PAGE_SIZE + 1;
                 }
 
+                Long userId=-1L;
+                //消息提醒
+                result.putPOJO("msgRemind",0); //消息不提醒
+                Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
+                if (header.isPresent()) {
+                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                    if (token.isPresent()) {
+                        JsonNode userJson = Json.parse(token.get());
+                        userId = Long.valueOf(userJson.findValue("id").asText());    //登录了
+                        result.putPOJO("msgRemind",msgRemind(userId)); //消息提醒
+                    }
+                }
+
                 if (pageNum == 1) {
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
-
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
                         List<Slider> sliderImgList = listOptionalSlider.get().stream().map(s -> {
@@ -126,6 +136,30 @@ public class Application extends Controller {
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.BAD_PARAMETER.getIndex()), Message.ErrorCode.BAD_PARAMETER.getIndex())));
             return badRequest(result);
         }
+    }
+
+    /***
+     * 消息是否提醒   0-不提醒  1-提醒
+     * @param userId
+     * @return
+     */
+    private int msgRemind(Long userId){
+        try {
+            MsgRec msgRec = new MsgRec();
+            msgRec.setUserId(userId);
+            msgRec.setReadStatus(1);
+            if (cartService.getNotReadMsgNum(msgRec) > 0) {   //未读消息
+                return 1;
+            } else {
+                Optional<List<Msg>> msgList = Optional.ofNullable(cartService.getNotRecMsg(userId));
+                if (msgList.isPresent() && msgList.get().size() > 0) {  //还未接收的系统消息
+                    return 1;
+                }
+            }
+        }catch(Exception ex){
+            Logger.info("get msg remind exception" +ex.getMessage());
+        }
+        return 0;
     }
 
     /**
