@@ -71,7 +71,14 @@ public class ThemeServiceImpl implements ThemeService {
         return subjectPriceMapper.getSbjPriceById(id);
     }
 
+    @Override
+    public List<SkuVo> getAllSkus(SkuVo skuVo) {
+        return themeMapper.getAllSkus(skuVo);
+    }
+
     public void setThemeMapper(ThemeMapper themeMapper) {
         this.themeMapper = themeMapper;
     }
+
+
 }

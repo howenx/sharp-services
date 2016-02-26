@@ -14,6 +14,7 @@ import util.GenCouponCode;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,7 @@ public class DetailMid {
         try {
             map.put("main", getItem(itemId));
             map.put("stock", getStock(itemId, skuId, varyId, subjectId,userId));
+            map.put("push",getPushSku(null));
             return map;
         } catch (Exception ex) {
             Logger.error("getItemDetail: " + ex.getMessage());
@@ -231,6 +233,7 @@ public class DetailMid {
         try {
             map.put("main", getItem(itemId));
             map.put("stock", getPinInvDetail(itemId, skuId, pinId,userId));
+            map.put("push",getPushSku("pin"));
             return map;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -259,8 +262,6 @@ public class DetailMid {
 
             inventory = inventoryList.get(0);
 
-            Logger.error("这但擦拭的发生的:\n"+inventory.toString());
-
             pinInvDetail.setInvArea(inventory.getInvArea());//库存区域区分：'B'保税区仓库发货，‘Z’韩国直邮
             pinInvDetail.setRestAmount(inventory.getRestAmount());//商品余量
 
@@ -276,8 +277,6 @@ public class DetailMid {
 
             pinInvDetail.setInvWeight(inventory.getInvWeight());//商品重量单位g
             pinInvDetail.setInvCustoms(inventory.getInvCustoms());//报关单位
-
-//            Logger.error("擦你妈蛋\n"+inventory.getPostalTaxRate());
 
             pinInvDetail.setPostalTaxRate(inventory.getPostalTaxRate());//税率,百分比
             pinInvDetail.setPostalStandard(inventory.getPostalStandard());//关税收费标准
@@ -345,5 +344,46 @@ public class DetailMid {
         return pinInvDetail;
     }
 
+    /**
+     * 获取推荐拼购商品
+     * @return list
+     * @throws Exception
+     */
+    public List<ThemeItem> getPushSku(String skuType) throws Exception {
+        List<ThemeItem> themeItems = new ArrayList<>();
+        SkuVo skuVo  = new SkuVo();
+        skuVo.setSkuTypeStatus("Y");
+        if (skuType!=null) skuVo.setSkuType(skuType);
+        List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
 
+        for (int i = 0; i < (skuVos.size() > 6 ? 6 : skuVos.size()); i++) {
+
+            ThemeItem themeItem  =new ThemeItem();
+            SkuVo pin = skuVos.get(i);
+
+            themeItem.setCollectCount(pin.getCollectCount().intValue());
+            themeItem.setItemDiscount(pin.getSkuTypeDiscount());
+            JsonNode jsonNodeInvImg = Json.parse(pin.getSkuTypeImg());
+            if (jsonNodeInvImg.has("url")) {
+                ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
+            }
+            themeItem.setItemPrice(pin.getSkuTypePrice());
+            themeItem.setItemSoldAmount(pin.getSkuTypeSoldAmount());
+            themeItem.setItemSrcPrice(pin.getItemSrcPrice());
+            themeItem.setItemTitle(pin.getSkuTypeTitle());
+            switch (pin.getSkuType()){
+                case "item": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId());break;
+                case "vary": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
+                case "pin": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + pin.getItemId() + "/" + pin.getInvId()  + "/" + pin.getSkuTypeId());break;
+                case "customize": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/subject/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
+            }
+            themeItem.setItemType(pin.getSkuType());
+            themeItem.setState(pin.getSkuTypeStatus());//商品状态
+            themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pin.getSkuTypeStartAt()));
+            themeItem.setEndAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pin.getSkuTypeEndAt()));
+            themeItems.add(themeItem);
+        }
+        return themeItems;
+    }
 }
