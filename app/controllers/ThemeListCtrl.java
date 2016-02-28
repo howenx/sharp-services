@@ -12,8 +12,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import service.CartService;
-import service.PromotionService;
-import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,24 +23,15 @@ import java.util.Optional;
  */
 public class ThemeListCtrl extends Controller {
 
-    private ThemeService themeService;
-
+    @Inject
     private CartService cartService;
 
-    private PromotionService promotionService;
-
+    @Inject
     private ThemeListMid themeListMid;
 
+    @Inject
     private MemcachedClient cache;
 
-    @Inject
-    public ThemeListCtrl(ThemeService themeService, CartService cartService, PromotionService promotionService, MemcachedClient cache) {
-        this.themeService = themeService;
-        this.cartService = cartService;
-        this.promotionService = promotionService;
-        this.cache = cache;
-        themeListMid = new ThemeListMid(cartService, promotionService, themeService);
-    }
 
     /**
      * 获取主题列表

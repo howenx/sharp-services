@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Application;
 import domain.*;
+import modules.SysParCom;
 import play.Logger;
 import play.libs.Json;
 import service.CartService;
@@ -12,6 +13,7 @@ import service.PromotionService;
 import service.ThemeService;
 import util.GenCouponCode;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,23 +24,18 @@ import java.util.stream.Collectors;
  * 中间事务处理层
  * Created by howen on 16/1/25.
  */
-@Singleton
 public class DetailMid {
 
+    @Inject
     private CartService cartService;
+    @Inject
     private PromotionService promotionService;
+    @Inject
     private ThemeService themeService;
 
 
     //将Json串转换成List
     final static ObjectMapper mapper = new ObjectMapper();
-
-    public DetailMid(ThemeService themeService, CartService cartService, PromotionService promotionService) {
-        this.themeService = themeService;
-        this.cartService = cartService;
-        this.promotionService = promotionService;
-    }
-
 
     /**
      * 获取商品详情
@@ -92,8 +89,8 @@ public class DetailMid {
 
                 //使用Java8 Stream写法,增加图片地址前缀
                 detailsList.stream().map((s) -> {
-                    stringBuilder.append("<img width=\"100%\" src=\"").append(Application.IMAGE_URL).append(s).append("\">");
-                    return Application.IMAGE_URL + s;
+                    stringBuilder.append("<img width=\"100%\" src=\"").append(SysParCom.IMAGE_URL).append(s).append("\">");
+                    return SysParCom.IMAGE_URL + s;
                 }).collect(Collectors.toList());
 
                 stringBuilder.append("</p></body></html>");
@@ -132,17 +129,17 @@ public class DetailMid {
         //遍历库存list 对其进行相应的处理
         return themeService.getInvBy(inventory).stream().map(l -> {
 
-            l.setInvUrl(Application.DEPLOY_URL + "/comm/detail/" + itemId + "/" + l.getId());
+            l.setInvUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + itemId + "/" + l.getId());
 
 
             //SKU图片
             if (l.getInvImg().contains("url")) {
                 JsonNode jsonNode_InvImg = Json.parse(l.getInvImg());
                 if (jsonNode_InvImg.has("url")) {
-                    ((ObjectNode) jsonNode_InvImg).put("url", Application.IMAGE_URL + jsonNode_InvImg.get("url").asText());
+                    ((ObjectNode) jsonNode_InvImg).put("url", SysParCom.IMAGE_URL + jsonNode_InvImg.get("url").asText());
                     l.setInvImg(Json.stringify(jsonNode_InvImg));
                 }
-            } else l.setInvImg(Application.IMAGE_URL + l.getInvImg());
+            } else l.setInvImg(SysParCom.IMAGE_URL + l.getInvImg());
 
 
             //判断是否是当前需要显示的sku
@@ -157,7 +154,7 @@ public class DetailMid {
             if (js.isArray()) {
                 for (JsonNode j : js) {
                     if (j.has("url")) {
-                        ((ObjectNode) j).put("url", Application.IMAGE_URL + j.get("url").asText());
+                        ((ObjectNode) j).put("url", SysParCom.IMAGE_URL + j.get("url").asText());
                     }
                 }
             }
@@ -176,7 +173,7 @@ public class DetailMid {
                     l.setSoldAmount(varyPrice.getSoldAmount());
                     l.setItemPrice(varyPrice.getPrice());
                     l.setState(varyPrice.getStatus());
-                    l.setInvUrl(Application.DEPLOY_URL + "/comm/detail/" + itemId + "/" + l.getId() + "/" + varyId);
+                    l.setInvUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + itemId + "/" + l.getId() + "/" + varyId);
                     l.setSkuType("vary");
                     l.setSkuTypeId(varyId);
                 }
@@ -187,7 +184,7 @@ public class DetailMid {
                 SubjectPrice subjectPrice = themeService.getSbjPriceById(subjectId);
                 l.setItemPrice(subjectPrice.getPrice());
                 l.setItemDiscount(subjectPrice.getDiscount());
-                l.setInvUrl(Application.DEPLOY_URL + "/comm/subject/detail/" + itemId + "/" + l.getId() + "/" + subjectId);
+                l.setInvUrl(SysParCom.DEPLOY_URL + "/comm/subject/detail/" + itemId + "/" + l.getId() + "/" + subjectId);
                 l.setSkuType("customize");
                 l.setSkuTypeId(subjectId);
             }
@@ -269,7 +266,7 @@ public class DetailMid {
             if (js.isArray()) {
                 for (JsonNode j : js) {
                     if (j.has("url")) {
-                        ((ObjectNode) j).put("url", Application.IMAGE_URL + j.get("url").asText());
+                        ((ObjectNode) j).put("url", SysParCom.IMAGE_URL + j.get("url").asText());
                     }
                 }
             }
@@ -291,7 +288,7 @@ public class DetailMid {
 
             JsonNode js_invImg = Json.parse(inventory.getInvImg());
             if (js_invImg.has("url")) {
-                ((ObjectNode) js_invImg).put("url", Application.IMAGE_URL + js_invImg.get("url").asText());
+                ((ObjectNode) js_invImg).put("url", SysParCom.IMAGE_URL + js_invImg.get("url").asText());
             }
             pinInvDetail.setInvImg(js_invImg.toString());
         }
@@ -322,7 +319,7 @@ public class DetailMid {
 
         pinInvDetail.setPinTieredPrices(pinTieredPrices);       //设置价格
 
-        pinInvDetail.setPinRedirectUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);
+        pinInvDetail.setPinRedirectUrl(SysParCom.DEPLOY_URL + "/comm/pin/detail/" + itemId + "/" + skuId + "/" + pinId);
         pinInvDetail.setCollectId(0L);
         if (!userId.equals(((Integer) (-1)).longValue())) {
             //用户收藏信息
@@ -365,7 +362,7 @@ public class DetailMid {
             themeItem.setItemDiscount(pin.getSkuTypeDiscount());
             JsonNode jsonNodeInvImg = Json.parse(pin.getSkuTypeImg());
             if (jsonNodeInvImg.has("url")) {
-                ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
                 themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
             }
             themeItem.setItemPrice(pin.getSkuTypePrice());
@@ -373,10 +370,10 @@ public class DetailMid {
             themeItem.setItemSrcPrice(pin.getItemSrcPrice());
             themeItem.setItemTitle(pin.getSkuTypeTitle());
             switch (pin.getSkuType()){
-                case "item": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId());break;
-                case "vary": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
-                case "pin": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + pin.getItemId() + "/" + pin.getInvId()  + "/" + pin.getSkuTypeId());break;
-                case "customize": themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/subject/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
+                case "item": themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId());break;
+                case "vary": themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
+                case "pin": themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/pin/detail/" + pin.getItemId() + "/" + pin.getInvId()  + "/" + pin.getSkuTypeId());break;
+                case "customize": themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/subject/detail/" + pin.getItemId() + "/" + pin.getInvId() + "/" + pin.getSkuTypeId());break;
             }
             themeItem.setItemType(pin.getSkuType());
             themeItem.setState(pin.getSkuTypeStatus());//商品状态

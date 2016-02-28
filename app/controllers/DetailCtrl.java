@@ -10,8 +10,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import service.CartService;
-import service.PromotionService;
-import service.ThemeService;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -25,29 +23,19 @@ import java.util.Optional;
  */
 public class DetailCtrl extends Controller {
 
-    private ThemeService themeService;
-
+    @Inject
     private CartService cartService;
 
-    private PromotionService promotionService;
-
+    @Inject
     private DetailMid detailMid;
 
-    private MemcachedClient cache;
-
     @Inject
-    public DetailCtrl(ThemeService themeService, CartService cartService, PromotionService promotionService, MemcachedClient cache) {
-        this.cache = cache;
-        this.themeService = themeService;
-        this.cartService = cartService;
-        this.promotionService = promotionService;
-        detailMid = new DetailMid(themeService, cartService, promotionService);
-    }
+    private MemcachedClient cache;
 
     /**
      * 获取商品详情
      *
-     * @param itemId     商品ID
+     * @param itemId 商品ID
      * @param skuId  库存ID
      * @param varyId 多样化价格ID
      * @return json
@@ -57,7 +45,7 @@ public class DetailCtrl extends Controller {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
-        Long userId=-1L;
+        Long userId = -1L;
         try {
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
@@ -73,8 +61,8 @@ public class DetailCtrl extends Controller {
                 }
             }
             if (subjectFlag == 1) {
-                map = detailMid.getDetail(itemId, skuId, varyId, -1L,userId);
-            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId,userId);
+                map = detailMid.getDetail(itemId, skuId, varyId, -1L, userId);
+            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId, userId);
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
@@ -97,7 +85,7 @@ public class DetailCtrl extends Controller {
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
-        Long userId=-1L;
+        Long userId = -1L;
         try {
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
@@ -112,7 +100,7 @@ public class DetailCtrl extends Controller {
                     }
                 }
             }
-            map = detailMid.getPinDetail(id, skuId, pinId,userId);
+            map = detailMid.getPinDetail(id, skuId, pinId, userId);
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
