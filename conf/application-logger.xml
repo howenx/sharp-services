@@ -43,13 +43,14 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="play" level="INFO" />
-    <logger name="mapper" level="INFO" />
-    <logger name="controllers" level="INFO" />
+
+    <logger name="mapper" level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="ACCESS_FILE" />
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>
