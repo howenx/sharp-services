@@ -43,6 +43,15 @@ libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
 
 libraryDependencies += "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0" withSources() withJavadoc()
 
+
+libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.4.1" withSources() withJavadoc()
+
+libraryDependencies += "com.typesafe.akka" % "akka-kernel_2.11" % "2.4.1" withSources() withJavadoc()
+
+libraryDependencies += "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.1" withSources() withJavadoc()
+
+libraryDependencies += "com.typesafe.akka" %% "akka-remote" % "2.4.1" withSources() withJavadoc()
+
 //Code Review
 //libraryDependencies += "com.puppycrawl.tools" % "checkstyle" % "6.7" withSources() withJavadoc()
 //
