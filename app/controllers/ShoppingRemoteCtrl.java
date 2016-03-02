@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import java.sql.Timestamp;
 
 /**
+ * 调用远程Shopping下的actor
  * Created by sibyl.sun on 16/3/1.
  */
 public class ShoppingRemoteCtrl extends Controller {
