@@ -49,13 +49,13 @@ public class ShoppingRemoteCtrl extends Controller {
 
     /**
      * 发送系统消息
-     * @param msgType
-     * @param title
-     * @param msgContent
-     * @param msgImg
-     * @param msgUrl
+     * @param msgType 消息类型
+     * @param title   标题
+     * @param msgContent 内容
+     * @param msgImg  图片地址
+     * @param msgUrl  url
      * @param targetType
-     * @param endAt
+     * @param endAt   失效时间
      */
 
     public void sendSysMsg(String msgType,String title,String msgContent,String msgImg,String msgUrl,String targetType, Timestamp endAt){

@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
+import modules.SysParCom;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
 import play.libs.Json;
@@ -20,14 +21,6 @@ import java.util.stream.Collectors;
 
 public class Application extends Controller {
 
-    //每页固定的取数
-    public static final int PAGE_SIZE = Integer.valueOf(play.Play.application().configuration().getString("theme.page.size"));
-
-    //图片服务器url
-    public static final String IMAGE_URL = play.Play.application().configuration().getString("image.server.url");
-
-    //发布服务器url
-    public static final String DEPLOY_URL = play.Play.application().configuration().getString("deploy.server.url");
 
     @Inject
     private ThemeService themeService;
@@ -51,9 +44,9 @@ public class Application extends Controller {
         if (pageNum > 0) {
 
             //计算从第几条开始取数据
-            int offset = (pageNum - 1) * PAGE_SIZE;
+            int offset = (pageNum - 1) * SysParCom.PAGE_SIZE;
 
-            Optional<List<Theme>> listOptional = themeService.getThemes(PAGE_SIZE, offset);
+            Optional<List<Theme>> listOptional = themeService.getThemes(SysParCom.PAGE_SIZE, offset);
 
 
             if (listOptional.isPresent()) {
@@ -61,16 +54,15 @@ public class Application extends Controller {
                     if (l.getThemeImg().contains("url")) {
                         JsonNode jsonNode1 = Json.parse(l.getThemeImg());
                         if (jsonNode1.has("url")) {
-                            ((ObjectNode) jsonNode1).put("url", IMAGE_URL + jsonNode1.get("url").asText());
+                            ((ObjectNode) jsonNode1).put("url", SysParCom.IMAGE_URL + jsonNode1.get("url").asText());
                             l.setThemeImg(Json.stringify(jsonNode1));
                         }
-                    } else l.setThemeImg(IMAGE_URL + l.getThemeImg());
+                    } else l.setThemeImg(SysParCom.IMAGE_URL + l.getThemeImg());
 
 
                     if (l.getType().equals("ordinary")) {
-                        l.setThemeUrl(DEPLOY_URL + "/topic/list/" + l.getId());
-                    }
-                    else {
+                        l.setThemeUrl(SysParCom.DEPLOY_URL + "/topic/list/" + l.getId());
+                    } else {
                         l.setThemeUrl(l.getH5Link());
                     }
 
@@ -79,19 +71,19 @@ public class Application extends Controller {
 
                 int page_count = 0;
                 if (themeList.size() > 0) {
-                    page_count = themeList.get(0).getThemeNum()%PAGE_SIZE==0 ? themeList.get(0).getThemeNum() / PAGE_SIZE:themeList.get(0).getThemeNum() / PAGE_SIZE + 1;
+                    page_count = themeList.get(0).getThemeNum() % SysParCom.PAGE_SIZE == 0 ? themeList.get(0).getThemeNum() / SysParCom.PAGE_SIZE : themeList.get(0).getThemeNum() / SysParCom.PAGE_SIZE + 1;
                 }
 
-                Long userId=-1L;
+                Long userId = -1L;
                 //消息提醒
-                result.putPOJO("msgRemind",0); //消息不提醒
+                result.putPOJO("msgRemind", 0); //消息不提醒
                 Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
                 if (header.isPresent()) {
                     Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                     if (token.isPresent()) {
                         JsonNode userJson = Json.parse(token.get());
                         userId = Long.valueOf(userJson.findValue("id").asText());    //登录了
-                        result.putPOJO("msgRemind",msgRemind(userId)); //消息提醒
+                        result.putPOJO("msgRemind", msgRemind(userId)); //消息提醒
                     }
                 }
 
@@ -103,11 +95,11 @@ public class Application extends Controller {
                             if (s.getImg().contains("url")) {
                                 JsonNode jsonNode2 = Json.parse(s.getImg());
                                 if (jsonNode2.has("url")) {
-                                    ((ObjectNode) jsonNode2).put("url", IMAGE_URL + jsonNode2.get("url").asText());
+                                    ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
                                     s.setUrl(Json.stringify(jsonNode2));
                                 }
                             }
-                            s.setItemTarget(DEPLOY_URL + s.getItemTarget());
+                            s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
                             return s;
                         }).collect(Collectors.toList());
 
@@ -140,10 +132,11 @@ public class Application extends Controller {
 
     /***
      * 消息是否提醒   0-不提醒  1-提醒
+     *
      * @param userId
      * @return
      */
-    private int msgRemind(Long userId){
+    private int msgRemind(Long userId) {
         try {
             MsgRec msgRec = new MsgRec();
             msgRec.setUserId(userId);
@@ -156,8 +149,8 @@ public class Application extends Controller {
                     return 1;
                 }
             }
-        }catch(Exception ex){
-            Logger.info("get msg remind exception" +ex.getMessage());
+        } catch (Exception ex) {
+            Logger.info("get msg remind exception" + ex.getMessage());
         }
         return 0;
     }

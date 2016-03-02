@@ -2,13 +2,13 @@ package middle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.Application;
 import domain.*;
+import modules.SysParCom;
 import play.libs.Json;
-import service.CartService;
 import service.PromotionService;
 import service.ThemeService;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,21 +19,13 @@ import java.util.Optional;
  * 中间事务处理层
  * Created by howen on 16/1/25.
  */
-@Singleton
 public class ThemeListMid {
 
-    private CartService cartService;
+    @Inject
     private PromotionService promotionService;
+
+    @Inject
     private ThemeService themeService;
-
-    private ThemeListMid() {
-    }
-
-    public ThemeListMid(CartService cartService, PromotionService promotionService, ThemeService themeService) {
-        this.cartService = cartService;
-        this.promotionService = promotionService;
-        this.themeService = themeService;
-    }
 
     /**
      * 获取主图列表,包括拼购
@@ -49,7 +41,7 @@ public class ThemeListMid {
 
         JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
         if (jsonNode_ThemeMasterImg.has("url")) {
-            ((ObjectNode) jsonNode_ThemeMasterImg).put("url", Application.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
+            ((ObjectNode) jsonNode_ThemeMasterImg).put("url", SysParCom.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
             themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
         }
 
@@ -64,7 +56,7 @@ public class ThemeListMid {
                             inventory.setId(ujson.get("id").asLong());
                             List<Inventory> inventoryList = themeService.getInvBy(inventory);
                             if (inventoryList.size() > 0) {
-                                ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/detail/" + inventoryList.get(0).getItemId() + "/" + ujson.get("id").asText());
+                                ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + inventoryList.get(0).getItemId() + "/" + ujson.get("id").asText());
                             }
                         } else if (ujson.get("type").asText().equals("pin")) {
                             PinSku pin = promotionService.getPinSkuById(ujson.get("id").asLong());
@@ -73,7 +65,7 @@ public class ThemeListMid {
                             List<Inventory> inventoryList = themeService.getInvBy(inv);
 
                             if (inventoryList.size() > 0) {
-                                ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/pin/detail/" + inventoryList.get(0).getItemId() + "/" + pin.getInvId() + "/" + ujson.get("id").asText());
+                                ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/pin/detail/" + inventoryList.get(0).getItemId() + "/" + pin.getInvId() + "/" + ujson.get("id").asText());
                             }
 
                         } else if (ujson.get("type").asText().equals("vary")) {
@@ -86,7 +78,7 @@ public class ThemeListMid {
                                 inventory.setId(varyPrice.getInvId());
                                 List<Inventory> inventoryList = themeService.getInvBy(inventory);
                                 if (inventoryList.size() > 0) {
-                                    ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/detail/" + inventoryList.get(0).getItemId() + "/" + varyPrice.getInvId() + "/" + ujson.get("id").asText());
+                                    ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + inventoryList.get(0).getItemId() + "/" + varyPrice.getInvId() + "/" + ujson.get("id").asText());
                                 }
                             }
                         } else if (ujson.get("type").asText().equals("customize")) {
@@ -95,7 +87,7 @@ public class ThemeListMid {
                             inventory.setId(subjectPrice.getInvId());
                             List<Inventory> inventoryList = themeService.getInvBy(inventory);
                             if (inventoryList.size() > 0) {
-                                ((ObjectNode) url).put("url", Application.DEPLOY_URL + "/comm/subject/detail/" + inventoryList.get(0).getItemId() + "/" + subjectPrice.getInvId() + "/" + ujson.get("id").asText());
+                                ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/subject/detail/" + inventoryList.get(0).getItemId() + "/" + subjectPrice.getInvId() + "/" + ujson.get("id").asText());
                             }
                         }
                     }
@@ -167,14 +159,14 @@ public class ThemeListMid {
                 themeItem.setItemDiscount(inventory.getItemDiscount());
                 JsonNode jsonNodeInvImg = Json.parse(inventory.getInvImg());
                 if (jsonNodeInvImg.has("url")) {
-                    ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                    ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
                     themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
                 }
                 themeItem.setItemPrice(varyPrice.getPrice());
                 themeItem.setItemSoldAmount(varyPrice.getSoldAmount());
                 themeItem.setItemSrcPrice(inventory.getItemSrcPrice());
                 themeItem.setItemTitle(inventory.getInvTitle());
-                themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + inventory.getItemId() + "/" + inventory.getId() + "/" + varyPrice.getId());
+                themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + inventory.getItemId() + "/" + inventory.getId() + "/" + varyPrice.getId());
                 themeItem.setItemType("vary");
                 themeItem.setState(varyPrice.getStatus());//商品状态
                 themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(inventory.getStartAt()));
@@ -210,14 +202,14 @@ public class ThemeListMid {
             themeItem.setItemDiscount(pin.getPinDiscount());
             JsonNode jsonNodeInvImg = Json.parse(pin.getPinImg());
             if (jsonNodeInvImg.has("url")) {
-                ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
                 themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
             }
             themeItem.setItemPrice(Json.parse(pin.getFloorPrice()).get("price").decimalValue());
             themeItem.setItemSoldAmount(inv.getSoldAmount());
             themeItem.setItemSrcPrice(inv.getItemSrcPrice());
             themeItem.setItemTitle(inv.getInvTitle());
-            themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/pin/detail/" + inv.getItemId() + "/" + inv.getId() + "/" + pin.getPinId());
+            themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/pin/detail/" + inv.getItemId() + "/" + inv.getId() + "/" + pin.getPinId());
             themeItem.setItemType("pin");
             themeItem.setState(pin.getStatus());//商品状态
             themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pin.getStartAt()));
@@ -251,14 +243,14 @@ public class ThemeListMid {
             themeItem.setItemDiscount(inventory.getItemDiscount());
             JsonNode jsonNodeInvImg = Json.parse(inventory.getInvImg());
             if (jsonNodeInvImg.has("url")) {
-                ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
                 themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
             }
             themeItem.setItemPrice(inventory.getItemPrice());
             themeItem.setItemSoldAmount(inventory.getSoldAmount());
             themeItem.setItemSrcPrice(inventory.getItemSrcPrice());
             themeItem.setItemTitle(inventory.getInvTitle());
-            themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/detail/" + inventory.getItemId() + "/" + inventory.getId());
+            themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + inventory.getItemId() + "/" + inventory.getId());
             themeItem.setItemType("item");
             themeItem.setState(inventory.getState());//商品状态
             themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(inventory.getStartAt()));
@@ -283,14 +275,14 @@ public class ThemeListMid {
             themeItem.setItemDiscount(subjectPrice.getDiscount());
             JsonNode jsonNodeInvImg = Json.parse(inventory.getInvImg());
             if (jsonNodeInvImg.has("url")) {
-                ((ObjectNode) jsonNodeInvImg).put("url", Application.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+                ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
                 themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
             }
             themeItem.setItemPrice(subjectPrice.getPrice());
             themeItem.setItemSoldAmount(inventory.getSoldAmount());
             themeItem.setItemSrcPrice(inventory.getItemSrcPrice());
             themeItem.setItemTitle(inventory.getInvTitle());
-            themeItem.setItemUrl(Application.DEPLOY_URL + "/comm/subject/detail/" + inventory.getItemId() + "/" + inventory.getId() + "/" + subjectPrice.getId());
+            themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/subject/detail/" + inventory.getItemId() + "/" + inventory.getId() + "/" + subjectPrice.getId());
             themeItem.setItemType("subject");
             themeItem.setState(inventory.getState());//商品状态
             themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(inventory.getStartAt()));

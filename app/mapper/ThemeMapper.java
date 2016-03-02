@@ -20,4 +20,6 @@ public interface ThemeMapper {
     Item getItemBy(Item item);
 
     List<Inventory> getInvBy(Inventory inventory);
+
+    List<SkuVo> getAllSkus(SkuVo skuVo);
 }

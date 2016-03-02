@@ -24,4 +24,6 @@ public interface ThemeService {
     List<VaryPrice> getVaryPriceBy(VaryPrice varyPrice);
 
     SubjectPrice getSbjPriceById(Long id);
+
+    List<SkuVo> getAllSkus(SkuVo skuVo);
 }

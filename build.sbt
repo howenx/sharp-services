@@ -1,6 +1,6 @@
 name := """style-services"""
 
-version := "0.1.2"
+version := "0.1.3"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -20,12 +20,6 @@ libraryDependencies ++= Seq(
   *
  */
 
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.6.3"
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3"
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.3"
-libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.6.3"
-libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.6.3"
-libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.3"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4" withSources() withJavadoc()
 
