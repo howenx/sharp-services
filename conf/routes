@@ -27,10 +27,9 @@ GET        /comm/pin/detail/$itemId<[0-9]+>/$skuId<[0-9]+>/$pinId<[0-9]+>       
 GET        /comm/subject/detail/$itemId<[0-9]+>/$skuId<[0-9]+>/$varyId<[0-9]+>        controllers.DetailCtrl.getItemDetail(subjectFlag:Integer ?=2,itemId:Long,skuId:Long,varyId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-<<<<<<< HEAD
 GET     /assets/*file                                                         controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /shoptest                                                    controllers.ShoppingRemoteCtrl.test()
-=======
+
 GET        /assets/*file                                                              controllers.Assets.versioned(path="/public", file: Asset)
->>>>>>> 217ccb95cef07ffff5259d5a6d20ed8b0b25eeed
+
+GET       /shoptest                                                                    controllers.ShoppingRemoteCtrl.test()
