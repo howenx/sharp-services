@@ -1,7 +1,6 @@
 package middle;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.SkuVo;
 import domain.Theme;
@@ -10,17 +9,12 @@ import domain.ThemeItem;
 import modules.SysParCom;
 import play.Logger;
 import play.libs.Json;
-import scala.util.parsing.json.JSONArray;
-import scala.util.parsing.json.JSONObject;
 import service.ThemeService;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 /**
  * 中间事务处理层
@@ -62,7 +56,6 @@ public class ThemeListMid {
                         skuVo.setSkuType(urlJson.get("type").asText());
                         skuVo.setSkuTypeId(urlJson.get("id").asLong());
                         List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
-                        Logger.error("测试---->"+url.toString());
                         if (skuVos.size() > 0) {
                             skuVo = skuVos.get(0);
                             ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
@@ -80,7 +73,7 @@ public class ThemeListMid {
         if (itemJson.isArray()) {
             for (JsonNode jn : itemJson) {
                 ThemeItem themeItem = getThemeItem(jn.get("type").asText(), jn.get("id").asLong());
-                if (themeItem!=null) themeItems.add(themeItem);
+                if (themeItem != null) themeItems.add(themeItem);
             }
         }
         themeBasic.setThemeItemList(themeItems);
