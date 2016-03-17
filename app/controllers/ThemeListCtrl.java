@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.Cart;
 import domain.Message;
-import domain.ThemeBasic;
 import middle.ThemeListMid;
 import net.spy.memcached.MemcachedClient;
 import play.Logger;
@@ -42,9 +41,7 @@ public class ThemeListCtrl extends Controller {
     public Result getThemeList(Long themeId) {
         ObjectNode result = Json.newObject();
         Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
-        //组合结果集
         try {
-
             if (header.isPresent()) {
                 Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
                 if (token.isPresent()) {
@@ -58,16 +55,9 @@ public class ThemeListCtrl extends Controller {
                     }
                 }
             }
-
-            Optional<ThemeBasic> themeBasic = themeListMid.getThemeList(themeId);
-            if (themeBasic.isPresent()) {
-                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-                result.putPOJO("themeList", Json.toJson(themeBasic.get()));
-                return ok(result);
-            } else {
-                result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex()), Message.ErrorCode.THEME_LIST_NULL_EXCEPTION.getIndex())));
-                return ok(result);
-            }
+            result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
+            result.putPOJO("themeList", Json.toJson(themeListMid.getThemeList(themeId)));
+            return ok(result);
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.error("server exception:" + ex.getMessage());

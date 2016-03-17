@@ -35,34 +35,18 @@ public class DetailCtrl extends Controller {
     /**
      * 获取商品详情
      *
-     * @param itemId 商品ID
-     * @param skuId  库存ID
-     * @param varyId 多样化价格ID
+     * @param skuType   skuType
+     * @param itemId    itemId
+     * @param skuTypeId skuTypeId
      * @return json
      */
-    public Result getItemDetail(Integer subjectFlag, Long itemId, Long skuId, Long varyId) {
+    public Result getItemDetail(String skuType, Long itemId, Long skuTypeId) {
 
-        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
         //组合结果集
         Map<String, Object> map = new HashMap<>();
-        Long userId = -1L;
         try {
-            if (header.isPresent()) {
-                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
-                if (token.isPresent()) {
-                    JsonNode userJson = Json.parse(token.get());
-                    userId = Long.valueOf(userJson.findValue("id").asText());
-                    Cart cart = new Cart();
-                    cart.setUserId(userId);
-                    Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                    if (cartList.isPresent() && cartList.get().size() > 0) {
-                        map.put("cartNum", cartList.get().get(0).getCartNum());
-                    }
-                }
-            }
-            if (subjectFlag == 1) {
-                map = detailMid.getDetail(itemId, skuId, varyId, -1L, userId);
-            } else map = detailMid.getDetail(itemId, skuId, -1L, varyId, userId);
+            map.putAll(getCartNum(request().getHeader("id-token")));
+            map = detailMid.getDetail(skuType, skuTypeId, itemId, (Long) map.get("userId"));
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
             return ok(Json.toJson(map));
         } catch (Exception ex) {
@@ -73,42 +57,25 @@ public class DetailCtrl extends Controller {
         }
     }
 
-    /**
-     * 获取拼购详情页
-     *
-     * @param id    商品ID
-     * @param skuId 库存ID
-     * @param pinId 拼购库存ID
-     * @return json
-     */
-    public Result getPinDetail(Long id, Long skuId, Long pinId) {
-        Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
-        //组合结果集
+    private Map<String, Object> getCartNum(String headerToken) throws Exception {
         Map<String, Object> map = new HashMap<>();
         Long userId = -1L;
-        try {
-            if (header.isPresent()) {
-                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
-                if (token.isPresent()) {
-                    JsonNode userJson = Json.parse(token.get());
-                    userId = Long.valueOf(userJson.findValue("id").asText());
-                    Cart cart = new Cart();
-                    cart.setUserId(userId);
-                    Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
-                    if (cartList.isPresent() && cartList.get().size() > 0) {
-                        map.put("cartNum", cartList.get().get(0).getCartNum());
-                    }
+        Optional<String> header = Optional.ofNullable(headerToken);
+        if (header.isPresent()) {
+            Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+            if (token.isPresent()) {
+                JsonNode userJson = Json.parse(token.get());
+                userId = Long.valueOf(userJson.findValue("id").asText());
+                Cart cart = new Cart();
+                cart.setUserId(userId);
+                Optional<List<Cart>> cartList = Optional.ofNullable(cartService.getCartByUserSku(cart));
+                if (cartList.isPresent() && cartList.get().size() > 0) {
+                    map.put("cartNum", cartList.get().get(0).getCartNum());
                 }
             }
-            map = detailMid.getPinDetail(id, skuId, pinId, userId);
-            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
-            return ok(Json.toJson(map));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Logger.error("server exception:" + ex.getLocalizedMessage());
-            map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
-            return ok(Json.toJson(map));
         }
+        map.put("userId", userId);
+        return map;
     }
 
 }

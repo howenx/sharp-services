@@ -208,7 +208,6 @@
         <if test="skuTypeStatus!=null and skuTypeStatus!=''">
             and sku_type_status=#{skuTypeStatus}
         </if>
-        and t.sku_type_end_at &gt;= CURRENT_TIMESTAMP (0) AND t.sku_type_start_at &lt;= CURRENT_TIMESTAMP (0)
     </select>
 
     <!--  首页主题图分页显示  -->
