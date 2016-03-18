@@ -59,6 +59,7 @@ public class ThemeListMid {
                         if (skuVos.size() > 0) {
                             skuVo = skuVos.get(0);
                             ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
+                            ((ObjectNode) url).put("type", skuVo.getSkuType());
                             tags.add(url);
                         }
                     }
