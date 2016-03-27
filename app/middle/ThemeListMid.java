@@ -37,6 +37,10 @@ public class ThemeListMid {
         ThemeBasic themeBasic = new ThemeBasic();
         themeBasic.setThemeId(themeId);
 
+
+        if (!theme.getType().equals("h5")){
+            Logger.error("擦你妈的");
+        }
         //主题主宣传图拼接URL
         JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
         if (jsonNode_ThemeMasterImg.has("url")) {

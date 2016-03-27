@@ -25,6 +25,7 @@ public class Global extends GlobalSettings {
     public F.Promise<play.mvc.Result> onError(Http.RequestHeader request, Throwable t) {
         Logger.error("请求出错: "+request.host()+request.uri()+" "+request.remoteAddress()+" "+request.getHeader("User-Agent"));
         ObjectNode result = Json.newObject();
+        t.printStackTrace();
         result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.FAILURE_REQUEST_ERROR.getIndex()), Message.ErrorCode.FAILURE_REQUEST_ERROR.getIndex())));
         return F.Promise.<play.mvc.Result>pure(notFound(result));
     }
