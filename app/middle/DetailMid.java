@@ -181,6 +181,14 @@ public class DetailMid {
         } else return null;
     }
 
+    /**
+     *
+     * @param skuType
+     * @param itemId
+     * @param skuTypeId  当前选中的主商品ID
+     * @param userId
+     * @return
+     */
     private List<Inventory> getItemStock(String skuType, Long itemId, Long skuTypeId, Long userId) {
         Inventory inventory = new Inventory();
         inventory.setItemId(itemId);
@@ -210,8 +218,7 @@ public class DetailMid {
 
             l.setSkuType(skuType);
             l.setSkuTypeId(l.getId());
-
-            l.setCollectId(getCollectInfo(skuType, l.getId(), skuTypeId, userId));
+            l.setCollectId(getCollectInfo(skuType, l.getId(), l.getSkuTypeId(), userId));
             return l;
         }).collect(Collectors.toList());
 
@@ -252,7 +259,7 @@ public class DetailMid {
             collect.setSkuType(skuType);
             collect.setSkuTypeId(skuTypeId);
             try {
-           //     Logger.info(userId+"=skuId="+skuId+"=skuType="+skuType+"=skuTypeId=getCollectInfo="+skuTypeId+"=");
+//                Logger.info("=getCollectInfo=userId="+userId+",skuId="+skuId+",skuType="+skuType+",skuTypeId=="+skuTypeId);
                 Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
                 if (collectList.isPresent() && collectList.get().size() > 0) {
                     return collectList.get().get(0).getCollectId();
