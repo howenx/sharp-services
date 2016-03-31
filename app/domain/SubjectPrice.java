@@ -21,9 +21,9 @@ public class SubjectPrice implements Serializable {
     private BigDecimal price;
     @JsonSerialize(using = DiscountSerializer.class)
     private BigDecimal discount;
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp createAt;
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp updateAt;
 
     public SubjectPrice() {

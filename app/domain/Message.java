@@ -101,7 +101,15 @@ public class Message implements Serializable{
 
         SECURITY_ERROR ("安全校验不通过", 5004),
 
-        SEND_SMS_TOO_MANY ("发送验证码次数过多,请明天再试", 5005);
+        SEND_SMS_TOO_MANY ("发送验证码次数过多,请明天再试", 5005),
+
+        FILE_TYPE_NOT_SUPPORTED("文件类型不支持",6001),
+
+        PIN_ACTIVITY_NOT_EXISTS("活动已经不存在",6002),
+
+        PURCHASE_PIN_RESTRICT("购买同一拼购商品数量超出限制",7001),
+
+        PURCHASE_PIN_SINGLE_ONE_TIME("您尚有未结束的拼团,不能再次发起拼团",7002);
 
         // 成员变量
         private String name;
