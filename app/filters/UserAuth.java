@@ -26,9 +26,9 @@ public class UserAuth extends Security.Authenticator {
     public String getUsername(Http.Context ctx) {
         Optional<String> header = Optional.ofNullable(ctx.request().getHeader("id-token"));
         if (header.isPresent()) {
-            Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+            Optional<Object> token = Optional.ofNullable(cache.get(header.get()));
             if (token.isPresent()) {
-                JsonNode userJson = Json.parse(token.get());
+                JsonNode userJson = Json.parse(token.get().toString());
                 Logger.error("Cache中的用户信息:"+userJson.toString());
                 Long userId = Long.valueOf(userJson.findValue("id").asText());
                 String  username = userJson.findValue("name").toString();

@@ -79,9 +79,9 @@ public class Application extends Controller {
                 result.putPOJO("msgRemind", 0); //消息不提醒
                 Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
                 if (header.isPresent()) {
-                    Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                    Optional<Object> token = Optional.ofNullable(cache.get(header.get()));
                     if (token.isPresent()) {
-                        JsonNode userJson = Json.parse(token.get());
+                        JsonNode userJson = Json.parse(token.get().toString());
                         userId = Long.valueOf(userJson.findValue("id").asText());    //登录了
                         result.putPOJO("msgRemind", msgRemind(userId)); //消息提醒
                     }
@@ -165,9 +165,9 @@ public class Application extends Controller {
         Map<String, Object> map = new HashMap<>();
         try {
             if (header.isPresent()) {
-                Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+                Optional<Object> token = Optional.ofNullable(cache.get(header.get()));
                 if (token.isPresent()) {
-                    JsonNode userJson = Json.parse(token.get());
+                    JsonNode userJson = Json.parse(token.get().toString());
                     Long userId = Long.valueOf(userJson.findValue("id").asText());
                     Cart cart = new Cart();
                     cart.setUserId(userId);

@@ -62,9 +62,9 @@ public class DetailCtrl extends Controller {
         Long userId = -1L;
         Optional<String> header = Optional.ofNullable(headerToken);
         if (header.isPresent()) {
-            Optional<String> token = Optional.ofNullable(cache.get(header.get()).toString());
+            Optional<Object> token = Optional.ofNullable(cache.get(header.get()));
             if (token.isPresent()) {
-                JsonNode userJson = Json.parse(token.get());
+                JsonNode userJson = Json.parse(token.get().toString());
                 userId = Long.valueOf(userJson.findValue("id").asText());
                 Cart cart = new Cart();
                 cart.setUserId(userId);
