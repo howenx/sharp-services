@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  * 消息
  * Created by sibyl.sun on 16/2/22.
  */
-public class MsgRec implements Serializable {
+public class MsgRec extends AbstractRemoteMsg implements Serializable {
     private static final long serialVersionUID = 1L;
     private long id;//唯一键
     @JsonIgnore

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
+import enums.SkuTypeEnum;
 import modules.SysParCom;
 import org.springframework.beans.BeanUtils;
 import play.Logger;
@@ -122,16 +123,21 @@ public class DetailMid {
      * @return list
      */
     private Object getStock(String skuType, Long itemId, Long skuTypeId, Long userId) {
-
-        switch (skuType) {
-            case "item":
+        SkuTypeEnum skuTypeEnum=SkuTypeEnum.getSkuTypeEnum(skuType);
+        if(null==skuTypeEnum){
+            return null;
+        }
+        switch (skuTypeEnum) {
+            case ITEM:
                 return getItemStock(skuType, itemId, skuTypeId, userId);
-            case "vary":
+            case VARY:
                 return getSingleStock(skuType, itemId, skuTypeId, userId);
-            case "customize":
+            case CUSTOMIZE:
                 return getSingleStock(skuType, itemId, skuTypeId, userId);
-            case "pin":
+            case PIN:  //拼购
                 return getPinStock(skuType, itemId, skuTypeId, userId);
+            case DIRECT: //海外直邮
+                return getItemStock(skuType, itemId, skuTypeId, userId);
         }
         return null;
     }
@@ -259,7 +265,7 @@ public class DetailMid {
             collect.setSkuType(skuType);
             collect.setSkuTypeId(skuTypeId);
             try {
-//                Logger.info("=getCollectInfo=userId="+userId+",skuId="+skuId+",skuType="+skuType+",skuTypeId=="+skuTypeId);
+                Logger.info("=getCollectInfo=userId="+userId+",skuId="+skuId+",skuType="+skuType+",skuTypeId=="+skuTypeId);
                 Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
                 if (collectList.isPresent() && collectList.get().size() > 0) {
                     return collectList.get().get(0).getCollectId();

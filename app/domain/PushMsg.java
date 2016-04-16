@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by sibyl.sun on 16/3/1.
  */
-public class PushMsg implements Serializable {
+public class PushMsg extends AbstractRemoteMsg implements Serializable {
     private static final long serialVersionUID = -1L;
     private String alert;
     private String title;

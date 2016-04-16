@@ -2,6 +2,7 @@ package actor;
 
 import akka.actor.*;
 import akka.japi.Procedure;
+import domain.AbstractRemoteMsg;
 import domain.Msg;
 import domain.MsgRec;
 import domain.PushMsg;
@@ -54,18 +55,21 @@ public class MsgActor extends UntypedActor {
     Procedure<Object> active = new Procedure<Object>() {
         @Override
         public void apply(Object message) {
-            if (message instanceof Msg ) {
-                // send message to server actor
+//            if (message instanceof Msg ) {
+//                // send message to server actor
+//                msgActor.tell(message, getSelf());
+//
+//            } if (message instanceof MsgRec) {
+//                // send message to server actor
+//                msgActor.tell(message, getSelf());
+//
+//            }if (message instanceof PushMsg) {
+//                // send message to server actor
+//                msgActor.tell(message, getSelf());
+//
+//            }
+            if (message instanceof AbstractRemoteMsg){
                 msgActor.tell(message, getSelf());
-
-            } if (message instanceof MsgRec) {
-                // send message to server actor
-                msgActor.tell(message, getSelf());
-
-            }if (message instanceof PushMsg) {
-                // send message to server actor
-                msgActor.tell(message, getSelf());
-
             }else {
                 unhandled(message);
             }

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * 全体系统消息
  * Created by sibyl.sun on 16/2/22.
  */
-public class Msg implements Serializable {
+public class Msg extends AbstractRemoteMsg implements Serializable {
     private static final long serialVersionUID = 1L;
     private long msgId;//消息id
     private String msgTitle; //消息标题
