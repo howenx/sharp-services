@@ -16,7 +16,7 @@
 package util.cache;
 
 import org.apache.ibatis.cache.CacheException;
-import org.mybatis.caches.memcached.StringUtils;
+import util.StringUtils;
 import play.Logger;
 
 import java.io.Serializable;

@@ -31,8 +31,6 @@ libraryDependencies += "org.mybatis" % "mybatis" % "3.4.0" withSources() withJav
 
 libraryDependencies += "org.mybatis" % "mybatis-guice" % "3.7.1" withSources() withJavadoc()
 
-libraryDependencies += "org.mybatis.caches" % "mybatis-memcached" % "1.0.0" withSources() withJavadoc()
-
 libraryDependencies += "com.google.inject.extensions" % "guice-multibindings" % "4.0" withSources() withJavadoc()
 
 libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
