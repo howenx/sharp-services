@@ -3,9 +3,7 @@ package modules;
 import com.google.inject.PrivateModule;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
-import mapper.SubjectPriceMapper;
 import mapper.ThemeMapper;
-import mapper.VaryPriceMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.session.SqlSessionManagerProvider;
@@ -37,8 +35,6 @@ public class PlayMybatisModule extends PrivateModule{
                 bindDataSourceProviderType(DevDataSourceProvider.class);
                 bindTransactionFactoryType(JdbcTransactionFactory.class);
                 addMapperClass(ThemeMapper.class);
-                addMapperClass(VaryPriceMapper.class);
-                addMapperClass(SubjectPriceMapper.class);
             }
         });
 

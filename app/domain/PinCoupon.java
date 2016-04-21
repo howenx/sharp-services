@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  */
 public class PinCoupon implements Serializable {
 
+    private static final long serialVersionUID = 21L;
     private Long id;                        // 主键ID
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp memberCouponEndAt;    //团员优惠券结束时间

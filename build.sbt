@@ -27,9 +27,11 @@ libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1205-jdbc42" withS
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.188" withSources() withJavadoc()
 
-libraryDependencies += "org.mybatis" % "mybatis" % "3.3.0" withSources() withJavadoc()
+libraryDependencies += "org.mybatis" % "mybatis" % "3.4.0" withSources() withJavadoc()
 
-libraryDependencies += "org.mybatis" % "mybatis-guice" % "3.6" withSources() withJavadoc()
+libraryDependencies += "org.mybatis" % "mybatis-guice" % "3.7.1" withSources() withJavadoc()
+
+libraryDependencies += "org.mybatis.caches" % "mybatis-memcached" % "1.0.0" withSources() withJavadoc()
 
 libraryDependencies += "com.google.inject.extensions" % "guice-multibindings" % "4.0" withSources() withJavadoc()
 

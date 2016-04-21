@@ -8,7 +8,7 @@
     <!--enable mybatis default cache configure reference:
         https://mybatis.github.io/mybatis-3/zh/sqlmap-xml.html#cache
     -->
-    <!--<cache/>-->
+    <cache type="util.cache.MemcachedCache"/>
 
     <sql id="themesColumns">
         ${alias}.id                  ,
@@ -246,7 +246,7 @@
     </select>
 
     <!--获取商品信息-->
-    <select id="getItemBy" resultType="domain.Item" parameterType="domain.Item">
+    <select id="getItemBy" resultType="domain.Item" parameterType="domain.Item" >
         select
         <include refid="itemColumns">
             <property name="alias" value="t"/>

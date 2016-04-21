@@ -1,11 +1,13 @@
 package modules;
 
 import com.google.inject.AbstractModule;
-
 import middle.DetailMid;
 import middle.ThemeListMid;
 import play.Configuration;
 import play.Environment;
+import util.cache.MemcachedCache;
+import util.cache.MemcachedClientWrapper;
+import util.cache.MemcachedConfiguration;
 
 /**
  * 中间层module
@@ -27,5 +29,6 @@ public class MiddleModule extends AbstractModule {
         bind(DetailMid.class);
         bind(ThemeListMid.class);
         bind(SysParCom.class).asEagerSingleton();
+        bind(MemcachedConfiguration.class).asEagerSingleton();
     }
 }

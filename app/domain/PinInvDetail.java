@@ -15,7 +15,7 @@ import java.util.List;
  * Created by howen on 16/1/25.
  */
 public class PinInvDetail {
-
+    private static final long serialVersionUID = 21L;
     private Long id;         //商品库存ID
     private String shareUrl;    //分享短连接
     private String status;      //状态

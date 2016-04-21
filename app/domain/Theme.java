@@ -11,6 +11,8 @@ import java.sql.Timestamp;
  */
 public class Theme implements Serializable {
 
+    private static final long serialVersionUID = 21L;
+
     @JsonIgnore
     private     Long        id;//主题ID
     private     String      themeImg;//主题图片

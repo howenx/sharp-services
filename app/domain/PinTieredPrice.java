@@ -14,7 +14,7 @@ import java.sql.Timestamp;
  * Created by tiffany on 16/1/28.
  */
 public class PinTieredPrice implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private Long id;                        //阶梯价格ID
     @JsonIgnore
     private String masterCouponClass;       //团长返券类别

@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by tiffany on 16/1/20.
  */
 public class PinUser implements Serializable {
+    private static final long serialVersionUID = 21L;
     private Long id;            //主键ID
     private Long userId;        //用户ID
     private boolean orMaster;   //是否团长

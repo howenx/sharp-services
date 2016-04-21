@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class Address implements Serializable {
 
+    private static final long serialVersionUID = 21L;
     private Long addId;//用户地址主键
     private String tel;//电话
     private String name;//姓名

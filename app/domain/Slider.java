@@ -11,6 +11,8 @@ import java.sql.Timestamp;
  */
 public class Slider implements Serializable{
 
+    private static final long serialVersionUID = 21L;
+
     @JsonIgnore
     private Long id;
     @JsonIgnore

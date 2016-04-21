@@ -8,6 +8,8 @@ import java.sql.Timestamp;
  * Created by sibyl.sun on 16/2/16.
  */
 public class Collect implements Serializable {
+
+    private static final long serialVersionUID = 21L;
     /**收藏ID*/
     private Long collectId;
     /**用户ID*/

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * 多样化价格
  */
 public class VaryPrice implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private Long id;                //主键id
     private Long invId;             //库存Id
     private BigDecimal price;       //销售价

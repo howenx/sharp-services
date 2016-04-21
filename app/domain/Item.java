@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * Created by howen on 15/11/12.
  */
 public class Item implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private Long id;//商品ID
     private String itemTitle;//商品标题
     private String itemDetailImgs;//商品详细图片

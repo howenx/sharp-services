@@ -21,9 +21,5 @@ public interface ThemeService {
 
     List<Inventory> getInvBy(Inventory inventory);
 
-    List<VaryPrice> getVaryPriceBy(VaryPrice varyPrice);
-
-    SubjectPrice getSbjPriceById(Long id);
-
     List<SkuVo> getAllSkus(SkuVo skuVo);
 }

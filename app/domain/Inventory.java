@@ -16,6 +16,8 @@ import java.sql.Timestamp;
  */
 public class Inventory implements Serializable{
 
+    private static final long serialVersionUID = 21L;
+
     private     Long                id;//库存ID
     private     String              itemColor;//颜色
     private     String              itemSize;//尺码

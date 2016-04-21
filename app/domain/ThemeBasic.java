@@ -10,7 +10,7 @@ import java.util.List;
  * Created by howen on 16/1/8.
  */
 public class ThemeBasic implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private Long                themeId;   	            //主题ID
     private String              themeImg;               //主题图
     private String              masterItemTag;	        //如果是主打宣传商品，会需要tag json串

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * Created by howen on 15/11/22.
  */
 public class Cart implements Serializable{
-
+    private static final long serialVersionUID = 21L;
     private Long         cartId;
     @JsonIgnore
     private Long         userId;

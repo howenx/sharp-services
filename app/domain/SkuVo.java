@@ -14,7 +14,7 @@ import java.sql.Timestamp;
  * Created by howen on 16/2/26.
  */
 public class SkuVo implements Serializable{
-
+    private static final long serialVersionUID = 21L;
     private String skuType;//商品类型
     private Long skuTypeId;//商品类型ID
     private Long invId;//库存ID

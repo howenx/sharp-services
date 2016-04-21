@@ -8,7 +8,7 @@
     <!--enable mybatis default cache configure reference:
         https://mybatis.github.io/mybatis-3/zh/sqlmap-xml.html#cache
     -->
-    <!--<cache/>-->
+    <cache type="util.cache.MemcachedCache"/>
 
     <sql id="shoppingCartColumns">
         ${alias}.cart_id
@@ -26,7 +26,7 @@
     </sql>
 
     <!---  获取用户购物车,以用户ID或者CartID    -->
-    <select id="getCartByUserSku" resultType="domain.Cart" parameterType="domain.Cart">
+    <select id="getCartByUserSku" resultType="domain.Cart" parameterType="domain.Cart" useCache="false">
         select
         <include refid="shoppingCartColumns">
             <property name="alias" value="t"/>
@@ -48,7 +48,7 @@
         ORDER BY t.create_at DESC,t.sku_id
     </select>
 
-    <select id="selectCollect" parameterType="domain.Collect" resultType="domain.Collect" >
+    <select id="selectCollect" parameterType="domain.Collect" resultType="domain.Collect">
         select
         collect_id          ,
         user_id             ,
@@ -76,7 +76,7 @@
     </select>
 
     <!--获取未读消息类型-->
-    <select id="getNotReadMsgNum" parameterType="domain.MsgRec" resultType="java.lang.Integer">
+    <select id="getNotReadMsgNum" parameterType="domain.MsgRec" resultType="java.lang.Integer" useCache="false">
         select count(id) from sp_msg_rec where 1=1 and del_status=1
         <if test="userId!=null and userId!=''">
             and user_id = #{userId}
@@ -100,7 +100,7 @@
         ${alias}.target_type
     </sql>
     <!--获取未接收的未过期的系统消息 -->
-    <select id="getNotRecMsg" parameterType="java.lang.Long" resultType="domain.Msg">
+    <select id="getNotRecMsg" parameterType="java.lang.Long" resultType="domain.Msg" useCache="false">
         select
         <include refid="MsgColumns">
             <property name="alias" value="t"/>

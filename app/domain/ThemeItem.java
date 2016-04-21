@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * Created by howen on 15/10/26.
  */
 public class ThemeItem implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private     String          itemImg;   	            //商品图片
     private     String          itemUrl;   		        //商品详细页面链接
 

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * Created by tiffany on 16/1/20.
  */
 public class PinSku implements Serializable {
-
+    private static final long serialVersionUID = 21L;
     private Long pinId;         //拼购ID
     private String pinImg;      //生成后列表图
     private String shareUrl;    //分享短连接

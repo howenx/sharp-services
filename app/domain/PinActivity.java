@@ -13,6 +13,9 @@ import java.sql.Timestamp;
  * Created by tiffany on 16/1/20.
  */
 public class PinActivity implements Serializable {
+
+    private static final long serialVersionUID = 21L;
+
     private Long pinActiveId;   //拼购活动ID
     private String pinUrl;      //此团的分享短连接
     private Long pinId;         //拼购ID

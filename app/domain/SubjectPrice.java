@@ -14,6 +14,7 @@ import java.sql.Timestamp;
  * Created by tiffany on 16/2/3.
  */
 public class SubjectPrice implements Serializable {
+    private static final long serialVersionUID = 21L;
     private Long id;
     private Long themeId;
     private Long invId;
