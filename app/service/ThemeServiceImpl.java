@@ -58,6 +58,11 @@ public class ThemeServiceImpl implements ThemeService {
         return themeMapper.getAllSkus(skuVo);
     }
 
+    @Override
+    public List<VersionVo> getVersioning(VersionVo versionVo) {
+        return themeMapper.getVersioning(versionVo);
+    }
+
     public void setThemeMapper(ThemeMapper themeMapper) {
         this.themeMapper = themeMapper;
     }

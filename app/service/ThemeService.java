@@ -22,4 +22,6 @@ public interface ThemeService {
     List<Inventory> getInvBy(Inventory inventory);
 
     List<SkuVo> getAllSkus(SkuVo skuVo);
+
+    List<VersionVo> getVersioning(VersionVo versionVo);
 }
