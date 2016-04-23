@@ -294,7 +294,7 @@
         ${alias}.release_name
     </sql>
     <!-- -->
-    <select id="getVersioning" resultType="domain.VersionVo" parameterType="domain.VersionVo">
+    <select id="getVersioning" resultType="domain.VersionVo" parameterType="domain.VersionVo" useCache="false">
         select
         <include refid="versioningColumns">
             <property name="alias" value="t"/>
