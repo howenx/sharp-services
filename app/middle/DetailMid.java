@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
 import enums.SkuTypeEnum;
-import util.SysParCom;
 import org.springframework.beans.BeanUtils;
 import play.Logger;
 import play.libs.Json;
@@ -14,6 +13,7 @@ import service.IdService;
 import service.PromotionService;
 import service.ThemeService;
 import util.GenCouponCode;
+import util.SysParCom;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -80,7 +80,8 @@ public class DetailMid {
             final Integer[] fullGradeCount = {0};
             final Integer[] invAllRemarkCount = {0};
 
-            inventoryList.forEach(inventory1 -> {
+
+            for (Inventory inventory1 : inventoryList) {
                 Remark remark = new Remark();
                 remark.setSkuType("item");
                 remark.setSkuTypeId(inventory1.getId());
@@ -93,14 +94,17 @@ public class DetailMid {
                         }
                     });
                 }
-            });
+            }
 
-            NumberFormat numberFormat = NumberFormat.getInstance();
-            numberFormat.setMaximumFractionDigits(2);
-            String result = numberFormat.format(fullGradeCount[0].floatValue() / invAllRemarkCount[0].floatValue() * 100);
-            map.put("remarkCount", invAllRemarkCount[0]);
-            map.put("remarkRate", result);
-            return map;
+            if (invAllRemarkCount[0] != 0) {
+                NumberFormat numberFormat = NumberFormat.getInstance();
+                numberFormat.setMaximumFractionDigits(2);
+                String result = numberFormat.format(fullGradeCount[0].floatValue() / invAllRemarkCount[0].floatValue() * 100);
+                map.put("remarkCount", invAllRemarkCount[0]);
+                map.put("remarkRate", result);
+                return map;
+            } else return null;
+
         } else {
             Remark remark = new Remark();
             remark.setSkuType(skuType);
@@ -457,8 +461,9 @@ public class DetailMid {
 
     /**
      * 处理评价结果
+     *
      * @param remarkList remarkList
-     * @param img img
+     * @param img        img
      * @return List<Remark>
      */
     public List<Remark> dealRemark(List<Remark> remarkList, Boolean img) {
