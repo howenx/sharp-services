@@ -1,9 +1,6 @@
 package service;
 
-import domain.Cart;
-import domain.Collect;
-import domain.Msg;
-import domain.MsgRec;
+import domain.*;
 import mapper.ShoppingCartMapper;
 
 import javax.inject.Inject;
@@ -36,6 +33,26 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Msg> getNotRecMsg(Long userId) {
         return shoppingCartMapper.getNotRecMsg(userId);
+    }
+
+    @Override
+    public List<Remark> selectRemark(Remark remark) {
+        return shoppingCartMapper.selectRemark(remark);
+    }
+
+    @Override
+    public List<Remark> selectRemarkPaging(Remark remark) {
+        return shoppingCartMapper.selectRemarkPaging(remark);
+    }
+
+    @Override
+    public List<Order> selectOrder(Order order) {
+        return shoppingCartMapper.selectOrder(order);
+    }
+
+    @Override
+    public List<OrderLine> selectOrderLine(OrderLine orderLine) {
+        return shoppingCartMapper.selectOrderLine(orderLine);
     }
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.IdMapper">
+
+    <!--enable mybatis default cache configure reference:
+        https://mybatis.github.io/mybatis-3/zh/sqlmap-xml.html#cache
+    -->
+    <!--<cache/>-->
+    <sql id="idColumns">
+       ${alias}.user_id,
+        ${alias}.nickname,
+        ${alias}.passwd,
+        ${alias}.email,
+        ${alias}.phone_num,
+        ${alias}.gender,
+        ${alias}.birthday,
+        ${alias}.photo_url,
+        ${alias}.real_name,
+        ${alias}.card_type,
+        ${alias}.card_num,
+        ${alias}.card_img ::text,
+        ${alias}.reg_ip ::text,
+        ${alias}.reg_dt,
+        ${alias}.or_active,
+        ${alias}.or_real,
+        ${alias}.alter_dt,
+        ${alias}.lastlogin_dt,
+        ${alias}.lastlogin_ip ::text,
+        ${alias}.status
+    </sql>
+
+    <!-- 获取一条用户信息 -->
+    <select id="getID" resultType="domain.ID" parameterType="java.lang.Integer">
+        select
+        <include refid="idColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from "ID" t where user_id=${value}
+    </select>
+
+</mapper>

@@ -1,22 +1,27 @@
 
 # Theme service
-GET        /index/$pageNum<[0-9]+>                                          controllers.Application.getIndex(pageNum:Int)
-GET        /topic/list/$themeId<[0-9]+>                                     controllers.ThemeListCtrl.getThemeList(themeId:Long)
-GET        /comm/cart/amount                                                controllers.Application.getCartAmount
+GET        /index/$pageNum<[0-9]+>                                                                               controllers.Application.getIndex(pageNum:Int)
+GET        /topic/list/$themeId<[0-9]+>                                                                          controllers.ThemeListCtrl.getThemeList(themeId:Long)
+GET        /comm/cart/amount                                                                                     controllers.Application.getCartAmount
 
 
 #views
-GET        /comm/views/about                                                controllers.CommonViewCtrl.aboutUs()
-GET        /comm/views/privacy                                              controllers.CommonViewCtrl.privacy()
-GET        /comm/views/agreement                                            controllers.CommonViewCtrl.agreement()
+GET        /comm/views/about                                                                                     controllers.CommonViewCtrl.aboutUs()
+GET        /comm/views/privacy                                                                                   controllers.CommonViewCtrl.privacy()
+GET        /comm/views/agreement                                                                                 controllers.CommonViewCtrl.agreement()
 
 
 #Detail
-GET        /comm/detail/item/$itemId<[0-9]+>/$skuTypeId<[0-9]+>             controllers.DetailCtrl.getItemDetail(skuType:String ?="item",itemId:Long,skuTypeId: Long)
-GET        /comm/detail/vary/$itemId<[0-9]+>/$skuTypeId<[0-9]+>             controllers.DetailCtrl.getItemDetail(skuType:String ?="vary",itemId:Long,skuTypeId: Long)
-GET        /comm/detail/customize/$itemId<[0-9]+>/$skuTypeId<[0-9]+>        controllers.DetailCtrl.getItemDetail(skuType:String ?="customize",itemId:Long,skuTypeId: Long)
-GET        /comm/detail/pin/$itemId<[0-9]+>/$skuTypeId<[0-9]+>              controllers.DetailCtrl.getItemDetail(skuType:String ?="pin",itemId:Long,skuTypeId: Long)
+GET        /comm/detail/item/$itemId<[0-9]+>/$skuTypeId<[0-9]+>                                                  controllers.DetailCtrl.getItemDetail(skuType:String ?="item",itemId:Long,skuTypeId: Long)
+GET        /comm/detail/vary/$itemId<[0-9]+>/$skuTypeId<[0-9]+>                                                  controllers.DetailCtrl.getItemDetail(skuType:String ?="vary",itemId:Long,skuTypeId: Long)
+GET        /comm/detail/customize/$itemId<[0-9]+>/$skuTypeId<[0-9]+>                                             controllers.DetailCtrl.getItemDetail(skuType:String ?="customize",itemId:Long,skuTypeId: Long)
+GET        /comm/detail/pin/$itemId<[0-9]+>/$skuTypeId<[0-9]+>                                                   controllers.DetailCtrl.getItemDetail(skuType:String ?="pin",itemId:Long,skuTypeId: Long)
 
-GET        /assets/*file                                                    controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /shoptest                                                        controllers.ShoppingRemoteCtrl.test()
+GET        /comm/detail/comment/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>            controllers.DetailCtrl.getSkuRemark(grade:Integer ?=0,skuType:String,skuTypeId:Long,pageNum: Integer)
+GET        /comm/comment/rank/worst/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>        controllers.DetailCtrl.getSkuRemark(grade:Integer ?=1,skuType:String,skuTypeId:Long,pageNum: Integer)
+GET        /comm/comment/rank/best/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>         controllers.DetailCtrl.getSkuRemark(grade:Integer ?=5,skuType:String,skuTypeId:Long,pageNum: Integer)
+GET        /comm/comment/rank/img/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>          controllers.DetailCtrl.getSkuRemark(grade:Integer ?=6,skuType:String,skuTypeId:Long,pageNum: Integer)
+
+
+GET        /assets/*file                                                                                         controllers.Assets.versioned(path="/public", file: Asset)

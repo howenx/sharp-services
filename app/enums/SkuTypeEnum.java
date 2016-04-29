@@ -7,8 +7,7 @@ public enum SkuTypeEnum {
     ITEM("item","普通商品"),
     VARY("vary","vary商品"),
     CUSTOMIZE("customize","自定义商品"),
-    PIN("pin","拼购商品"),
-    DIRECT("direct","海外直邮商品");
+    PIN("pin","拼购商品");
 
     private String skuType;
     private String name;

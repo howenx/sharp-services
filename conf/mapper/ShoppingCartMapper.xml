@@ -50,11 +50,11 @@
 
     <select id="selectCollect" parameterType="domain.Collect" resultType="domain.Collect">
         select
-        collect_id          ,
-        user_id             ,
-        sku_id              ,
-        create_at           ,
-        sku_type            ,
+        collect_id ,
+        user_id ,
+        sku_id ,
+        create_at ,
+        sku_type ,
         sku_type_id
         from sp_collect where 1=1
         <if test="collectId!=null and collectId!=''">
@@ -112,6 +112,167 @@
         where r.user_id =#{value}
         and t.msg_id=r.msg_id
         )
+    </select>
+
+    <sql id="shoppingRemark">
+        ${alias}.id
+        ,${alias}.user_id
+        ,${alias}.order_id
+        ,${alias}.create_at
+        ,${alias}.content
+        ,${alias}.picture
+        ,${alias}.grade
+        ,${alias}.sku_type
+        ,${alias}.sku_type_id
+        ,count(*) over() count_num
+    </sql>
+
+    <select id="selectRemark" parameterType="domain.Remark" resultType="domain.Remark">
+        select
+        <include refid="shoppingRemark">
+            <property name="alias" value="t"/>
+        </include>
+        from sp_remark t
+        where 1=1
+        <if test="id!=null and id !=''">
+            and t.id = #{id}
+        </if>
+        <if test="userId!=null and userId !=''">
+            and t.user_id = #{userId}
+        </if>
+        <if test="orderId!=null and orderId !=''">
+            and t.order_id = #{orderId}
+        </if>
+        <if test="skuType!=null and skuType!=''">
+            and t.sku_type = #{skuType}
+        </if>
+        <if test="skuTypeId!=null and skuTypeId!=''">
+            and t.sku_type_id = #{skuTypeId}
+        </if>
+        <if test="grade!=null and grade!=''">
+            and t.grade = #{grade}
+        </if>
+        <if test="picture!=null and picture!=''">
+            and t.picture is not null
+        </if>
+        order by t.picture,t.grade DESC,t.create_at DESC
+
+    </select>
+
+
+    <select id="selectRemarkPaging" resultType="domain.Remark" parameterType="domain.Remark">
+        select
+        <include refid="shoppingRemark">
+            <property name="alias" value="t"/>
+        </include>
+        from sp_remark t
+        where 1=1
+        <if test="id!=null and id !=''">
+            and t.id = #{id}
+        </if>
+        <if test="userId!=null and userId !=''">
+            and t.user_id = #{userId}
+        </if>
+        <if test="orderId!=null and orderId !=''">
+            and t.order_id = #{orderId}
+        </if>
+        <if test="skuType!=null and skuType!=''">
+            and t.sku_type = #{skuType}
+        </if>
+        <if test="skuTypeId!=null and skuTypeId!=''">
+            and t.sku_type_id = #{skuTypeId}
+        </if>
+        <if test="grade==5 or grade=='5'">
+            and t.grade in (3,4,5)
+        </if>
+        <if test="grade==1 or grade=='1'">
+            and t.grade = 1
+        </if>
+        <if test="picture!=null and picture!=''">
+            and t.picture is not null
+        </if>
+        order by t.picture,t.grade DESC,t.create_at DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+
+    <sql id="orderColumns">
+        ${alias}.order_id             ,
+        ${alias}.user_id              ,
+        ${alias}.pay_total            ,
+        ${alias}.pay_method           ,
+        to_char(${alias}.order_create_at, 'YYYY-MM-DD HH24:MI:SS') order_create_at,
+        ${alias}.order_ip             ,
+        ${alias}.pg_trade_no          ,
+        ${alias}.order_status         ,
+        ${alias}.error_str            ,
+        ${alias}.discount             ,
+        ${alias}.updated_at           ,
+        ${alias}.order_desc           ,
+        ${alias}.ship_fee             ,
+        ${alias}.total_fee            ,
+        ${alias}.postal_fee           ,
+        to_char(${alias}.confirm_receive_at, 'YYYY-MM-DD HH24:MI:SS') confirm_receive_at,
+        ${alias}.pin_active_id         ,
+        ${alias}.order_type,
+        ${alias}.qr_code_url,
+        ${alias}.qr_code_at
+    </sql>
+
+    <!--查询用户订单-->
+    <select id="selectOrder" parameterType="domain.Order" resultType="domain.Order">
+        select
+        <include refid="orderColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from sp_order t
+        where 1=1
+        <if test="userId!=null and userId !=''">
+            and t.user_id = #{userId}
+        </if>
+        <if test="orderId!=null and orderId !=''">
+            and t.order_id = #{orderId}
+        </if>
+        order by t.order_create_at DESC
+    </select>
+
+    <select id="selectOrderLine" parameterType="domain.OrderLine" resultType="domain.OrderLine">
+        select line_id,
+        order_id ,
+        sku_id ,
+        item_id ,
+        amount ,
+        price ,
+        sku_title ,
+        sku_img ,
+        split_id ,
+        sku_size ,
+        sku_color ,
+        sku_type ,
+        sku_type_id,
+        pin_tiered_price_id
+        from sp_order_line where 1=1
+        <if test="lineId!=null and lineId!=''">
+            and line_id=#{lineId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            and order_id=#{orderId}
+        </if>
+        <if test="skuId!=null and skuId!=''">
+            and sku_id =#{skuId}
+        </if>
+        <if test="itemId !=null and itemId!=''">
+            and item_id=#{itemId}
+        </if>
+        <if test="splitId !=null and splitId!=''">
+            and split_id=#{splitId}
+        </if>
+        <if test="skuType !=null and skuType!=''">
+            and sku_type=#{skuType}
+        </if>
+        <if test="skuTypeId !=null and skuTypeId!=''">
+            and sku_type_id=#{skuTypeId}
+        </if>
     </select>
 
 </mapper>

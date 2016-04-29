@@ -15,6 +15,9 @@ public class SysParCom {
     //每页固定的取数
     public static  Integer PAGE_SIZE;
 
+    //图片展示时每页固定的取数
+    public static  Integer IMG_PAGE_SIZE;
+
     //图片服务器url
     public static String IMAGE_URL;
 
@@ -29,6 +32,9 @@ public class SysParCom {
         IMAGE_URL = configuration.getString("image.server.url");
 
         DEPLOY_URL = configuration.getString("deploy.server.url");
+
+        IMG_PAGE_SIZE = configuration.getInt("img.page.size");
+
     }
 
 }

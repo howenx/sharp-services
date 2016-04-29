@@ -10,12 +10,14 @@ import org.springframework.beans.BeanUtils;
 import play.Logger;
 import play.libs.Json;
 import service.CartService;
+import service.IdService;
 import service.PromotionService;
 import service.ThemeService;
 import util.GenCouponCode;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +34,9 @@ public class DetailMid {
     private PromotionService promotionService;
     @Inject
     private ThemeService themeService;
+
+    @Inject
+    private IdService idService;
 
 
     //将Json串转换成List
@@ -53,11 +58,69 @@ public class DetailMid {
             map.put("main", getItem(itemId));
             map.put("stock", getStock(skuType, itemId, skuTypeId, userId));
             map.put("push", getPushSku(skuType));
+            Map<String, Object> commentMap = getComment(itemId, skuType, skuTypeId);
+            if (commentMap != null) map.put("comment", commentMap);
             return map;
         } catch (Exception ex) {
             Logger.error("getItemDetail: " + ex.getMessage());
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    private Map<String, Object> getComment(Long itemId, String skuType, Long skuTypeId) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (skuType.equals("item")) {
+            Inventory inventory = new Inventory();
+            inventory.setItemId(itemId);
+            List<Inventory> inventoryList = themeService.getInvBy(inventory);
+
+
+            final Integer[] fullGradeCount = {0};
+            final Integer[] invAllRemarkCount = {0};
+
+            inventoryList.forEach(inventory1 -> {
+                Remark remark = new Remark();
+                remark.setSkuType("item");
+                remark.setSkuTypeId(inventory1.getId());
+                List<Remark> remarkList = cartService.selectRemark(remark);
+                if (remarkList != null && remarkList.size() > 0) {
+                    invAllRemarkCount[0] += remarkList.size();
+                    remarkList.forEach(re -> {
+                        if (re.getGrade() != 1 && re.getGrade() != 2) {
+                            fullGradeCount[0] += 1;
+                        }
+                    });
+                }
+            });
+
+            NumberFormat numberFormat = NumberFormat.getInstance();
+            numberFormat.setMaximumFractionDigits(2);
+            String result = numberFormat.format(fullGradeCount[0].floatValue() / invAllRemarkCount[0].floatValue() * 100);
+            map.put("remarkCount", invAllRemarkCount[0]);
+            map.put("remarkRate", result);
+            return map;
+        } else {
+            Remark remark = new Remark();
+            remark.setSkuType(skuType);
+            remark.setSkuTypeId(skuTypeId);
+            List<Remark> remarkList = cartService.selectRemark(remark);
+            if (remarkList != null && remarkList.size() > 0) {
+                map.put("remarkCount", remarkList.size());
+                final Integer[] fullGradeCount = {0};
+
+                remarkList.forEach(re -> {
+                    if (re.getGrade() != 1 && re.getGrade() != 2) {
+                        fullGradeCount[0] = +1;
+                    }
+                });
+                NumberFormat numberFormat = NumberFormat.getInstance();
+                numberFormat.setMaximumFractionDigits(2);
+                String result = numberFormat.format(fullGradeCount[0].floatValue() / (float) remarkList.size() * 100);
+                map.put("remarkRate", result);
+                return map;
+            } else return null;
         }
     }
 
@@ -123,8 +186,8 @@ public class DetailMid {
      * @return list
      */
     private Object getStock(String skuType, Long itemId, Long skuTypeId, Long userId) {
-        SkuTypeEnum skuTypeEnum=SkuTypeEnum.getSkuTypeEnum(skuType);
-        if(null==skuTypeEnum){
+        SkuTypeEnum skuTypeEnum = SkuTypeEnum.getSkuTypeEnum(skuType);
+        if (null == skuTypeEnum) {
             return null;
         }
         switch (skuTypeEnum) {
@@ -136,8 +199,6 @@ public class DetailMid {
                 return getSingleStock(skuType, itemId, skuTypeId, userId);
             case PIN:  //拼购
                 return getPinStock(skuType, itemId, skuTypeId, userId);
-            case DIRECT: //海外直邮
-                return getItemStock(skuType, itemId, skuTypeId, userId);
         }
         return null;
     }
@@ -188,10 +249,9 @@ public class DetailMid {
     }
 
     /**
-     *
      * @param skuType
      * @param itemId
-     * @param skuTypeId  当前选中的主商品ID
+     * @param skuTypeId 当前选中的主商品ID
      * @param userId
      * @return
      */
@@ -265,7 +325,7 @@ public class DetailMid {
             collect.setSkuType(skuType);
             collect.setSkuTypeId(skuTypeId);
             try {
-                Logger.info("=getCollectInfo=userId="+userId+",skuId="+skuId+",skuType="+skuType+",skuTypeId=="+skuTypeId);
+                Logger.info("=getCollectInfo=userId=" + userId + ",skuId=" + skuId + ",skuType=" + skuType + ",skuTypeId==" + skuTypeId);
                 Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
                 if (collectList.isPresent() && collectList.get().size() > 0) {
                     return collectList.get().get(0).getCollectId();
@@ -392,5 +452,70 @@ public class DetailMid {
             themeItems.add(themeItem);
         }
         return themeItems;
+    }
+
+
+    /**
+     * 处理评价结果
+     * @param remarkList remarkList
+     * @param img img
+     * @return List<Remark>
+     */
+    public List<Remark> dealRemark(List<Remark> remarkList, Boolean img) {
+        List<Remark> imgRemarks = new ArrayList<>();
+
+        for (Remark re : remarkList) {
+            try {
+                ID id = idService.getID(re.getUserId());
+                if (id != null) {
+                    re.setUserImg(SysParCom.IMAGE_URL + id.getPhotoUrl());
+                    if (id.getNickname().length() < 4) {
+                        re.setUserName(id.getNickname().charAt(0) + "**" + id.getNickname().charAt(id.getNickname().length() - 1));
+                    } else
+                        re.setUserName(id.getNickname().charAt(0) + id.getNickname().substring(1, id.getNickname().length() - 2).replaceAll("\\S", "*") + id.getNickname().charAt(id.getNickname().length() - 1));
+                } else {
+                    re.setUserImg(SysParCom.IMAGE_URL + "users/photo/default.png");
+                    re.setUserName("HMM**" + new Random().nextInt(1000));
+                }
+                //增加购买时间,规格
+                Order order = new Order();
+                order.setOrderId(re.getOrderId());
+                List<Order> orders = cartService.selectOrder(order);
+                if (orders.size() == 1) {
+                    order = orders.get(0);
+                    re.setBuyAt(order.getOrderCreateAt());
+                    OrderLine orderLine = new OrderLine();
+                    orderLine.setOrderId(order.getOrderId());
+                    orderLine.setSkuTypeId(re.getSkuTypeId());
+                    orderLine.setSkuType(re.getSkuType());
+                    List<OrderLine> orderLines = cartService.selectOrderLine(orderLine);
+                    if (orderLines.size() == 1) {
+                        orderLine = orderLines.get(0);
+                        re.setSize(orderLine.getSkuColor() + orderLine.getSkuSize());
+                    }
+                }
+
+                if (re.getPicture() != null) {
+                    List<String> remarkPics = mapper.readValue(re.getPicture(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    if (remarkPics.size() > 0) {
+                        if (img) {
+                            for (String pic : remarkPics) {
+                                re.setPicture(SysParCom.IMAGE_URL + pic);
+                                Remark imgRemark = new Remark();
+                                BeanUtils.copyProperties(re, imgRemark);
+                                imgRemarks.add(imgRemark);
+                            }
+                        } else {
+                            remarkPics = remarkPics.stream().map(pic -> SysParCom.IMAGE_URL + pic).collect(Collectors.toList());
+                            re.setPicture(Json.toJson(remarkPics).toString());
+                            imgRemarks.add(re);
+                        }
+                    }
+                } else imgRemarks.add(re);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return imgRemarks;
     }
 }
