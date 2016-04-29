@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
 import middle.DetailMid;
-import modules.SysParCom;
+import util.SysParCom;
 import net.spy.memcached.MemcachedClient;
 import org.apache.commons.codec.digest.DigestUtils;
 import play.Logger;

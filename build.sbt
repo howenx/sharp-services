@@ -1,6 +1,6 @@
 name := """style-services"""
 
-version := "0.2.1"
+version := "0.2.2"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -47,6 +47,8 @@ libraryDependencies += "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.1" withSou
 libraryDependencies += "com.typesafe.akka" %% "akka-remote" % "2.4.1" withSources() withJavadoc()
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.10"
+
+libraryDependencies += "redis.clients" % "jedis" % "2.8.1"
 
 //Code Review
 //libraryDependencies += "com.puppycrawl.tools" % "checkstyle" % "6.7" withSources() withJavadoc()

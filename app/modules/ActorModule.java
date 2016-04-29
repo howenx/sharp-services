@@ -1,5 +1,6 @@
 package modules;
 
+import actor.MnsActor;
 import actor.ServicesRunActor;
 import com.google.inject.AbstractModule;
 import play.libs.akka.AkkaGuiceSupport;
@@ -13,5 +14,6 @@ public class ActorModule extends AbstractModule implements AkkaGuiceSupport {
     protected void configure() {
 
         bindActor(ServicesRunActor.class,"servicesRunActor");
+        bindActor(MnsActor.class,"mnsActor");
     }
 }

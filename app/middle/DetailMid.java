@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
 import enums.SkuTypeEnum;
-import modules.SysParCom;
+import util.SysParCom;
 import org.springframework.beans.BeanUtils;
 import play.Logger;
 import play.libs.Json;

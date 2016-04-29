@@ -5,8 +5,10 @@ import middle.DetailMid;
 import middle.ThemeListMid;
 import play.Configuration;
 import play.Environment;
-import util.cache.MemcachedCache;
-import util.cache.MemcachedClientWrapper;
+import redis.clients.jedis.Jedis;
+import util.LogUtil;
+import util.RedisPool;
+import util.SysParCom;
 import util.cache.MemcachedConfiguration;
 
 /**
@@ -30,5 +32,8 @@ public class MiddleModule extends AbstractModule {
         bind(ThemeListMid.class);
         bind(SysParCom.class).asEagerSingleton();
         bind(MemcachedConfiguration.class).asEagerSingleton();
+        bind(LogUtil.class).asEagerSingleton();
+        bind(RedisPool.class).asEagerSingleton();
+        bind(Jedis.class).toInstance(RedisPool.create());
     }
 }
