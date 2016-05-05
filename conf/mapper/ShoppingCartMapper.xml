@@ -57,9 +57,9 @@
         sku_type ,
         sku_type_id
         from sp_collect where 1=1
-        <if test="collectId!=null and collectId!=''">
-            and collect_id = #{collectId}
-        </if>
+        <!--<if test="collectId!=null and collectId!=''">-->
+            <!--and collect_id = #{collectId}-->
+        <!--</if>-->
         <if test="userId!=null and userId!=''">
             and user_id = #{userId}
         </if>

@@ -77,6 +77,8 @@ public class Collect implements Serializable {
                 "collectId="+collectId +
                 ", userId="+userId +
                 ", skuId=" + skuId +
+                ", skuType="+skuType+
+                ", skuTypeId="+skuTypeId+
                 ", createAt=" + createAt +
                 "}";
     }
