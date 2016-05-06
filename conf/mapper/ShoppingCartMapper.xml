@@ -48,7 +48,7 @@
         ORDER BY t.create_at DESC,t.sku_id
     </select>
 
-    <select id="selectCollect" parameterType="domain.Collect" resultType="domain.Collect">
+    <select id="selectCollect" parameterType="domain.Collect" resultType="domain.Collect" useCache="false">
         select
         collect_id ,
         user_id ,
