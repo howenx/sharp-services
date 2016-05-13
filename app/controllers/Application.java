@@ -11,6 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import service.CartService;
 import service.ThemeService;
+import util.cache.MemcachedClientWrapper;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -184,5 +185,11 @@ public class Application extends Controller {
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(Json.toJson(map));
         }
+    }
+
+
+    public Result test(){
+        new MemcachedClientWrapper().removeGroup("mapper.ThemeMapper");
+        return ok("贼你妈的");
     }
 }
