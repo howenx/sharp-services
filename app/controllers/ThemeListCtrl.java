@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Throwables;
 import domain.Cart;
 import domain.Message;
 import middle.ThemeListMid;
@@ -60,7 +61,8 @@ public class ThemeListCtrl extends Controller {
             return ok(result);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.error("server exception:" + ex.getMessage());
+            Logger.error("server exception:" + Throwables.getStackTraceAsString(ex));
+
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(result);
         }

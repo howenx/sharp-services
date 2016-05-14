@@ -15,6 +15,7 @@
  */
 package util.cache;
 
+import com.google.common.base.Throwables;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 import play.Logger;
@@ -74,7 +75,7 @@ public final class MemcachedCache implements Cache {
             MEMCACHED_CLIENT.putObject(key, value, this.id);
         } catch (Exception ignored) {
             ignored.printStackTrace();
-            Logger.error("存入错误--->" + ignored.getMessage());
+            Logger.error("存入错误--->" + Throwables.getStackTraceAsString(ignored));
         }
     }
 

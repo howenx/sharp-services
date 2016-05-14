@@ -3,6 +3,7 @@ package middle;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Throwables;
 import domain.*;
 import enums.SkuTypeEnum;
 import org.springframework.beans.BeanUtils;
@@ -62,8 +63,8 @@ public class DetailMid {
             if (commentMap != null) map.put("comment", commentMap);
             return map;
         } catch (Exception ex) {
-            Logger.error("getItemDetail: " + ex.getMessage());
             ex.printStackTrace();
+            Logger.error("getItemDetail:" + Throwables.getStackTraceAsString(ex));
             return null;
         }
     }
@@ -519,6 +520,7 @@ public class DetailMid {
                 } else imgRemarks.add(re);
             } catch (Exception e) {
                 e.printStackTrace();
+                Logger.error("删除评价:" + Throwables.getStackTraceAsString(e));
             }
         }
         return imgRemarks;

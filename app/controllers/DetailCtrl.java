@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Throwables;
 import domain.*;
 import middle.DetailMid;
 import util.SysParCom;
@@ -56,7 +57,7 @@ public class DetailCtrl extends Controller {
             return ok(Json.toJson(map));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.error("server exception:" + ex.getLocalizedMessage());
+            Logger.error("server exception:" + Throwables.getStackTraceAsString(ex));
             map.put("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SERVER_EXCEPTION.getIndex()), Message.ErrorCode.SERVER_EXCEPTION.getIndex())));
             return ok(Json.toJson(map));
         }

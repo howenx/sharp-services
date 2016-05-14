@@ -1,6 +1,7 @@
 package filters;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Throwables;
 import domain.Message;
 import play.GlobalSettings;
 import play.Logger;
@@ -30,6 +31,7 @@ public class Global extends GlobalSettings {
         Logger.error("请求出错: "+request.host()+request.uri()+" "+request.remoteAddress()+" "+request.getHeader("User-Agent"));
         ObjectNode result = Json.newObject();
         t.printStackTrace();
+        Logger.error("请求出错:" + Throwables.getStackTraceAsString(t));
         result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.FAILURE_REQUEST_ERROR.getIndex()), Message.ErrorCode.FAILURE_REQUEST_ERROR.getIndex())));
         return F.Promise.pure(notFound(result));
     }
@@ -42,7 +44,7 @@ public class Global extends GlobalSettings {
     }
 
     public Action onRequest(Http.Request request, Method actionMethod) {
-        if (request.getHeader("User-Agent").contains("Alibaba.Security")){
+        if (request.getHeader("User-Agent").contains("Alibaba.Security")|| request.getHeader("User-Agent").contains("Monitor")){
             ObjectNode result = Json.newObject();
             result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.FAILURE_BAD_REQUEST.getIndex()), Message.ErrorCode.FAILURE_BAD_REQUEST.getIndex())));
             return new Action.Simple() {
