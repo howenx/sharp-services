@@ -35,6 +35,7 @@ public class ThemeListMid {
         Theme theme = themeService.getThemeBy(themeId);
         ThemeBasic themeBasic = new ThemeBasic();
         themeBasic.setThemeId(themeId);
+        themeBasic.setTitle(theme.getTitle());
 
         //主题主宣传图拼接URL
         JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());

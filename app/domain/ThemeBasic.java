@@ -11,14 +11,29 @@ import java.util.List;
  */
 public class ThemeBasic implements Serializable {
     private static final long serialVersionUID = 21L;
-    private Long                themeId;   	            //主题ID
-    private String              themeImg;               //主题图
-    private String              masterItemTag;	        //如果是主打宣传商品，会需要tag json串
-    @JsonIgnore
-    private String              masterItemTagAndroid;	//如果是主打宣传商品，会需要tag json串
-    private List<ThemeItem>     themeItemList;          //主题中的商品数据
+    private Long themeId;                //主题ID
+    private String title;
+    private String themeImg;               //主题图
+    private String masterItemTag;            //如果是主打宣传商品，会需要tag json串
 
+    @JsonIgnore
+    private String masterItemTagAndroid;    //如果是主打宣传商品，会需要tag json串
+    private List<ThemeItem> themeItemList;          //主题中的商品数据
+    
     public ThemeBasic() {
+    }
+
+    public ThemeBasic(Long themeId, String themeImg, String masterItemTag, String masterItemTagAndroid, List<ThemeItem> themeItemList, String title) {
+        this.themeId = themeId;
+        this.themeImg = themeImg;
+        this.masterItemTag = masterItemTag;
+        this.masterItemTagAndroid = masterItemTagAndroid;
+        this.themeItemList = themeItemList;
+        this.title = title;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Long getThemeId() {
@@ -61,12 +76,12 @@ public class ThemeBasic implements Serializable {
         this.themeItemList = themeItemList;
     }
 
-    public ThemeBasic(Long themeId, String themeImg, String masterItemTag, String masterItemTagAndroid, List<ThemeItem> themeItemList) {
-        this.themeId = themeId;
-        this.themeImg = themeImg;
-        this.masterItemTag = masterItemTag;
-        this.masterItemTagAndroid = masterItemTagAndroid;
-        this.themeItemList = themeItemList;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -77,6 +92,7 @@ public class ThemeBasic implements Serializable {
                 ", masterItemTag='" + masterItemTag + '\'' +
                 ", masterItemTagAndroid='" + masterItemTagAndroid + '\'' +
                 ", themeItemList=" + themeItemList +
+                ", title='" + title + '\'' +
                 '}';
     }
 }
