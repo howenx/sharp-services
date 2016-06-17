@@ -2,15 +2,15 @@ package middle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import domain.SkuVo;
-import domain.Theme;
-import domain.ThemeBasic;
-import domain.ThemeItem;
+import domain.*;
+import play.Logger;
+import service.PromotionService;
 import util.SysParCom;
 import play.libs.Json;
 import service.ThemeService;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,9 @@ public class ThemeListMid {
 
     @Inject
     private ThemeService themeService;
+
+    @Inject
+    private PromotionService promotionService;
 
     /**
      * 获取主图列表,包括拼购
@@ -106,6 +109,21 @@ public class ThemeListMid {
                 themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
             }
             themeItem.setItemPrice(skuVo.getSkuTypePrice());
+
+            //拼购
+            if (skuType.equals("pin")){
+
+                PinSku pinSku = promotionService.getPinSkuById(skuTypeId);
+                JsonNode floorJson  = Json.parse(pinSku.getFloorPrice());
+                if (floorJson.has("price")){
+                    BigDecimal floorPrice =new BigDecimal(floorJson.findValue("price").asText());
+                    themeItem.setItemPrice(floorPrice);
+                }
+                themeItem.setItemDiscount(pinSku.getPinDiscount());
+
+//                Logger.error("拼购商品最低价格: "+floorJson.findValue("price").asText());
+            }
+
             themeItem.setItemSoldAmount(skuVo.getSkuTypeSoldAmount());
             themeItem.setItemSrcPrice(skuVo.getItemSrcPrice());
             themeItem.setItemTitle(skuVo.getSkuTypeTitle());
