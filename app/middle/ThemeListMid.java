@@ -120,8 +120,6 @@ public class ThemeListMid {
                     themeItem.setItemPrice(floorPrice);
                 }
                 themeItem.setItemDiscount(pinSku.getPinDiscount());
-
-//                Logger.error("拼购商品最低价格: "+floorJson.findValue("price").asText());
             }
 
             themeItem.setItemSoldAmount(skuVo.getSkuTypeSoldAmount());
