@@ -9,6 +9,7 @@ import enums.SkuTypeEnum;
 import org.springframework.beans.BeanUtils;
 import play.Logger;
 import play.libs.Json;
+import redis.clients.jedis.Jedis;
 import service.CartService;
 import service.IdService;
 import service.PromotionService;
@@ -39,9 +40,13 @@ public class DetailMid {
     @Inject
     private IdService idService;
 
+    @Inject
+    private Jedis jedis;
+
 
     //将Json串转换成List
     public final static ObjectMapper mapper = new ObjectMapper();
+
 
     /**
      * 获取商品详情
@@ -323,25 +328,52 @@ public class DetailMid {
      */
     private Long getCollectInfo(String skuType, Long skuId, Long skuTypeId, Long userId) {
         if (!userId.equals(-1L)) {
-            //用户收藏信息
-            Collect collect = new Collect();
-            collect.setUserId(userId);
-            collect.setSkuId(skuId);
-            collect.setSkuType(skuType);
-            collect.setSkuTypeId(skuTypeId);
-            try {
-                Logger.info("=getCollectInfo=userId=" + userId + ",skuId=" + skuId + ",skuType=" + skuType + ",skuTypeId==" + skuTypeId);
-                Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
-                if (collectList.isPresent() && collectList.get().size() > 0) {
-                    return collectList.get().get(0).getCollectId();
+//            //用户收藏信息
+//            Collect collect = new Collect();
+//            collect.setUserId(userId);
+//            collect.setSkuId(skuId);
+//            collect.setSkuType(skuType);
+//            collect.setSkuTypeId(skuTypeId);
+//            try {
+//                Logger.info("=getCollectInfo=userId=" + userId + ",skuId=" + skuId + ",skuType=" + skuType + ",skuTypeId==" + skuTypeId);
+//
+//                Optional<List<Collect>> collectList = Optional.ofNullable(cartService.selectCollect(collect));
+//                if (collectList.isPresent() && collectList.get().size() > 0) {
+//                    return collectList.get().get(0).getCollectId();
+//                }
+//                return 0L;
+//            } catch (Exception ex) {
+//                Logger.error("cartService.selectCollect exception " + ex.getMessage());
+//                return 0L;
+//            }
+//            Logger.info("=getCollectInfo=userId=" + userId + ",skuId=" + skuId + ",skuType=" + skuType + ",skuTypeId==" + skuTypeId);
+            List<String> collectList=jedis.hvals(getUserCollectKey(userId));
+            if (null!=collectList&&!collectList.isEmpty()) {
+                Collect collect;
+                for (String str : collectList) {
+                    collect = Json.fromJson(Json.parse(str), Collect.class);
+//                    Logger.info("==collect==="+collect);
+                    if(null!=collect&&collect.getSkuTypeId()==skuTypeId.longValue()&&skuType.equals(collect.getSkuType())
+                            &&(null==skuId||collect.getSkuId()==skuId.longValue())){
+                        return collect.getCollectId();
+                    }
                 }
                 return 0L;
-            } catch (Exception ex) {
-                Logger.error("cartService.selectCollect exception " + ex.getMessage());
+            }else{
                 return 0L;
             }
         } else return 0L;
     }
+
+    /**
+     * 获取用户收藏的键值
+     * @param userId
+     * @return
+     */
+    private String getUserCollectKey(Long userId){
+        return "collect-"+userId;
+    }
+
 
     /**
      * 获取拼购库存详情
