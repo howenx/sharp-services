@@ -8,6 +8,7 @@ import com.google.common.base.Throwables;
 import play.Logger;
 import play.libs.Json;
 import redis.clients.jedis.Jedis;
+import util.RedisPool;
 
 import javax.inject.Inject;
 
@@ -19,15 +20,12 @@ import static util.SysParCom.REDIS_CHANNEL;
  */
 public class MnsActor extends AbstractActor {
 
-    @Inject
-    public MnsActor(Jedis jedis) {
+    public MnsActor() {
         receive(ReceiveBuilder.match(Object.class, event -> {
             try {
                 if (event instanceof ILoggingEvent) {
                     ((ILoggingEvent) event).getMDCPropertyMap().put("projectId", "style-services");
-//                    System.err.println("有没有占信息--->"+ org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(Throwable));
-
-                    jedis.publish(REDIS_CHANNEL, Json.mapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).valueToTree(event).toString());
+                    RedisPool.createPool().getResource().publish(REDIS_CHANNEL, Json.mapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).valueToTree(event).toString());
                 }
             } catch (Exception ignored) {
             }
