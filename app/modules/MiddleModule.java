@@ -34,6 +34,5 @@ public class MiddleModule extends AbstractModule {
         bind(MemcachedConfiguration.class).asEagerSingleton();
         bind(LogUtil.class).asEagerSingleton();
         bind(RedisPool.class).asEagerSingleton();
-        bind(Jedis.class).toInstance(RedisPool.create());
     }
 }

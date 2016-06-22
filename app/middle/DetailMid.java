@@ -15,6 +15,7 @@ import service.IdService;
 import service.PromotionService;
 import service.ThemeService;
 import util.GenCouponCode;
+import util.RedisPool;
 import util.SysParCom;
 
 import javax.inject.Inject;
@@ -39,9 +40,6 @@ public class DetailMid {
 
     @Inject
     private IdService idService;
-
-    @Inject
-    private Jedis jedis;
 
 
     //将Json串转换成List
@@ -347,20 +345,22 @@ public class DetailMid {
 //                return 0L;
 //            }
 //            Logger.info("=getCollectInfo=userId=" + userId + ",skuId=" + skuId + ",skuType=" + skuType + ",skuTypeId==" + skuTypeId);
-            List<String> collectList=jedis.hvals(getUserCollectKey(userId));
-            if (null!=collectList&&!collectList.isEmpty()) {
-                Collect collect;
-                for (String str : collectList) {
-                    collect = Json.fromJson(Json.parse(str), Collect.class);
+            try (Jedis jedis = RedisPool.createPool().getResource()) {
+                List<String> collectList = jedis.hvals(getUserCollectKey(userId));
+                if (null != collectList && !collectList.isEmpty()) {
+                    Collect collect;
+                    for (String str : collectList) {
+                        collect = Json.fromJson(Json.parse(str), Collect.class);
 //                    Logger.info("==collect==="+collect);
-                    if(null!=collect&&collect.getSkuTypeId()==skuTypeId.longValue()&&skuType.equals(collect.getSkuType())
-                            &&(null==skuId||collect.getSkuId()==skuId.longValue())){
-                        return collect.getCollectId();
+                        if (null != collect && collect.getSkuTypeId() == skuTypeId.longValue() && skuType.equals(collect.getSkuType())
+                                && (null == skuId || collect.getSkuId() == skuId.longValue())) {
+                            return collect.getCollectId();
+                        }
                     }
+                    return 0L;
+                } else {
+                    return 0L;
                 }
-                return 0L;
-            }else{
-                return 0L;
             }
         } else return 0L;
     }
