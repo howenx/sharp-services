@@ -214,7 +214,8 @@
         ${alias}.postal_fee           ,
         to_char(${alias}.confirm_receive_at, 'YYYY-MM-DD HH24:MI:SS') confirm_receive_at,
         ${alias}.pin_active_id         ,
-        ${alias}.order_type
+        ${alias}.order_type,
+        ${alias}.or_del
     </sql>
 
     <!--查询用户订单-->
