@@ -39,7 +39,9 @@
         ${alias}.sort_nu,
         ${alias}.create_at,
         ${alias}.item_target,
-        ${alias}.target_type
+        ${alias}.target_type,
+        ${alias}.or_nav,
+        ${alias}.nav_text
     </sql>
 
     <sql id="itemColumns">
@@ -241,7 +243,16 @@
         <include refid="sliderColumns">
             <property name="alias" value="t"/>
         </include>
-        from slider t
+        from slider t where or_nav=false
+        ORDER BY t.create_at DESC, t.sort_nu
+    </select>
+
+    <select id="getSliderNav" resultType="domain.Slider">
+        select
+        <include refid="sliderColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from slider t where or_nav=true
         ORDER BY t.create_at DESC, t.sort_nu
     </select>
 

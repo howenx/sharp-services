@@ -89,6 +89,25 @@ public class Application extends Controller {
                 }
 
                 if (pageNum == 1) {
+
+                    //导航菜单
+                    Optional<List<Slider>> listOptionalSliderNav = themeService.getSliderNav();
+                    if (listOptionalSliderNav.isPresent()) {
+                        //slider取出链接
+                        List<Slider> sliderNavImgList = listOptionalSliderNav.get().stream().map(s -> {
+                            if (s.getImg().contains("url")) {
+                                JsonNode jsonNode2 = Json.parse(s.getImg());
+                                if (jsonNode2.has("url")) {
+                                    ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
+                                    s.setUrl(Json.stringify(jsonNode2));
+                                }
+                            }
+                            s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            return s;
+                        }).collect(Collectors.toList());
+                        result.putPOJO("sliderNav", Json.toJson(sliderNavImgList));
+                    }
+
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
