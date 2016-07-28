@@ -94,29 +94,35 @@ public class Application extends Controller {
                     Optional<List<Slider>> listOptionalSliderNav = themeService.getSliderNav();
                     if (listOptionalSliderNav.isPresent()) {
                         //slider取出链接
-                        List<Slider> sliderNavImgList = listOptionalSliderNav.get().stream().map(s -> {
+                        List<SliderNav> sliderNavImgList = listOptionalSliderNav.get().stream().map(s -> {
+                            String url="";
                             if (s.getImg().contains("url")) {
                                 JsonNode jsonNode2 = Json.parse(s.getImg());
                                 if (jsonNode2.has("url")) {
-                                    ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
-                                    s.setUrl(Json.stringify(jsonNode2));
+                               //     ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
+                                //    s.setUrl(Json.stringify(jsonNode2));
+                                    url=SysParCom.IMAGE_URL + jsonNode2.get("url").asText();
                                 }
                             }
                             s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
-                            return s;
+
+                            return new SliderNav(s.getItemTarget(),s.getTargetType(),url,s.getNavText());
+
                         }).collect(Collectors.toList());
                         result.putPOJO("sliderNav", Json.toJson(sliderNavImgList));
                     }
 
+                    //滚动图
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
                         List<Slider> sliderImgList = listOptionalSlider.get().stream().map(s -> {
+                           // String url="";
                             if (s.getImg().contains("url")) {
                                 JsonNode jsonNode2 = Json.parse(s.getImg());
                                 if (jsonNode2.has("url")) {
-                                    ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
-                                    s.setUrl(Json.stringify(jsonNode2));
+                                   // ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
+                                    s.setUrl(SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
                                 }
                             }
                             s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());

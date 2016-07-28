@@ -24,8 +24,9 @@ public class Slider implements Serializable{
     private String  itemTarget;
     private String  targetType;
     private String  url;
-
+    @JsonIgnore
     private Boolean orNav; //是否是导航图
+    @JsonIgnore
     private String navText;//导航文字显示
 
     public Slider() {
