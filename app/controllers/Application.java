@@ -63,7 +63,9 @@ public class Application extends Controller {
 
                     if (l.getType().equals("ordinary")) {
                         l.setThemeUrl(SysParCom.DEPLOY_URL + "/topic/list/" + l.getId());
-                    } else {
+                    } else if (l.getType().equals("detail")||l.getType().equals("pin")) {
+                        l.setThemeUrl(SysParCom.DEPLOY_URL  + l.getH5Link());
+                    }else{
                         l.setThemeUrl(l.getH5Link());
                     }
 
@@ -104,7 +106,9 @@ public class Application extends Controller {
                                     url=SysParCom.IMAGE_URL + jsonNode2.get("url").asText();
                                 }
                             }
-                            s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            if(!"U".equals(s.getTargetType())){ //T:主题，D:详细页面，P:拼购商品页，U:一个促销活动的链接（h5主题）
+                                s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            }
 
                             return new SliderNav(s.getItemTarget(),s.getTargetType(),url,s.getNavText());
 
@@ -125,7 +129,9 @@ public class Application extends Controller {
                                     s.setUrl(SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
                                 }
                             }
-                            s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            if(!"U".equals(s.getTargetType())){ //T:主题，D:详细页面，P:拼购商品页，U:一个促销活动的链接（h5主题）
+                                s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            }
                             return s;
                         }).collect(Collectors.toList());
 
