@@ -27,7 +27,7 @@ public class Slider implements Serializable{
     @JsonIgnore
     private Boolean orNav; //是否是导航图
     @JsonIgnore
-    private String navText;//导航文字显示
+    private String navText;//导航文字显示  
 
     public Slider() {
     }
