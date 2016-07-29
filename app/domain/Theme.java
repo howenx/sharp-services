@@ -37,7 +37,7 @@ public class Theme implements Serializable {
     private     Timestamp   createAt;
     @JsonIgnore
     private     String      themeSrcImg;
-//    @JsonIgnore
+//    @JsonIgnore  
     private     String    themeConfigInfo;
     @JsonIgnore
     private     String    themeItem;
