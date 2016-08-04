@@ -37,6 +37,11 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
+    public Optional<List<Slider>> getSliderNav() {
+        return Optional.ofNullable(themeMapper.getSliderNav());
+    }
+
+    @Override
     public Theme getThemeBy(Long themeId) {
         Theme theme = new Theme();
         theme.setId(themeId);

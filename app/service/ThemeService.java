@@ -14,6 +14,7 @@ public interface ThemeService {
     Optional<List<Theme>> getThemes(int pageSize, int offset);
 
     Optional<List<Slider>> getSlider();
+    Optional<List<Slider>> getSliderNav();
 
     Theme getThemeBy(Long themeId);
 

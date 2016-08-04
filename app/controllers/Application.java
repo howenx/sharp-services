@@ -63,7 +63,9 @@ public class Application extends Controller {
 
                     if (l.getType().equals("ordinary")) {
                         l.setThemeUrl(SysParCom.DEPLOY_URL + "/topic/list/" + l.getId());
-                    } else {
+                    } else if (l.getType().equals("detail")||l.getType().equals("pin")) {
+                        l.setThemeUrl(SysParCom.DEPLOY_URL  + l.getH5Link());
+                    }else{
                         l.setThemeUrl(l.getH5Link());
                     }
 
@@ -89,18 +91,47 @@ public class Application extends Controller {
                 }
 
                 if (pageNum == 1) {
+
+                    //导航菜单
+                    Optional<List<Slider>> listOptionalSliderNav = themeService.getSliderNav();
+                    if (listOptionalSliderNav.isPresent()) {
+                        //slider取出链接
+                        List<SliderNav> sliderNavImgList = listOptionalSliderNav.get().stream().map(s -> {
+                            String url="";
+                            if (s.getImg().contains("url")) {
+                                JsonNode jsonNode2 = Json.parse(s.getImg());
+                                if (jsonNode2.has("url")) {
+                               //     ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
+                                //    s.setUrl(Json.stringify(jsonNode2));
+                                    url=SysParCom.IMAGE_URL + jsonNode2.get("url").asText();
+                                }
+                            }
+                            if(!"U".equals(s.getTargetType())){ //T:主题，D:详细页面，P:拼购商品页，U:一个促销活动的链接（h5主题）
+                                s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            }
+
+                            return new SliderNav(s.getItemTarget(),s.getTargetType(),url,s.getNavText());
+
+                        }).collect(Collectors.toList());
+                        result.putPOJO("sliderNav", Json.toJson(sliderNavImgList));
+                    }
+
+                    //滚动图
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider();
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
                         List<Slider> sliderImgList = listOptionalSlider.get().stream().map(s -> {
+                           // String url="";
                             if (s.getImg().contains("url")) {
                                 JsonNode jsonNode2 = Json.parse(s.getImg());
                                 if (jsonNode2.has("url")) {
-                                    ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
-                                    s.setUrl(Json.stringify(jsonNode2));
+                                   // ((ObjectNode) jsonNode2).put("url", SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
+                                    s.setUrl(SysParCom.IMAGE_URL + jsonNode2.get("url").asText());
                                 }
                             }
-                            s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            if(!"U".equals(s.getTargetType())){ //T:主题，D:详细页面，P:拼购商品页，U:一个促销活动的链接（h5主题）
+                                s.setItemTarget(SysParCom.DEPLOY_URL + s.getItemTarget());
+                            }
                             return s;
                         }).collect(Collectors.toList());
 

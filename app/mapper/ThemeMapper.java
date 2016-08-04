@@ -15,7 +15,17 @@ public interface ThemeMapper {
 
     Theme getThemeBy(Theme theme);
 
+    /**
+     * 获取滚动导航
+     * @return
+     */
     List<Slider> getSlider();
+
+    /**
+     * 获取滚动导航下面图标
+     * @return
+     */
+    List<Slider> getSliderNav();
 
     Item getItemBy(Item item);
 

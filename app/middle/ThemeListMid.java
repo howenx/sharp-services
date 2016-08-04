@@ -40,47 +40,54 @@ public class ThemeListMid {
         themeBasic.setThemeId(themeId);
         themeBasic.setTitle(theme.getTitle());
 
-        //主题主宣传图拼接URL
-        JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
-        if (jsonNode_ThemeMasterImg.has("url")) {
-            ((ObjectNode) jsonNode_ThemeMasterImg).put("url", SysParCom.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
-            themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
-        }
+        if(null!=theme.getThemeMasterImg()){
+            //主题主宣传图拼接URL
+            JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
+            if (jsonNode_ThemeMasterImg.has("url")) {
+                ((ObjectNode) jsonNode_ThemeMasterImg).put("url", SysParCom.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
+                themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
+            }
 
-        //处理主宣传图上的标签跳转连接
-        if (theme.getMasterItemTag() != null) {
-            JsonNode jsonNodeTag = Json.parse(theme.getMasterItemTag());
-            List<JsonNode> tags = new ArrayList<>();
-            if (jsonNodeTag.isArray()) {
-                for (final JsonNode url : jsonNodeTag) {
-                    if (url.has("url")) {
-                        JsonNode urlJson = Json.parse(url.get("url").toString());
-                        SkuVo skuVo = new SkuVo();
-                        skuVo.setSkuType(urlJson.get("type").asText());
-                        skuVo.setSkuTypeId(urlJson.get("id").asLong());
-                        List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
-                        if (skuVos.size() > 0) {
-                            skuVo = skuVos.get(0);
-                            ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
-                            ((ObjectNode) url).put("type", skuVo.getSkuType());
-                            tags.add(url);
+            //处理主宣传图上的标签跳转连接
+            if (theme.getMasterItemTag() != null) {
+                JsonNode jsonNodeTag = Json.parse(theme.getMasterItemTag());
+                List<JsonNode> tags = new ArrayList<>();
+                if (jsonNodeTag.isArray()) {
+                    for (final JsonNode url : jsonNodeTag) {
+                        if (url.has("url")) {
+                            JsonNode urlJson = Json.parse(url.get("url").toString());
+                            SkuVo skuVo = new SkuVo();
+                            skuVo.setSkuType(urlJson.get("type").asText());
+                            skuVo.setSkuTypeId(urlJson.get("id").asLong());
+                            List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
+                            if (skuVos.size() > 0) {
+                                skuVo = skuVos.get(0);
+                                ((ObjectNode) url).put("url", SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
+                                ((ObjectNode) url).put("type", skuVo.getSkuType());
+                                tags.add(url);
+                            }
                         }
                     }
                 }
-            }
-            themeBasic.setMasterItemTag(Json.stringify(Json.toJson(tags)));
-        }
-
-        JsonNode itemJson = Json.parse(theme.getThemeItem());
-
-        List<ThemeItem> themeItems = new ArrayList<>();
-        if (itemJson.isArray()) {
-            for (JsonNode jn : itemJson) {
-                ThemeItem themeItem = getThemeItem(jn.get("type").asText(), jn.get("id").asLong());
-                if (themeItem != null) themeItems.add(themeItem);
+                themeBasic.setMasterItemTag(Json.stringify(Json.toJson(tags)));
             }
         }
-        themeBasic.setThemeItemList(themeItems);
+
+
+        if(null!=theme.getThemeItem()){ //只有宣传图没有下面的商品时为null
+            JsonNode itemJson = Json.parse(theme.getThemeItem());
+
+            List<ThemeItem> themeItems = new ArrayList<>();
+            if (itemJson.isArray()) {
+                for (JsonNode jn : itemJson) {
+                    ThemeItem themeItem = getThemeItem(jn.get("type").asText(), jn.get("id").asLong());
+                    if (themeItem != null) themeItems.add(themeItem);
+                }
+            }
+            themeBasic.setThemeItemList(themeItems);
+        }
+
+
         return themeBasic;
     }
 
