@@ -418,9 +418,6 @@ public class DetailMid {
 
         PinSku pinSku = promotionService.getPinSkuById(skuTypeId);
 
-        Logger.info("=pinSku==="+pinSku+"===="+skuTypeId);
-
-
         if (pinSku.getShareUrl() != null && !pinSku.getShareUrl().equals(""))
             pinInvDetail.setShareUrl(pinSku.getShareUrl()); //分享短连接
         pinInvDetail.setId(skuVo.getId());                              //库存ID
