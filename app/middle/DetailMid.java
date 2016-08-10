@@ -512,7 +512,7 @@ public class DetailMid {
                         re.setUserName(id.getNickname().charAt(0) + id.getNickname().substring(1, id.getNickname().length() - 2).replaceAll("\\S", "*") + id.getNickname().charAt(id.getNickname().length() - 1));
                 } else {
                     re.setUserImg(SysParCom.IMAGE_URL + "users/photo/default.png");
-                    re.setUserName("HMM**" + new Random().nextInt(1000));
+                    re.setUserName("KG**" + new Random().nextInt(1000));
                 }
                 //增加购买时间,规格
                 Order order = new Order();
