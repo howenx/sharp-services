@@ -246,7 +246,7 @@
             <property name="alias" value="t"/>
         </include>
         from slider t where or_nav=false
-        ORDER BY t.create_at DESC, t.sort_nu
+        ORDER BY t.sort_nu
     </select>
 
     <select id="getSliderNav" resultType="domain.Slider">
@@ -255,7 +255,7 @@
             <property name="alias" value="t"/>
         </include>
         from slider t where or_nav=true
-        ORDER BY t.create_at DESC, t.sort_nu
+        ORDER BY t.sort_nu
     </select>
 
     <!--获取商品信息-->
