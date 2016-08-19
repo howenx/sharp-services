@@ -546,7 +546,11 @@ public class DetailMid {
                     }
                 } else {
                     LocalDate today = LocalDate.now();
-                    LocalDateTime localDateTime = LocalDateTime.of(today.getYear(), new Random().nextInt(today.getMonth().getValue()), new Random().nextInt(25), new Random().nextInt(23), new Random().nextInt(59), new Random().nextInt(59));
+
+                    Integer day = today.getDayOfMonth()-1;
+                    if (today.getDayOfMonth()>25) day = 25;
+
+                    LocalDateTime localDateTime = LocalDateTime.of(today.getYear(), new Random().nextInt(today.getMonth().getValue()-1)+1, new Random().nextInt(day)+1, new Random().nextInt(23), new Random().nextInt(59), new Random().nextInt(59));
                     DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     re.setBuyAt(localDateTime.format(format));
                     SkuVo skuVo = new SkuVo();
