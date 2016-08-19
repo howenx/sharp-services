@@ -22,6 +22,9 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,7 @@ public class DetailMid {
 
     //将Json串转换成List
     public final static ObjectMapper mapper = new ObjectMapper();
+    private SkuVo skuVo;
 
 
     /**
@@ -367,11 +371,12 @@ public class DetailMid {
 
     /**
      * 获取用户收藏的键值
+     *
      * @param userId
      * @return
      */
-    private String getUserCollectKey(Long userId){
-        return "collect-"+userId;
+    private String getUserCollectKey(Long userId) {
+        return "collect-" + userId;
     }
 
 
@@ -498,39 +503,62 @@ public class DetailMid {
      * @param img        img
      * @return List<Remark>
      */
-    public List<Remark> dealRemark(List<Remark> remarkList, Boolean img) {
+    public List<Remark> dealRemark(Remark rk, List<Remark> remarkList, Boolean img) {
         List<Remark> imgRemarks = new ArrayList<>();
 
         for (Remark re : remarkList) {
             try {
-                ID id = idService.getID(re.getUserId());
-                if (id != null) {
-                    re.setUserImg(SysParCom.IMAGE_URL + id.getPhotoUrl());
-                    if (id.getNickname().length() < 4) {
-                        re.setUserName(id.getNickname().charAt(0) + "**" + id.getNickname().charAt(id.getNickname().length() - 1));
-                    } else
-                        re.setUserName(id.getNickname().charAt(0) + id.getNickname().substring(1, id.getNickname().length() - 2).replaceAll("\\S", "*") + id.getNickname().charAt(id.getNickname().length() - 1));
+                if (re.getUserId() != null) {
+                    ID id = idService.getID(re.getUserId());
+                    if (id != null) {
+                        re.setUserImg(SysParCom.IMAGE_URL + id.getPhotoUrl());
+                        if (id.getNickname().length() < 4) {
+                            re.setUserName(id.getNickname().charAt(0) + "**" + id.getNickname().charAt(id.getNickname().length() - 1));
+                        } else
+                            re.setUserName(id.getNickname().charAt(0) + id.getNickname().substring(1, id.getNickname().length() - 2).replaceAll("\\S", "*") + id.getNickname().charAt(id.getNickname().length() - 1));
+                    } else {
+                        re.setUserImg(SysParCom.IMAGE_URL + "users/photo/default.png");
+                        re.setUserName("KG**" + new Random().nextInt(1000));
+                    }
                 } else {
                     re.setUserImg(SysParCom.IMAGE_URL + "users/photo/default.png");
                     re.setUserName("KG**" + new Random().nextInt(1000));
                 }
+
                 //增加购买时间,规格
-                Order order = new Order();
-                order.setOrderId(re.getOrderId());
-                List<Order> orders = cartService.selectOrder(order);
-                if (orders.size() == 1) {
-                    order = orders.get(0);
-                    re.setBuyAt(order.getOrderCreateAt());
-                    OrderLine orderLine = new OrderLine();
-                    orderLine.setOrderId(order.getOrderId());
-                    orderLine.setSkuTypeId(re.getSkuTypeId());
-                    orderLine.setSkuType(re.getSkuType());
-                    List<OrderLine> orderLines = cartService.selectOrderLine(orderLine);
-                    if (orderLines.size() == 1) {
-                        orderLine = orderLines.get(0);
-                        re.setSize(orderLine.getSkuColor() + orderLine.getSkuSize());
+
+                if (re.getOrderId() != null) {
+                    Order order = new Order();
+                    order.setOrderId(re.getOrderId());
+                    List<Order> orders = cartService.selectOrder(order);
+                    if (orders.size() == 1) {
+                        order = orders.get(0);
+                        re.setBuyAt(order.getOrderCreateAt());
+                        OrderLine orderLine = new OrderLine();
+                        orderLine.setOrderId(order.getOrderId());
+                        orderLine.setSkuTypeId(re.getSkuTypeId());
+                        orderLine.setSkuType(re.getSkuType());
+                        List<OrderLine> orderLines = cartService.selectOrderLine(orderLine);
+                        if (orderLines.size() == 1) {
+                            orderLine = orderLines.get(0);
+                            re.setSize(orderLine.getSkuColor() + orderLine.getSkuSize());
+                        }
                     }
+                } else {
+                    LocalDate today = LocalDate.now();
+                    LocalDateTime localDateTime = LocalDateTime.of(today.getYear(), new Random().nextInt(today.getMonth().getValue()), new Random().nextInt(25), new Random().nextInt(23), new Random().nextInt(59), new Random().nextInt(59));
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    re.setBuyAt(localDateTime.format(format));
+                    SkuVo skuVo = new SkuVo();
+                    skuVo.setSkuType(re.getSkuType());
+                    skuVo.setSkuTypeId(re.getSkuTypeId());
+                    List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
+                    if (skuVos.size() > 0) {
+                        skuVo = skuVos.get(0);
+                    }
+                    re.setSize(skuVo.getItemColor() + skuVo.getItemSize());
                 }
+
 
                 if (re.getPicture() != null) {
                     List<String> remarkPics = mapper.readValue(re.getPicture(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));

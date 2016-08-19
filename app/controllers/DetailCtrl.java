@@ -131,13 +131,13 @@ public class DetailCtrl extends Controller {
                                 rk.setPicture("not null");
                                 List<Remark> remarkList = cartService.selectRemark(rk);
                                 if (remarkList != null && remarkList.size() > 0) {
-                                    itemRemarks.addAll(detailMid.dealRemark(remarkList, true));
+                                    itemRemarks.addAll(detailMid.dealRemark(rk,remarkList, true));
                                 }
                             } else {//请求的是好评或者差评或者全部的结果
                                 if (grade != 0) rk.setGrade(grade);
                                 List<Remark> remarkList = cartService.selectRemark(rk);
                                 if (remarkList != null && remarkList.size() > 0) {
-                                    itemRemarks.addAll(detailMid.dealRemark(remarkList, false));
+                                    itemRemarks.addAll(detailMid.dealRemark(rk,remarkList, false));
                                 }
                             }
                         }
@@ -196,10 +196,10 @@ public class DetailCtrl extends Controller {
                 if (remarkList.size() > 0) {
 
                     if (grade == 6) {
-                        remarkList = detailMid.dealRemark(remarkList, true);
+                        remarkList = detailMid.dealRemark(remark,remarkList, true);
                         result.putPOJO("count_num", remarkList.size());
                     } else {
-                        remarkList = detailMid.dealRemark(remarkList, false);
+                        remarkList = detailMid.dealRemark(remark,remarkList, false);
                         result.putPOJO("count_num", remarkList.get(0).getCountNum());
                     }
 
