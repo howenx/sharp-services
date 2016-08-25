@@ -373,7 +373,7 @@
         from skus t where 1!=1
 
         <if test="itemIdList!=null">
-            union all (
+            union (
             select
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
@@ -386,7 +386,7 @@
         </if>
 
         <if test="invIdList!=null">
-            union all (
+            union (
             select
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
@@ -401,7 +401,7 @@
         <!--拼购主题还未处理-->
 
         <if test="cateIdList!=null">
-            union all (
+            union (
             select
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
