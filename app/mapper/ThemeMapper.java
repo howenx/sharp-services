@@ -21,12 +21,6 @@ public interface ThemeMapper {
      */
     List<Slider> getSlider(Slider slider);
 
-    /**
-     * 获取滚动导航下面图标
-     * @return
-     */
-    List<Slider> getSliderNav();
-
     Item getItemBy(Item item);
 
     List<Inventory> getInvBy(Inventory inventory);

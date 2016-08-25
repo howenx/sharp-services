@@ -108,7 +108,9 @@ public class Application extends Controller {
 
 
                     //导航菜单
-                    Optional<List<Slider>> listOptionalSliderNav = themeService.getSliderNav();
+                    Slider tempSlider=new Slider();
+                    tempSlider.setOrNav(true);
+                    Optional<List<Slider>> listOptionalSliderNav = themeService.getSlider(tempSlider);
                     if (listOptionalSliderNav.isPresent()) {
                         //slider取出链接
                         List<SliderNav> sliderNavImgList = listOptionalSliderNav.get().stream().map(s -> {
@@ -137,6 +139,7 @@ public class Application extends Controller {
                     //滚动图
                     Slider temp=new Slider();
                     temp.setSliderType(1);
+                    temp.setOrNav(false);
                     Optional<List<Slider>> listOptionalSlider = themeService.getSlider(temp);
                     if (listOptionalSlider.isPresent()) {
                         //slider取出链接
@@ -346,6 +349,14 @@ public class Application extends Controller {
                     if (pageNum == 1) {
                         page_count = listOptional.get(0).getSkuNum() % SysParCom.PAGE_SIZE == 0 ? listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE : listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE + 1;
                         result.putPOJO("page_count", page_count);
+                        Slider temp=new Slider();
+                        temp.setId(navId);
+                        Optional<List<Slider>> listOptionalSlider = themeService.getSlider(temp);
+                        String title="商品分类"; //分类界面标题
+                        if (listOptionalSlider.isPresent()&&listOptionalSlider.get().size()>0) {
+                            title=listOptionalSlider.get().get(0).getNavText();
+                        }
+                        result.put("title", title);
                     }
                     for(SkuVo skuVo:listOptional){
                         try{
@@ -404,15 +415,7 @@ public class Application extends Controller {
                     list=new ArrayList<>();
                     navItemCateQuery.setCateIdList(list);
                 }
-                //TODO ...
-               // navItemCateQuery.getCateIdList().add(navItemCate.getCateTypeId());
-                navItemCateQuery.getCateIdList().add(888444L);
-                navItemCateQuery.getCateIdList().add(888432L);
-                navItemCateQuery.getCateIdList().add(888477L);
-                navItemCateQuery.getCateIdList().add(888462L);
-                navItemCateQuery.getCateIdList().add(888465L);
-                navItemCateQuery.getCateIdList().add(888480L);
-                navItemCateQuery.getCateIdList().add(888483L);
+                navItemCateQuery.getCateIdList().add(navItemCate.getCateTypeId());
             }
         }
 

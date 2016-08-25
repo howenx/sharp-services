@@ -268,20 +268,16 @@
         <include refid="sliderColumns">
             <property name="alias" value="t"/>
         </include>
-        from slider t where or_nav=false
+        from slider t where 1=1
+        <if test="id!=null and id !=''">
+            and t.id = #{id}
+        </if>
+        <if test="orNav!=null">
+            and t.or_nav = #{orNav}
+        </if>
         <if test="sliderType!=null and sliderType !=''">
             and t.slider_type = #{sliderType}
         </if>
-
-        ORDER BY t.sort_nu
-    </select>
-
-    <select id="getSliderNav" resultType="domain.Slider">
-        select
-        <include refid="sliderColumns">
-            <property name="alias" value="t"/>
-        </include>
-        from slider t where or_nav=true
         ORDER BY t.sort_nu
     </select>
 
@@ -376,15 +372,43 @@
         </include>
         from skus t where 1!=1
 
+        <if test="itemIdList!=null">
+            union all (
+            select
+            <include refid="skusColumns">
+                <property name="alias" value="t"/>
+            </include>
+            from skus t  where 1=1 and t.or_master_inv=true and
+            <foreach item="itemId" collection="itemIdList" separator=" or " open="(" close=")" index="index">
+                t.item_id=#{itemId}
+            </foreach>
+            )
+        </if>
+
+        <if test="invIdList!=null">
+            union all (
+            select
+            <include refid="skusColumns">
+                <property name="alias" value="t"/>
+            </include>
+            from skus t  where 1=1 and t.or_master_inv=true and
+            <foreach item="invId" collection="invIdList" separator=" or " open="(" close=")" index="index">
+                t.inv_id=#{invId}
+            </foreach>
+            )
+        </if>
+
+        <!--拼购主题还未处理-->
+
         <if test="cateIdList!=null">
             union all (
             select
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t where 1=1 and t.or_master_inv=true and
+            from skus t ,items it where 1=1 and t.or_master_inv=true and t.item_id=it.id and
             <foreach item="cateId" collection="cateIdList" separator=" or " open="(" close=")" index="index">
-                t.item_id=#{cateId}
+                it.cate_id=#{cateId}
             </foreach>
             )
         </if>
