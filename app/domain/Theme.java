@@ -19,7 +19,7 @@ public class Theme implements Serializable {
     private     String      themeUrl;//跳转到主题列表页的链接
     private     String      type;//主题类型
 
-//    @JsonIgnore
+    @JsonIgnore
     private     String      title;
     @JsonIgnore
     private     Timestamp   startAt;
@@ -37,7 +37,7 @@ public class Theme implements Serializable {
     private     Timestamp   createAt;
     @JsonIgnore
     private     String      themeSrcImg;
-//    @JsonIgnore
+    @JsonIgnore
     private     String    themeConfigInfo;
     @JsonIgnore
     private     String    themeItem;
@@ -55,6 +55,18 @@ public class Theme implements Serializable {
 
     @JsonIgnore
     private     String      h5Link;
+    /**
+     * 主题状态（1隐藏 2专用 3正常）
+     */
+    @JsonIgnore
+    private  Integer themeState;
+
+    @JsonIgnore
+    private Integer pageSize;
+    @JsonIgnore
+    private Integer offset;
+    @JsonIgnore
+    private Integer themeCateCode; //1.首页，2.拼购，3.礼品
 
     public Theme() {
     }
@@ -242,6 +254,38 @@ public class Theme implements Serializable {
         this.h5Link = h5Link;
     }
 
+    public Integer getThemeState() {
+        return themeState;
+    }
+
+    public void setThemeState(Integer themeState) {
+        this.themeState = themeState;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getThemeCateCode() {
+        return themeCateCode;
+    }
+
+    public void setThemeCateCode(Integer themeCateCode) {
+        this.themeCateCode = themeCateCode;
+    }
+
     @Override
     public String toString() {
         return "Theme{" +
@@ -265,6 +309,10 @@ public class Theme implements Serializable {
                 ", themeMasterImg='" + themeMasterImg + '\'' +
                 ", themeNum=" + themeNum +
                 ", h5Link='" + h5Link + '\'' +
+                ", themeState=" + themeState +
+                ", pageSize=" + pageSize +
+                ", offset=" + offset +
+                ", themeCateCode=" + themeCateCode +
                 '}';
     }
 }

@@ -105,6 +105,8 @@ public class SkuVo implements Serializable{
     private String invAreaNm;//报关区域名
     private String postalStandard;//行邮税标准
 
+    private Integer skuNum;//条数
+
     public SkuVo() {
     }
 
@@ -595,6 +597,14 @@ public class SkuVo implements Serializable{
 
     public void setPostalStandard(String postalStandard) {
         this.postalStandard = postalStandard;
+    }
+
+    public Integer getSkuNum() {
+        return skuNum;
+    }
+
+    public void setSkuNum(Integer skuNum) {
+        this.skuNum = skuNum;
     }
 
     @Override

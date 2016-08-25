@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface ThemeMapper {
 
-    List<Theme> getThemes(Map<String,Integer> params);
+    List<Theme> getThemes(Theme theme);
 
     Theme getThemeBy(Theme theme);
 
@@ -19,7 +19,7 @@ public interface ThemeMapper {
      * 获取滚动导航
      * @return
      */
-    List<Slider> getSlider();
+    List<Slider> getSlider(Slider slider);
 
     /**
      * 获取滚动导航下面图标
@@ -34,4 +34,18 @@ public interface ThemeMapper {
     List<SkuVo> getAllSkus(SkuVo skuVo);
 
     List<VersionVo> getVersioning(VersionVo versionVo);
+
+    /**
+     * 根据分类查询商品
+     * @param navItemCateQuery
+     * @return
+     */
+    List<SkuVo> getSkusByNavItemCate(NavItemCateQuery navItemCateQuery);
+
+    /**
+     * 获取分类
+     * @param navItemCate
+     * @return
+     */
+    List<NavItemCate> getNavItemCate(NavItemCate navItemCate);
 }

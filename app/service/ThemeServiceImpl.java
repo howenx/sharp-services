@@ -23,17 +23,13 @@ public class ThemeServiceImpl implements ThemeService {
     final static ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Optional<List<Theme>> getThemes(int pageSize, int offset) {
-
-        Map<String, Integer> params = new HashMap<>();
-        params.put("pageSize", pageSize);
-        params.put("offset", offset);
-        return Optional.ofNullable(themeMapper.getThemes(params));
+    public Optional<List<Theme>> getThemes(Theme theme) {
+        return Optional.ofNullable(themeMapper.getThemes(theme));
     }
 
     @Override
-    public Optional<List<Slider>> getSlider() {
-        return Optional.ofNullable(themeMapper.getSlider());
+    public Optional<List<Slider>> getSlider(Slider slider) {
+        return Optional.ofNullable(themeMapper.getSlider(slider));
     }
 
     @Override
@@ -66,6 +62,16 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public List<VersionVo> getVersioning(VersionVo versionVo) {
         return themeMapper.getVersioning(versionVo);
+    }
+
+    @Override
+    public List<SkuVo> getSkusByNavItemCate(NavItemCateQuery navItemCateQuery) {
+        return themeMapper.getSkusByNavItemCate(navItemCateQuery);
+    }
+
+    @Override
+    public List<NavItemCate> getNavItemCate(NavItemCate navItemCate) {
+        return themeMapper.getNavItemCate(navItemCate);
     }
 
     public void setThemeMapper(ThemeMapper themeMapper) {

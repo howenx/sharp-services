@@ -11,9 +11,9 @@ import java.util.Optional;
  */
 public interface ThemeService {
 
-    Optional<List<Theme>> getThemes(int pageSize, int offset);
+    Optional<List<Theme>> getThemes(Theme theme);
 
-    Optional<List<Slider>> getSlider();
+    Optional<List<Slider>> getSlider(Slider slider);
     Optional<List<Slider>> getSliderNav();
 
     Theme getThemeBy(Long themeId);
@@ -25,4 +25,16 @@ public interface ThemeService {
     List<SkuVo> getAllSkus(SkuVo skuVo);
 
     List<VersionVo> getVersioning(VersionVo versionVo);
+    /**
+     * 根据分类查询商品
+     * @param navItemCateQuery
+     * @return
+     */
+    List<SkuVo> getSkusByNavItemCate(NavItemCateQuery navItemCateQuery);
+    /**
+     * 获取分类
+     * @param navItemCate
+     * @return
+     */
+    List<NavItemCate> getNavItemCate(NavItemCate navItemCate);
 }

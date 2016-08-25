@@ -29,7 +29,9 @@
         ${alias}.theme_master_img,
         count(*) over() theme_num,
         type,
-        h5_link
+        h5_link,
+        ${alias}.theme_state,
+        ${alias}.show_type
     </sql>
 
 
@@ -176,7 +178,7 @@
         ${alias}.restrict_amount,
         ${alias}.inv_title,
         ${alias}.inv_customs,
-        COALESCE(${alias}.postal_tax_rate,(select f.rate from tax_code f where f.code = t.postal_tax_code)) as postal_tax_rate,
+        COALESCE(${alias}.postal_tax_rate,(select f.rate from tax_code f where f.code = ${alias}.postal_tax_code)) as postal_tax_rate,
         (select parameter_val from sys_parameter where parameter_code='POSTAL_STANDARD') as postalStandard,
         ${alias}.inv_weight,
         ${alias}.postal_tax_rate,
@@ -190,7 +192,10 @@
         ${alias}.collect_count,
         ${alias}.browse_count,
         ${alias}.theme_id,
-        ${alias}.inv_code
+        ${alias}.inv_code,
+        count(*) over() sku_num
+        <!--${alias}.or_show,-->
+
     </sql>
 
 
@@ -212,18 +217,36 @@
         <if test="skuTypeStatus!=null and skuTypeStatus!=''">
             and sku_type_status=#{skuTypeStatus}
         </if>
+        <!--<if test="orShow!=null and orShow!=''">-->
+            <!--and or_show=#{orShow}-->
+        <!--</if>-->
     </select>
 
     <!--  首页主题图分页显示  -->
-    <select id="getThemes" resultType="domain.Theme" parameterType="map">
+    <select id="getThemes" resultType="domain.Theme" parameterType="domain.Theme">
         select
         <include refid="themesColumns">
             <property name="alias" value="t"/>
         </include>
-        from themes t
-        where 1=1 and t.end_at &gt;=CURRENT_TIMESTAMP(0) and or_destroy=false
-        ORDER BY t.create_at DESC, t.sort_nu
-        LIMIT #{pageSize} OFFSET #{offset}
+        from themes t,theme_cate tc
+        where 1=1 and t.end_at &gt;=CURRENT_TIMESTAMP(0) and t.or_destroy=false
+
+        <if test="themeState!=null and themeState !=''">
+            and t.theme_state = #{themeState}
+        </if>
+        <if test="themeCateCode!=null and themeCateCode !=''">
+            and tc.theme_cate_code = #{themeCateCode}
+        </if>
+
+        and t.id=tc.theme_id
+
+        ORDER BY t.sort_nu
+        <if test="pageSize!=null and pageSize !=''">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null and offset !=''">
+            OFFSET #{offset}
+        </if>
     </select>
 
     <!--  获取单个主题  -->
@@ -240,12 +263,16 @@
     </select>
 
     <!--  首页滚动图显示 -->
-    <select id="getSlider" resultType="domain.Slider">
+    <select id="getSlider" resultType="domain.Slider" parameterType="domain.Slider">
         select
         <include refid="sliderColumns">
             <property name="alias" value="t"/>
         </include>
         from slider t where or_nav=false
+        <if test="sliderType!=null and sliderType !=''">
+            and t.slider_type = #{sliderType}
+        </if>
+
         ORDER BY t.sort_nu
     </select>
 
@@ -321,4 +348,55 @@
         </if>
         order by current_version DESC,release_number DESC
     </select>
+
+    <sql id="navItemCateColumns">
+        ${alias}.id              ,
+        ${alias}.nav_id   ,
+        ${alias}.cate_type    ,
+        ${alias}.cate_type_id   ,
+        ${alias}.or_destroy
+    </sql>
+
+    <select id="getNavItemCate" resultType="domain.NavItemCate" parameterType="domain.NavItemCate">
+        select
+        <include refid="navItemCateColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from nav_item_cate t where 1=1 and or_destroy=false
+        <if test="navId!=null and navId!=''">
+            and nav_id=#{navId}
+        </if>
+
+    </select>
+
+    <select id="getSkusByNavItemCate" resultType="domain.SkuVo" parameterType="domain.NavItemCateQuery">
+        select
+        <include refid="skusColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from skus t where 1!=1
+
+        <if test="cateIdList!=null">
+            union all (
+            select
+            <include refid="skusColumns">
+                <property name="alias" value="t"/>
+            </include>
+            from skus t where 1=1 and t.or_master_inv=true and
+            <foreach item="cateId" collection="cateIdList" separator=" or " open="(" close=")" index="index">
+                t.item_id=#{cateId}
+            </foreach>
+            )
+        </if>
+
+        ORDER BY create_at DESC
+        <if test="pageSize!=null and pageSize !=''">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset!=null and offset !=''">
+            OFFSET #{offset}
+        </if>
+
+    </select>
+
 </mapper>

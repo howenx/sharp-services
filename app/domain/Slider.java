@@ -22,12 +22,14 @@ public class Slider implements Serializable{
     @JsonIgnore
     private Timestamp createAt;
     private String  itemTarget;
-    private String  targetType;
+    private String  targetType; //T:主题，D:详细页面，P:拼购商品页，U:一个促销活动的链接（h5主题），M：一对多关系，需要去查询nav_item_cate表
     private String  url;
     @JsonIgnore
     private Boolean orNav; //是否是导航图
     @JsonIgnore
     private String navText;//导航文字显示
+    @JsonIgnore
+    private Integer sliderType;//滚动条类型   1为首页tab sliders，2.拼购tab sliders，3.礼品tab sliders，默认为1
 
     public Slider() {
     }
@@ -114,6 +116,14 @@ public class Slider implements Serializable{
         this.navText = navText;
     }
 
+    public Integer getSliderType() {
+        return sliderType;
+    }
+
+    public void setSliderType(Integer sliderType) {
+        this.sliderType = sliderType;
+    }
+
     @Override
     public String toString() {
         return "Slider{" +
@@ -126,6 +136,7 @@ public class Slider implements Serializable{
                 ", url='" + url + '\'' +
                 ", orNav=" + orNav +
                 ", navText='" + navText + '\'' +
+                ", sliderType=" + sliderType +
                 '}';
     }
 }

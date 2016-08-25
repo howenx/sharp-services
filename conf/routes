@@ -4,6 +4,10 @@ GET        /index/$pageNum<[0-9]+>                                              
 GET        /topic/list/$themeId<[0-9]+>                                                                          controllers.ThemeListCtrl.getThemeList(themeId:Long)
 GET        /comm/cart/amount                                                                                     controllers.Application.getCartAmount
 
+#2-拼购,3-礼品
+GET        /comm/theme/$themeCateCode<2|3>/$pageNum<[0-9]+>                                                      controllers.Application.getThemeByThemeCateCode(themeCateCode:Integer,pageNum:Int)
+#跳分类
+GET        /comm/nav/$navId<[0-9]+>/$pageNum<[0-9]+>                                                             controllers.Application.getSkusByNavItemCate(navId:Long,pageNum:Int)
 
 #views
 GET        /comm/views/about                                                                                     controllers.CommonViewCtrl.aboutUs()
@@ -22,6 +26,8 @@ GET        /comm/detail/comment/$skuType<item|vary|customize|pin>/$skuTypeId<[0-
 GET        /comm/comment/rank/worst/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>        controllers.DetailCtrl.getSkuRemark(grade:Integer ?=1,skuType:String,skuTypeId:Long,pageNum: Integer)
 GET        /comm/comment/rank/best/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>         controllers.DetailCtrl.getSkuRemark(grade:Integer ?=5,skuType:String,skuTypeId:Long,pageNum: Integer)
 GET        /comm/comment/rank/img/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>          controllers.DetailCtrl.getSkuRemark(grade:Integer ?=6,skuType:String,skuTypeId:Long,pageNum: Integer)
+
+
 
 GET        /test                                                                                                 controllers.Application.test()
 GET        /assets/*file                                                                                         controllers.Assets.versioned(path="/public", file: Asset)

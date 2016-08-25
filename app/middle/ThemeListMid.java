@@ -105,40 +105,48 @@ public class ThemeListMid {
         skuVo.setSkuTypeId(skuTypeId);
         List<SkuVo> skuVos = themeService.getAllSkus(skuVo);
         if (skuVos.size() > 0) {
-            ThemeItem themeItem = new ThemeItem();
             skuVo = skuVos.get(0);
+            return makeThemeItem(skuVo);
 
-            themeItem.setCollectCount(skuVo.getCollectCount().intValue());
-            themeItem.setItemDiscount(skuVo.getSkuTypeDiscount());
-            JsonNode jsonNodeInvImg = Json.parse(skuVo.getSkuTypeImg());
-            if (jsonNodeInvImg.has("url")) {
-                ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
-                themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
-            }
-            themeItem.setItemPrice(skuVo.getSkuTypePrice());
 
-            //拼购
-            if (skuType.equals("pin")){
-
-                PinSku pinSku = promotionService.getPinSkuById(skuTypeId);
-                JsonNode floorJson  = Json.parse(pinSku.getFloorPrice());
-                if (floorJson.has("price")){
-                    BigDecimal floorPrice =new BigDecimal(floorJson.findValue("price").asText());
-                    themeItem.setItemPrice(floorPrice);
-                }
-                themeItem.setItemDiscount(pinSku.getPinDiscount());
-            }
-
-            themeItem.setItemSoldAmount(skuVo.getSkuTypeSoldAmount());
-            themeItem.setItemSrcPrice(skuVo.getItemSrcPrice());
-            themeItem.setItemTitle(skuVo.getSkuTypeTitle());
-            themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
-
-            themeItem.setItemType(skuVo.getSkuType());
-            themeItem.setState(skuVo.getSkuTypeStatus());//商品状态
-            themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(skuVo.getSkuTypeStartAt()));
-            themeItem.setEndAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(skuVo.getSkuTypeEndAt()));
-            return themeItem;
         } else return null;
+    }
+
+    /**
+     * 构造ThemeItem
+     * @param skuVo
+     * @return
+     */
+    public ThemeItem makeThemeItem(SkuVo skuVo){
+        ThemeItem themeItem = new ThemeItem();
+        themeItem.setCollectCount(skuVo.getCollectCount().intValue());
+        themeItem.setItemDiscount(skuVo.getSkuTypeDiscount());
+        JsonNode jsonNodeInvImg = Json.parse(skuVo.getSkuTypeImg());
+        if (jsonNodeInvImg.has("url")) {
+            ((ObjectNode) jsonNodeInvImg).put("url", SysParCom.IMAGE_URL + jsonNodeInvImg.get("url").asText());
+            themeItem.setItemImg(Json.stringify(jsonNodeInvImg));
+        }
+        themeItem.setItemPrice(skuVo.getSkuTypePrice());
+        //拼购
+        if (skuVo.getSkuType().equals("pin")){
+            PinSku pinSku = promotionService.getPinSkuById(skuVo.getSkuTypeId());
+            JsonNode floorJson  = Json.parse(pinSku.getFloorPrice());
+            if (floorJson.has("price")){
+                BigDecimal floorPrice =new BigDecimal(floorJson.findValue("price").asText());
+                themeItem.setItemPrice(floorPrice);
+            }
+            themeItem.setItemDiscount(pinSku.getPinDiscount());
+        }
+
+        themeItem.setItemSoldAmount(skuVo.getSkuTypeSoldAmount());
+        themeItem.setItemSrcPrice(skuVo.getItemSrcPrice());
+        themeItem.setItemTitle(skuVo.getSkuTypeTitle());
+        themeItem.setItemUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + skuVo.getSkuType() + "/" + skuVo.getItemId() + "/" + skuVo.getSkuTypeId());
+
+        themeItem.setItemType(skuVo.getSkuType());
+        themeItem.setState(skuVo.getSkuTypeStatus());//商品状态
+        themeItem.setStartAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(skuVo.getSkuTypeStartAt()));
+        themeItem.setEndAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(skuVo.getSkuTypeEndAt()));
+        return themeItem;
     }
 }
