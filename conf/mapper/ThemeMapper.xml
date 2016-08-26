@@ -240,7 +240,7 @@
 
         and t.id=tc.theme_id
 
-        ORDER BY t.sort_nu
+        ORDER BY t.sort_nu desc
         <if test="pageSize!=null and pageSize !=''">
             LIMIT #{pageSize}
         </if>
