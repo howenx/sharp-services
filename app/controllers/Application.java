@@ -344,11 +344,10 @@ public class Application extends Controller {
                 navItemCateQuery.setPageSize(SysParCom.PAGE_SIZE);
                 navItemCateQuery.setOffset(offset);
                 List<SkuVo> listOptional = themeService.getSkusByNavItemCate(navItemCateQuery);
-                int page_count = 0;
                 if(null!=listOptional&&listOptional.size()>0){
+                    int page_count = listOptional.get(0).getSkuNum() % SysParCom.PAGE_SIZE == 0 ? listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE : listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE + 1;
+                    result.putPOJO("page_count", page_count);
                     if (pageNum == 1) {
-                        page_count = listOptional.get(0).getSkuNum() % SysParCom.PAGE_SIZE == 0 ? listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE : listOptional.get(0).getSkuNum() / SysParCom.PAGE_SIZE + 1;
-                        result.putPOJO("page_count", page_count);
                         Slider temp=new Slider();
                         temp.setId(navId);
                         Optional<List<Slider>> listOptionalSlider = themeService.getSlider(temp);
