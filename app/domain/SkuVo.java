@@ -104,8 +104,10 @@ public class SkuVo implements Serializable{
 
     private String invAreaNm;//报关区域名
     private String postalStandard;//行邮税标准
-
+    @JsonIgnore
     private Integer skuNum;//条数
+    @JsonIgnore
+    private Integer limitNum;//limit num
 
     public SkuVo() {
     }
@@ -607,6 +609,14 @@ public class SkuVo implements Serializable{
         this.skuNum = skuNum;
     }
 
+    public Integer getLimitNum() {
+        return limitNum;
+    }
+
+    public void setLimitNum(Integer limitNum) {
+        this.limitNum = limitNum;
+    }
+
     @Override
     public String toString() {
         return "SkuVo{" +
@@ -664,6 +674,8 @@ public class SkuVo implements Serializable{
                 ", invCode='" + invCode + '\'' +
                 ", invAreaNm='" + invAreaNm + '\'' +
                 ", postalStandard='" + postalStandard + '\'' +
+                ", skuNum=" + skuNum +
+                ", limitNum=" + limitNum +
                 '}';
     }
 }

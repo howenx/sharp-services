@@ -27,7 +27,7 @@ GET        /comm/comment/rank/worst/$skuType<item|vary|customize|pin>/$skuTypeId
 GET        /comm/comment/rank/best/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>         controllers.DetailCtrl.getSkuRemark(grade:Integer ?=5,skuType:String,skuTypeId:Long,pageNum: Integer)
 GET        /comm/comment/rank/img/$skuType<item|vary|customize|pin>/$skuTypeId<[0-9]+>/$pageNum<[0-9]+>          controllers.DetailCtrl.getSkuRemark(grade:Integer ?=6,skuType:String,skuTypeId:Long,pageNum: Integer)
 
-
+GET        /comm/recommend/$position<[0-9]+>                                                                     controllers.RecommendCtrl.getRecommendSku(position:Int)
 
 GET        /test                                                                                                 controllers.Application.test()
 GET        /assets/*file                                                                                         controllers.Assets.versioned(path="/public", file: Asset)

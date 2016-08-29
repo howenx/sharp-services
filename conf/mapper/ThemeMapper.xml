@@ -423,4 +423,31 @@
 
     </select>
 
+    <select id="getRecommendSku" resultType="domain.SkuVo" parameterType="domain.SkuVo">
+        select
+        <include refid="skusColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from skus t where 1=1
+        <if test="skuType!=null and skuType!=''">
+            and sku_type=#{skuType}
+        </if>
+        <if test="skuTypeId!=null and skuTypeId!=''">
+            and sku_type_id=#{skuTypeId}
+        </if>
+        <if test="invId!=null and invId!=''">
+            and inv_id=#{invId}
+        </if>
+        <if test="skuTypeStatus!=null and skuTypeStatus!=''">
+            and sku_type_status=#{skuTypeStatus}
+        </if>
+
+        order by sku_type_sold_amount desc
+
+        <if test="limitNum!=null and limitNum!=''">
+            limit #{limitNum}
+        </if>
+
+    </select>
+
 </mapper>

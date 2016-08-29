@@ -69,6 +69,11 @@ public class ThemeServiceImpl implements ThemeService {
         return themeMapper.getNavItemCate(navItemCate);
     }
 
+    @Override
+    public List<SkuVo> getRecommendSku(SkuVo skuVo) {
+        return themeMapper.getRecommendSku(skuVo);
+    }
+
     public void setThemeMapper(ThemeMapper themeMapper) {
         this.themeMapper = themeMapper;
     }

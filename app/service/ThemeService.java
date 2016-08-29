@@ -36,4 +36,10 @@ public interface ThemeService {
      * @return
      */
     List<NavItemCate> getNavItemCate(NavItemCate navItemCate);
+    /**
+     * 获取推荐商品
+     * @param skuVo
+     * @return
+     */
+    List<SkuVo> getRecommendSku(SkuVo skuVo);
 }
