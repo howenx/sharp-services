@@ -150,6 +150,9 @@ public class DetailMid {
         Optional<Item> itemOptional = Optional.ofNullable(themeService.getItemBy(item));
         if (itemOptional.isPresent()) {
             item = itemOptional.get();
+            SysParameter sysParameter=new SysParameter();
+            sysParameter.setParameterCode("REFUND_PAGE");
+            sysParameter=themeService.getSysParameter(sysParameter);
             //将Json字符串转成list
             if (item.getItemDetailImgs() != null) {
                 List<List<String>> listList = mapper.readValue(item.getItemDetailImgs(), mapper.getTypeFactory().constructCollectionType(List.class, List.class));
@@ -168,6 +171,11 @@ public class DetailMid {
                     return SysParCom.IMAGE_URL + s;
                 }).collect(Collectors.toList());
 
+                //详情页统一内容
+                if(null!=sysParameter.getParameterVal()&&!"".equals(sysParameter.getParameterVal())){
+                    stringBuilder.append("<img width=\"100%\" src=\"").append(SysParCom.IMAGE_URL).append(sysParameter.getParameterVal()).append("\">");
+                }
+
                 stringBuilder.append("</p></body></html>");
 
                 item.setItemDetailImgs(stringBuilder.toString());
@@ -179,6 +187,11 @@ public class DetailMid {
                 stringBuilder = new StringBuilder("<!DOCTYPE HTML><html><meta charset='UTF-8'><title>Image Canvas</title></head><style>body {margin: 0px;} p {width: 100%;line-height: 24px;font-size: 12px;text-align: left;margin: 0px auto 0 auto;padding: 0;}p img{float: none;margin: 0;padding: 0;border: 0;vertical-align: top;}</style><body><p>");
 
                 stringBuilder.append(item.getItemDetail());
+
+                //详情页统一内容
+                if(null!=sysParameter.getParameterVal()&&!"".equals(sysParameter.getParameterVal())){
+                    stringBuilder.append("</p><p><img width=\"100%\" src=\"").append(SysParCom.IMAGE_URL).append(sysParameter.getParameterVal()).append("\">");
+                }
 
                 stringBuilder.append("</p></body></html>");
 

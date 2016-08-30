@@ -55,4 +55,6 @@ public interface ThemeMapper {
      * @return
      */
     List<Cates> getCate(Cates cates);
+
+    SysParameter getSysParameter(SysParameter sysParameter);
 }

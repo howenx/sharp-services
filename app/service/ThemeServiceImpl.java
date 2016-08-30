@@ -3,6 +3,7 @@ package service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.*;
 import mapper.ThemeMapper;
+import play.Logger;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -77,6 +78,15 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public List<Cates> getCate(Cates cates) {
         return themeMapper.getCate(cates);
+    }
+    @Override
+    public SysParameter getSysParameter(SysParameter sysParameter){
+        try{
+            return themeMapper.getSysParameter(sysParameter);
+        }catch (Exception ex){
+            Logger.error(ex.getMessage());
+            return null;
+        }
     }
 
     public void setThemeMapper(ThemeMapper themeMapper) {

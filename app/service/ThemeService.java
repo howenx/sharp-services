@@ -49,4 +49,5 @@ public interface ThemeService {
      * @return
      */
     List<Cates> getCate(Cates cates);
+    SysParameter getSysParameter(SysParameter sysParameter);
 }

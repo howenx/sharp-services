@@ -499,4 +499,25 @@
         ORDER BY t.cate_nm;
     </select>
 
+    <!--获取系统参数表-->
+    <sql id="sysParameterColumns">
+        ${alias}.sys_id ,
+        ${alias}.parameter_nm ,
+        ${alias}.parameter_val ,
+        ${alias}.parameter_code
+    </sql>
+    <select id="getSysParameter" parameterType="domain.SysParameter" resultType="domain.SysParameter">
+        select
+        <include refid="sysParameterColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from sys_parameter t where 1=1
+        <if test="sysId != null and sysId!=''">
+            and t.sys_id=#{sysId}
+        </if>
+        <if test="parameterCode != null and parameterCode!=''">
+            and t.parameter_code=#{parameterCode}
+        </if>
+    </select>
+
 </mapper>
