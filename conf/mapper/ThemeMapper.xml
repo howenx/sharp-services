@@ -428,7 +428,7 @@
         <include refid="skusColumns">
             <property name="alias" value="t"/>
         </include>
-        from skus t where 1=1
+        from skus t where 1=1 and sku_type_status='Y'
         <if test="skuType!=null and skuType!=''">
             and sku_type=#{skuType}
         </if>
