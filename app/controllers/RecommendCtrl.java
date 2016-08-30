@@ -44,6 +44,9 @@ public class RecommendCtrl extends Controller {
         if (position>0) {
             List<ThemeItem> themeItemList=new ArrayList<>();
             SkuVo temp=new SkuVo();
+            if(position==4){
+                temp.setSkuType("pin");
+            }
             temp.setLimitNum(SysParCom.PAGE_SIZE);
             List<SkuVo> listOptional = themeService.getRecommendSku(temp);
             if(null!=listOptional&&listOptional.size()>0){
