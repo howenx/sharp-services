@@ -386,35 +386,57 @@ public class Application extends Controller {
     private NavItemCateQuery makeNavItemCateQuery( List<NavItemCate> navItemCateList){
         NavItemCateQuery navItemCateQuery=new NavItemCateQuery();
         for(NavItemCate navItemCate:navItemCateList){
-            //1.商品，2.sku，3.拼购商品，4.商品分类，5.主题
-            if(navItemCate.getCateType()==1){
-                List<Long> itemIdList=navItemCateQuery.getItemIdList();
+            //1.商品，2.sku，3.拼购商品，4.商品二级类目，5.主题，6.商品一级类目
+            if(navItemCate.getCateType()==1){ //1.商品
+                HashSet<Long> itemIdList=navItemCateQuery.getItemIdList();
                 if(null==itemIdList){
-                    itemIdList=new ArrayList<>();
+                    itemIdList=new HashSet<>();
                     navItemCateQuery.setItemIdList(itemIdList);
                 }
                 navItemCateQuery.getItemIdList().add(navItemCate.getCateTypeId());
-            }else if(navItemCate.getCateType()==2){
-                List<Long> invIdList=navItemCateQuery.getInvIdList();
+            }else if(navItemCate.getCateType()==2){ //2.sku
+                HashSet<Long> invIdList=navItemCateQuery.getInvIdList();
                 if(null==invIdList){
-                    invIdList=new ArrayList<>();
+                    invIdList=new HashSet<>();
                     navItemCateQuery.setInvIdList(invIdList);
                 }
                 navItemCateQuery.getInvIdList().add(navItemCate.getCateTypeId());
-            }else if(navItemCate.getCateType()==3){
-                List<Long> list=navItemCateQuery.getPinIdList();
+            }else if(navItemCate.getCateType()==3){ //3.拼购商品
+                HashSet<Long> list=navItemCateQuery.getPinIdList();
                 if(null==list){
-                    list=new ArrayList<>();
+                    list=new HashSet<>();
                     navItemCateQuery.setPinIdList(list);
                 }
                 navItemCateQuery.getPinIdList().add(navItemCate.getCateTypeId());
-            }else if(navItemCate.getCateType()==4){
-                List<Long> list=navItemCateQuery.getCateIdList();
+            }else if(navItemCate.getCateType()==4){ //4.商品二级类目
+                HashSet<Long> list=navItemCateQuery.getCateIdList();
                 if(null==list){
-                    list=new ArrayList<>();
+                    list=new HashSet<>();
                     navItemCateQuery.setCateIdList(list);
                 }
                 navItemCateQuery.getCateIdList().add(navItemCate.getCateTypeId());
+            }else if(navItemCate.getCateType()==5){ //5.主题
+                HashSet<Long> list=navItemCateQuery.getThemeIdList();
+                if(null==list){
+                    list=new HashSet<>();
+                    navItemCateQuery.setThemeIdList(list);
+                }
+                navItemCateQuery.getThemeIdList().add(navItemCate.getCateTypeId());
+            }else if(navItemCate.getCateType()==6){ //6.商品一级类目
+                HashSet<Long> list=navItemCateQuery.getCateIdList();
+                if(null==list){
+                    list=new HashSet<>();
+                    navItemCateQuery.setCateIdList(list);
+                }
+                Cates temp=new Cates();
+                temp.setPcateId(navItemCate.getCateTypeId());
+                List<Cates> catesList=themeService.getCate(temp);
+                navItemCateQuery.getCateIdList().add(navItemCate.getCateTypeId());
+                if(null!=catesList&&catesList.size()>0){
+                    for(Cates cates:catesList){
+                        navItemCateQuery.getCateIdList().add(cates.getCateId());
+                    }
+                }
             }
         }
 

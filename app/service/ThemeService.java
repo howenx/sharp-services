@@ -42,4 +42,11 @@ public interface ThemeService {
      * @return
      */
     List<SkuVo> getRecommendSku(SkuVo skuVo);
+
+    /**
+     * 获取商品分类
+     * @param cates
+     * @return
+     */
+    List<Cates> getCate(Cates cates);
 }

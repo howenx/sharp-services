@@ -2,6 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -15,11 +16,14 @@ public class NavItemCateQuery {
     @JsonIgnore
     private Integer offset;
 
-    private List<Long> itemIdList;
-    private List<Long> invIdList;
+    private HashSet<Long> itemIdList;
+    private HashSet<Long> invIdList;
 
-    private List<Long> pinIdList;
-    private List<Long> cateIdList;
+    private HashSet<Long> pinIdList;
+    private HashSet<Long> cateIdList;
+    //主题id
+    private HashSet<Long> themeIdList;
+
 
 
     public Integer getPageSize() {
@@ -38,36 +42,44 @@ public class NavItemCateQuery {
         this.offset = offset;
     }
 
-    public List<Long> getItemIdList() {
+    public HashSet<Long> getItemIdList() {
         return itemIdList;
     }
 
-    public void setItemIdList(List<Long> itemIdList) {
+    public void setItemIdList(HashSet<Long> itemIdList) {
         this.itemIdList = itemIdList;
     }
 
-    public List<Long> getInvIdList() {
+    public HashSet<Long> getInvIdList() {
         return invIdList;
     }
 
-    public void setInvIdList(List<Long> invIdList) {
+    public void setInvIdList(HashSet<Long> invIdList) {
         this.invIdList = invIdList;
     }
 
-    public List<Long> getPinIdList() {
+    public HashSet<Long> getPinIdList() {
         return pinIdList;
     }
 
-    public void setPinIdList(List<Long> pinIdList) {
+    public void setPinIdList(HashSet<Long> pinIdList) {
         this.pinIdList = pinIdList;
     }
 
-    public List<Long> getCateIdList() {
+    public HashSet<Long> getCateIdList() {
         return cateIdList;
     }
 
-    public void setCateIdList(List<Long> cateIdList) {
+    public void setCateIdList(HashSet<Long> cateIdList) {
         this.cateIdList = cateIdList;
+    }
+
+    public HashSet<Long> getThemeIdList() {
+        return themeIdList;
+    }
+
+    public void setThemeIdList(HashSet<Long> themeIdList) {
+        this.themeIdList = themeIdList;
     }
 
     @Override

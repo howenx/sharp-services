@@ -378,7 +378,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.or_master_inv=true and
+            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='item'
             <foreach item="itemId" collection="itemIdList" separator=" or " open="(" close=")" index="index">
                 t.item_id=#{itemId}
             </foreach>
@@ -391,14 +391,25 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.or_master_inv=true and
+            from skus t  where 1=1 and t.sku_type='item'
             <foreach item="invId" collection="invIdList" separator=" or " open="(" close=")" index="index">
-                t.inv_id=#{invId}
+                t.sku_type_id=#{invId}
             </foreach>
             )
         </if>
 
-        <!--拼购主题还未处理-->
+        <if test="pinIdList!=null">
+            union (
+            select
+            <include refid="skusColumns">
+                <property name="alias" value="t"/>
+            </include>
+            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='pin'
+            <foreach item="pinId" collection="pinIdList" separator=" or " open="(" close=")" index="index">
+                t.sku_type_id=#{pinId}
+            </foreach>
+            )
+        </if>
 
         <if test="cateIdList!=null">
             union (
@@ -409,6 +420,19 @@
             from skus t ,items it where 1=1 and t.or_master_inv=true and t.item_id=it.id and
             <foreach item="cateId" collection="cateIdList" separator=" or " open="(" close=")" index="index">
                 it.cate_id=#{cateId}
+            </foreach>
+            )
+        </if>
+
+        <if test="themeIdList!=null">
+            union (
+            select
+            <include refid="skusColumns">
+                <property name="alias" value="t"/>
+            </include>
+            from skus t  where 1=1 and t.or_master_inv=true and
+            <foreach item="themeId" collection="invIdList" separator=" or " open="(" close=")" index="index">
+                t.themeId like '%${themeId}%'
             </foreach>
             )
         </if>
@@ -448,6 +472,31 @@
             limit #{limitNum}
         </if>
 
+    </select>
+
+
+    <sql id="catesColumns">
+        ${alias}.cate_id,
+        ${alias}.pcate_id,
+        ${alias}.cate_nm,
+        ${alias}.cate_desc,
+        ${alias}.cate_code
+    </sql>
+
+    <!-- 获取类别信息 -->
+    <select id="getCate" resultType="domain.Cates" parameterType="domain.Cates">
+        select
+        <include refid="catesColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from cates t where 1=1
+        <if test="pcateId !=null">
+            AND pcate_id = #{pcateId}
+        </if>
+        <if test="cateId !=null">
+            AND cate_id = #{cateId}
+        </if>
+        ORDER BY t.cate_nm;
     </select>
 
 </mapper>
