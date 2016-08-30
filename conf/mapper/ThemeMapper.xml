@@ -378,7 +378,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='item'
+            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='item' and t.state!='D' and t.state!='N' and
             <foreach item="itemId" collection="itemIdList" separator=" or " open="(" close=")" index="index">
                 t.item_id=#{itemId}
             </foreach>
@@ -391,7 +391,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.sku_type='item'
+            from skus t  where 1=1 and t.sku_type='item' and t.state!='D' and t.state!='N' and
             <foreach item="invId" collection="invIdList" separator=" or " open="(" close=")" index="index">
                 t.sku_type_id=#{invId}
             </foreach>
@@ -404,7 +404,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='pin'
+            from skus t  where 1=1 and t.or_master_inv=true and t.sku_type='pin' and t.state!='D' and t.state!='N' and
             <foreach item="pinId" collection="pinIdList" separator=" or " open="(" close=")" index="index">
                 t.sku_type_id=#{pinId}
             </foreach>
@@ -417,7 +417,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t ,items it where 1=1 and t.or_master_inv=true and t.item_id=it.id and
+            from skus t ,items it where 1=1 and t.or_master_inv=true and t.item_id=it.id and t.state!='D' and t.state!='N' and
             <foreach item="cateId" collection="cateIdList" separator=" or " open="(" close=")" index="index">
                 it.cate_id=#{cateId}
             </foreach>
@@ -430,7 +430,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t  where 1=1 and t.or_master_inv=true and
+            from skus t  where 1=1 and t.or_master_inv=true and t.state!='D' and t.state!='N' and
             <foreach item="themeId" collection="invIdList" separator=" or " open="(" close=")" index="index">
                 t.themeId like '%${themeId}%'
             </foreach>
