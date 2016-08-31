@@ -1,6 +1,7 @@
 package middle;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.*;
 import play.Logger;
@@ -10,10 +11,13 @@ import play.libs.Json;
 import service.ThemeService;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 中间事务处理层
@@ -41,12 +45,31 @@ public class ThemeListMid {
         themeBasic.setTitle(theme.getTitle());
 
         if(null!=theme.getThemeMasterImg()){
-            //主题主宣传图拼接URL
-            JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
-            if (jsonNode_ThemeMasterImg.has("url")) {
-                ((ObjectNode) jsonNode_ThemeMasterImg).put("url", SysParCom.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
-                themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
+
+            if("h5".equals(theme.getType())){ //h5主题主图图片存储方式是数组
+                List<String> listList = null;
+                try {
+                    listList = new ObjectMapper().readValue(theme.getThemeMasterImg(), new ObjectMapper().getTypeFactory().constructCollectionType(List.class, String.class));
+                    if(null!=listList){
+                        List<String> imgList=new ArrayList<>();
+                        for(String img:listList){
+                            imgList.add(SysParCom.IMAGE_URL+img);
+                        }
+                        themeBasic.setThemeImg(Json.toJson(imgList).toString());//H5分割的图片
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                //主题主宣传图拼接URL
+                JsonNode jsonNode_ThemeMasterImg = Json.parse(theme.getThemeMasterImg());
+                if (jsonNode_ThemeMasterImg.has("url")) {
+                    ((ObjectNode) jsonNode_ThemeMasterImg).put("url", SysParCom.IMAGE_URL + jsonNode_ThemeMasterImg.get("url").asText());
+                    themeBasic.setThemeImg(Json.stringify(jsonNode_ThemeMasterImg));//主题主商品宣传图
+                }
             }
+
 
             //处理主宣传图上的标签跳转连接
             if (theme.getMasterItemTag() != null) {
@@ -74,7 +97,7 @@ public class ThemeListMid {
         }
 
 
-        if(null!=theme.getThemeItem()){ //只有宣传图没有下面的商品时为null
+        if(null!=theme.getThemeItem()&&!"".equals(theme.getThemeItem().trim())){ //只有宣传图没有下面的商品时为null
             JsonNode itemJson = Json.parse(theme.getThemeItem());
 
             List<ThemeItem> themeItems = new ArrayList<>();
