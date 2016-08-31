@@ -88,6 +88,7 @@ public class Application extends Controller {
                         //如果是2状态的，使用redis中SISMEMBER这个主题ID为Key，并将请求中的id-token转为userId作为value，判断用户是否在专用用户之列，如果在责在状态3查询结果基础上增加2状态查询结果
                         tempTheme = new Theme();
                         tempTheme.setThemeState(2);
+                        tempTheme.setThemeCateCode(1);
                         Optional<List<Theme>> themeList2 = themeService.getThemes(tempTheme);
                         if (themeList2.isPresent() && themeList2.get().size() > 0) {
                             List<Theme> themes2=new ArrayList<>();
@@ -306,6 +307,39 @@ public class Application extends Controller {
                 int page_count = 0;
                 if (themeList.size() > 0) {
                     page_count = themeList.get(0).getThemeNum() % SysParCom.PAGE_SIZE == 0 ? themeList.get(0).getThemeNum() / SysParCom.PAGE_SIZE : themeList.get(0).getThemeNum() / SysParCom.PAGE_SIZE + 1;
+                }
+                if(pageNum==1){
+                    Long userId = -1L;
+                    Optional<String> header = Optional.ofNullable(request().getHeader("id-token"));
+                    if (header.isPresent()) {
+                        Optional<Object> token = Optional.ofNullable(cache.get(header.get()));
+                        if (token.isPresent()) {
+                            JsonNode userJson = Json.parse(token.get().toString());
+                            userId = Long.valueOf(userJson.findValue("id").asText());    //登录了
+                        }
+                    }
+
+                    if(userId>0) { //用户登录了
+                        //如果是2状态的，使用redis中SISMEMBER这个主题ID为Key，并将请求中的id-token转为userId作为value，判断用户是否在专用用户之列，如果在责在状态3查询结果基础上增加2状态查询结果
+                        tempTheme = new Theme();
+                        tempTheme.setThemeState(2);
+                        tempTheme.setThemeCateCode(themeCateCode);
+                        Optional<List<Theme>> themeList2 = themeService.getThemes(tempTheme);
+                        if (themeList2.isPresent() && themeList2.get().size() > 0) {
+                            List<Theme> themes2=new ArrayList<>();
+                            for (Theme theme : themeList2.get()) {
+                                try (Jedis jedis = RedisPool.createPool().getResource()) {
+                                    if(jedis.sismember(theme.getId()+"", userId + "")){
+                                        themes2.add(handleThemeShow(theme));
+                                    }
+                                }
+                            }
+                            if(null!=themes2&&themes2.size()>0){
+                                themeList.addAll(0,themes2);
+                            }
+                        }
+                    }
+
                 }
 
                 result.putPOJO("message", Json.toJson(new Message(Message.ErrorCode.getName(Message.ErrorCode.SUCCESS.getIndex()), Message.ErrorCode.SUCCESS.getIndex())));
