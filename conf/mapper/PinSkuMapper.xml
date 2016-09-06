@@ -58,7 +58,7 @@
         <include refid="tieredPriceColumns">
             <property name="alias" value="t"/>
         </include>
-        from pin_tiered_price t where t.pin_id = ${value} order by t.people_num
+        from pin_tiered_price t where t.pin_id = ${value} order by t.people_num desc
     </select>
 
 </mapper>
