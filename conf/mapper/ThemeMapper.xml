@@ -365,6 +365,7 @@
 
     </select>
 
+    <!--根据分类获取商品-->
     <select id="getSkusByNavItemCate" resultType="domain.SkuVo" parameterType="domain.NavItemCateQuery">
         select
         <include refid="skusColumns">
@@ -417,7 +418,7 @@
             <include refid="skusColumns">
                 <property name="alias" value="t"/>
             </include>
-            from skus t ,items it where 1=1 and t.or_master_inv=true and t.item_id=it.id and t.state!='D' and t.state!='N' and
+            from skus t ,items it where 1=1 and t.or_master_inv=true and t.sku_type='item' and t.state!='D' and t.state!='N' and t.item_id=it.id and
             <foreach item="cateId" collection="cateIdList" separator=" or " open="(" close=")" index="index">
                 it.cate_id=#{cateId}
             </foreach>
@@ -452,7 +453,7 @@
         <include refid="skusColumns">
             <property name="alias" value="t"/>
         </include>
-        from skus t where 1=1 and sku_type_status='Y'
+        from skus t where 1=1 and sku_type_status='Y' and inv_id != 111948
         <if test="skuType!=null and skuType!=''">
             and sku_type=#{skuType}
         </if>

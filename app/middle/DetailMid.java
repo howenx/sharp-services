@@ -486,6 +486,11 @@ public class DetailMid {
             ThemeItem themeItem = new ThemeItem();
             skuVo = skuVos.get(i);
 
+            //测试商品id写死
+            if(111948==skuVo.getInvId()){
+                continue;
+            }
+
             themeItem.setCollectCount(skuVo.getCollectCount().intValue());
             themeItem.setItemDiscount(skuVo.getSkuTypeDiscount());
             JsonNode jsonNodeInvImg = Json.parse(skuVo.getSkuTypeImg());
