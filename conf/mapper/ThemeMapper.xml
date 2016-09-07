@@ -312,6 +312,7 @@
         <if test="orMasterInv != null and orMasterInv!=''">
             and t.or_master_inv = #{orMasterInv}
         </if>
+        order by t.id asc
     </select>
 
 
