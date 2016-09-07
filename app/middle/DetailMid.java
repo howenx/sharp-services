@@ -283,7 +283,7 @@ public class DetailMid {
     private List<Inventory> getItemStock(String skuType, Long itemId, Long skuTypeId, Long userId) {
         Inventory inventory = new Inventory();
         inventory.setItemId(itemId);
-        return themeService.getInvBy(inventory).stream().map(l -> {
+        return themeService.getInvBy(inventory).stream().filter(s ->(!"D".equals(s.getState())&&!"T".equals(s.getState()))).map(l -> {
 
             l.setInvUrl(SysParCom.DEPLOY_URL + "/comm/detail/" + skuType + "/" + itemId + "/" + l.getId());
 
@@ -486,8 +486,8 @@ public class DetailMid {
             ThemeItem themeItem = new ThemeItem();
             skuVo = skuVos.get(i);
 
-            //测试商品id写死
-            if(111948==skuVo.getInvId()){
+            //该测试ID写死的
+            if(skuVo.getInvId()==111948){
                 continue;
             }
 
